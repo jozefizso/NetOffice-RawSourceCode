@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.MSFormsApi
 {
 
@@ -33,6 +35,17 @@ namespace NetOffice.MSFormsApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -53,14 +66,14 @@ namespace NetOffice.MSFormsApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public HTMLText(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public HTMLText(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public HTMLText(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public HTMLText(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -70,7 +83,7 @@ namespace NetOffice.MSFormsApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public HTMLText(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public HTMLText(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -79,20 +92,20 @@ namespace NetOffice.MSFormsApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public HTMLText(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public HTMLText(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public HTMLText(COMObject replacedObject) : base(replacedObject)
+		public HTMLText(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of HTMLText 
+        /// Creates a new instance of HTMLText 
         ///</summary>		
 		public HTMLText():base("MSForms.HTMLText")
 		{
@@ -100,7 +113,7 @@ namespace NetOffice.MSFormsApi
 		}
 		
 		///<summary>
-        ///creates a new instance of HTMLText
+        /// Creates a new instance of HTMLText
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public HTMLText(string progId):base(progId)
@@ -113,12 +126,12 @@ namespace NetOffice.MSFormsApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running MSForms.HTMLText objects from the running object table(ROT)
+        /// Returns all running MSForms.HTMLText objects from the environment/system
         /// </summary>
         /// <returns>an MSForms.HTMLText array</returns>
 		public static NetOffice.MSFormsApi.HTMLText[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("MSForms","HTMLText");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSForms","HTMLText");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.HTMLText> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.HTMLText>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.MSFormsApi.HTMLText(null, proxy) );
@@ -126,12 +139,12 @@ namespace NetOffice.MSFormsApi
 		}
 
 		/// <summary>
-        /// returns a running MSForms.HTMLText object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running MSForms.HTMLText object from the environment/system.
         /// </summary>
         /// <returns>an MSForms.HTMLText object or null</returns>
 		public static NetOffice.MSFormsApi.HTMLText GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSForms","HTMLText", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","HTMLText", false);
 			if(null != proxy)
 				return new NetOffice.MSFormsApi.HTMLText(null, proxy);
 			else
@@ -139,13 +152,13 @@ namespace NetOffice.MSFormsApi
 		}
 
 		/// <summary>
-        /// returns a running MSForms.HTMLText object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running MSForms.HTMLText object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an MSForms.HTMLText object or null</returns>
 		public static NetOffice.MSFormsApi.HTMLText GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSForms","HTMLText", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","HTMLText", throwOnError);
 			if(null != proxy)
 				return new NetOffice.MSFormsApi.HTMLText(null, proxy);
 			else
@@ -182,7 +195,7 @@ namespace NetOffice.MSFormsApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -204,6 +217,9 @@ namespace NetOffice.MSFormsApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -212,7 +228,10 @@ namespace NetOffice.MSFormsApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -232,6 +251,9 @@ namespace NetOffice.MSFormsApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -251,7 +273,10 @@ namespace NetOffice.MSFormsApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -270,8 +295,14 @@ namespace NetOffice.MSFormsApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -303,6 +334,9 @@ namespace NetOffice.MSFormsApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.PowerPointApi
 {
 
@@ -14,9 +16,9 @@ namespace NetOffice.PowerPointApi
 
 	///<summary>
 	/// CoClass PowerRex 
-	/// SupportByVersion PowerPoint, 10,11,12,14,15
+	/// SupportByVersion PowerPoint, 10,11,12,14,15,16
 	///</summary>
-	[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15)]
+	[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsCoClass)]
 	public class PowerRex : _PowerRex
 	{
@@ -30,6 +32,17 @@ namespace NetOffice.PowerPointApi
 		#endregion
 
 		#region Type Information
+
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
 
         private static Type _type;
 		
@@ -51,14 +64,14 @@ namespace NetOffice.PowerPointApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public PowerRex(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public PowerRex(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public PowerRex(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public PowerRex(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +81,7 @@ namespace NetOffice.PowerPointApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PowerRex(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public PowerRex(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +90,20 @@ namespace NetOffice.PowerPointApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PowerRex(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public PowerRex(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PowerRex(COMObject replacedObject) : base(replacedObject)
+		public PowerRex(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of PowerRex 
+        /// Creates a new instance of PowerRex 
         ///</summary>		
 		public PowerRex():base("PowerPoint.PowerRex")
 		{
@@ -98,7 +111,7 @@ namespace NetOffice.PowerPointApi
 		}
 		
 		///<summary>
-        ///creates a new instance of PowerRex
+        /// Creates a new instance of PowerRex
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public PowerRex(string progId):base(progId)
@@ -111,12 +124,12 @@ namespace NetOffice.PowerPointApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running PowerPoint.PowerRex objects from the running object table(ROT)
+        /// Returns all running PowerPoint.PowerRex objects from the environment/system
         /// </summary>
         /// <returns>an PowerPoint.PowerRex array</returns>
 		public static NetOffice.PowerPointApi.PowerRex[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("PowerPoint","PowerRex");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("PowerPoint","PowerRex");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.PowerRex> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.PowerRex>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.PowerPointApi.PowerRex(null, proxy) );
@@ -124,12 +137,12 @@ namespace NetOffice.PowerPointApi
 		}
 
 		/// <summary>
-        /// returns a running PowerPoint.PowerRex object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running PowerPoint.PowerRex object from the environment/system.
         /// </summary>
         /// <returns>an PowerPoint.PowerRex object or null</returns>
 		public static NetOffice.PowerPointApi.PowerRex GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("PowerPoint","PowerRex", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","PowerRex", false);
 			if(null != proxy)
 				return new NetOffice.PowerPointApi.PowerRex(null, proxy);
 			else
@@ -137,13 +150,13 @@ namespace NetOffice.PowerPointApi
 		}
 
 		/// <summary>
-        /// returns a running PowerPoint.PowerRex object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running PowerPoint.PowerRex object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an PowerPoint.PowerRex object or null</returns>
 		public static NetOffice.PowerPointApi.PowerRex GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("PowerPoint","PowerRex", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","PowerRex", throwOnError);
 			if(null != proxy)
 				return new NetOffice.PowerPointApi.PowerRex(null, proxy);
 			else
@@ -158,7 +171,7 @@ namespace NetOffice.PowerPointApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -175,6 +188,9 @@ namespace NetOffice.PowerPointApi
  
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +199,10 @@ namespace NetOffice.PowerPointApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +222,9 @@ namespace NetOffice.PowerPointApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +244,10 @@ namespace NetOffice.PowerPointApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +266,14 @@ namespace NetOffice.PowerPointApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,6 +305,9 @@ namespace NetOffice.PowerPointApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

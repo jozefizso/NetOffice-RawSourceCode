@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -19,7 +19,7 @@ namespace NetOffice.OWC10Api
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public _Range_(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public _Range_(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -27,7 +27,7 @@ namespace NetOffice.OWC10Api
         /// <param name="parentObject">object there has created the proxy</param>
         /// <param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range_(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public _Range_(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -35,7 +35,7 @@ namespace NetOffice.OWC10Api
         /// <param name="comProxy">inner wrapped COM proxy</param>
         /// <param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range_(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public _Range_(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 
@@ -44,14 +44,14 @@ namespace NetOffice.OWC10Api
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range_(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public _Range_(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
 		
 		/// <param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range_(COMObject replacedObject) : base(replacedObject)
+		public _Range_(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 
@@ -285,7 +285,7 @@ namespace NetOffice.OWC10Api
 			object returnItem = Invoker.PropertyGet(this, "Value", paramsArray);
 			if((null != returnItem) && (returnItem is MarshalByRefObject))
 			{
-				COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+				ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 				return newObject;
 			}
 			else
@@ -294,12 +294,13 @@ namespace NetOffice.OWC10Api
 			}
 		}
 
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get/Set
-		/// </summary>
-		/// <param name="rangeValueDataType">optional object RangeValueDataType</param>
-		[SupportByVersionAttribute("OWC10", 1)]
+        /// <summary>
+        /// SupportByVersion OWC10 1
+        /// Get/Set
+        /// </summary>
+        /// <param name="rangeValueDataType">optional object RangeValueDataType</param>
+        /// <param name="value">optional object value</param>
+        [SupportByVersionAttribute("OWC10", 1)]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void set_Value(object rangeValueDataType, object value)
 		{
@@ -358,7 +359,7 @@ namespace NetOffice.OWC10Api
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public _Range(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public _Range(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -366,7 +367,7 @@ namespace NetOffice.OWC10Api
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public _Range(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -375,7 +376,7 @@ namespace NetOffice.OWC10Api
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public _Range(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
@@ -384,13 +385,13 @@ namespace NetOffice.OWC10Api
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public _Range(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _Range(COMObject replacedObject) : base(replacedObject)
+		public _Range(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 		
@@ -425,7 +426,7 @@ namespace NetOffice.OWC10Api
 			object returnItem = Invoker.PropertyGet(this, "_Default", paramsArray);
 			if((null != returnItem) && (returnItem is MarshalByRefObject))
 			{
-				COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+				ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 				return newObject;
 			}
 			else
@@ -455,7 +456,7 @@ namespace NetOffice.OWC10Api
 			object returnItem = Invoker.PropertyGet(this, "_Default", paramsArray);
 			if((null != returnItem) && (returnItem is MarshalByRefObject))
 			{
-				COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+				ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 				return newObject;
 			}
 			else
@@ -577,7 +578,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "ColumnWidth", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -726,7 +727,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Formula", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -754,7 +755,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "FormulaArray", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -782,7 +783,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "FormulaLocal", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -810,7 +811,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "HasArray", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -833,7 +834,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "HasFormula", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -856,7 +857,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Height", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -899,7 +900,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "HorizontalAlignment", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -975,7 +976,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Left", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -998,7 +999,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Locked", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1042,7 +1043,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "MergeCells", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1107,7 +1108,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "NumberFormat", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1167,7 +1168,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "PrefixCharacter", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1260,7 +1261,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "ReadingOrder", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1303,7 +1304,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "RowHeight", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1347,7 +1348,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Text", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1370,7 +1371,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Top", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1393,7 +1394,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "UseStandardHeight", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1421,7 +1422,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "UseStandardWidth", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1449,7 +1450,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Value", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1478,7 +1479,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Value2", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1506,7 +1507,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "VerticalAlignment", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else
@@ -1534,7 +1535,7 @@ namespace NetOffice.OWC10Api
 				object returnItem = Invoker.PropertyGet(this, "Width", paramsArray);
 				if((null != returnItem) && (returnItem is MarshalByRefObject))
 				{
-					COMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
+					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
 					return newObject;
 				}
 				else

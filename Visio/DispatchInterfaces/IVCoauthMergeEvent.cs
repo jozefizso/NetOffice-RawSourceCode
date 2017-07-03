@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -10,9 +10,9 @@ namespace NetOffice.VisioApi
 {
 	///<summary>
 	/// DispatchInterface IVCoauthMergeEvent 
-	/// SupportByVersion Visio, 15
+	/// SupportByVersion Visio, 15, 16
 	///</summary>
-	[SupportByVersionAttribute("Visio", 15)]
+	[SupportByVersionAttribute("Visio", 15, 16)]
 	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
 	public class IVCoauthMergeEvent : COMObject
 	{
@@ -40,7 +40,7 @@ namespace NetOffice.VisioApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public IVCoauthMergeEvent(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public IVCoauthMergeEvent(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -48,7 +48,7 @@ namespace NetOffice.VisioApi
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVCoauthMergeEvent(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public IVCoauthMergeEvent(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -57,7 +57,7 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVCoauthMergeEvent(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public IVCoauthMergeEvent(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
@@ -66,13 +66,13 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVCoauthMergeEvent(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public IVCoauthMergeEvent(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVCoauthMergeEvent(COMObject replacedObject) : base(replacedObject)
+		public IVCoauthMergeEvent(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 		
@@ -92,10 +92,10 @@ namespace NetOffice.VisioApi
 		#region Properties
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVApplication Application
 		{
 			get
@@ -108,10 +108,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public Int16 ObjectType
 		{
 			get
@@ -123,10 +123,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVDocument BaseDocument
 		{
 			get
@@ -139,10 +139,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVDocument DownloadDocument
 		{
 			get
@@ -155,10 +155,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVDocument WorkingDocument
 		{
 			get
@@ -171,10 +171,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public Int16 Stat
 		{
 			get

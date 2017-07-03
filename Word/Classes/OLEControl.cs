@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.WordApi
 {
 
@@ -16,9 +18,9 @@ namespace NetOffice.WordApi
 
 	///<summary>
 	/// CoClass OLEControl 
-	/// SupportByVersion Word, 9,10,11,12,14,15
+	/// SupportByVersion Word, 9,10,11,12,14,15,16
 	///</summary>
-	[SupportByVersionAttribute("Word", 9,10,11,12,14,15)]
+	[SupportByVersionAttribute("Word", 9,10,11,12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsCoClass)]
 	public class OLEControl : _OLEControl,IEventBinding
 	{
@@ -33,6 +35,17 @@ namespace NetOffice.WordApi
 		#endregion
 
 		#region Type Information
+
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
 
         private static Type _type;
 		
@@ -54,14 +67,14 @@ namespace NetOffice.WordApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public OLEControl(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public OLEControl(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public OLEControl(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public OLEControl(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -71,7 +84,7 @@ namespace NetOffice.WordApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEControl(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public OLEControl(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -80,20 +93,20 @@ namespace NetOffice.WordApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEControl(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public OLEControl(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEControl(COMObject replacedObject) : base(replacedObject)
+		public OLEControl(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of OLEControl 
+        /// Creates a new instance of OLEControl 
         ///</summary>		
 		public OLEControl():base("Word.OLEControl")
 		{
@@ -101,7 +114,7 @@ namespace NetOffice.WordApi
 		}
 		
 		///<summary>
-        ///creates a new instance of OLEControl
+        /// Creates a new instance of OLEControl
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public OLEControl(string progId):base(progId)
@@ -114,12 +127,12 @@ namespace NetOffice.WordApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running Word.OLEControl objects from the running object table(ROT)
+        /// Returns all running Word.OLEControl objects from the environment/system
         /// </summary>
         /// <returns>an Word.OLEControl array</returns>
 		public static NetOffice.WordApi.OLEControl[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("Word","OLEControl");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Word","OLEControl");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.WordApi.OLEControl> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.WordApi.OLEControl>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.WordApi.OLEControl(null, proxy) );
@@ -127,12 +140,12 @@ namespace NetOffice.WordApi
 		}
 
 		/// <summary>
-        /// returns a running Word.OLEControl object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running Word.OLEControl object from the environment/system.
         /// </summary>
         /// <returns>an Word.OLEControl object or null</returns>
 		public static NetOffice.WordApi.OLEControl GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Word","OLEControl", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Word","OLEControl", false);
 			if(null != proxy)
 				return new NetOffice.WordApi.OLEControl(null, proxy);
 			else
@@ -140,13 +153,13 @@ namespace NetOffice.WordApi
 		}
 
 		/// <summary>
-        /// returns a running Word.OLEControl object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running Word.OLEControl object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an Word.OLEControl object or null</returns>
 		public static NetOffice.WordApi.OLEControl GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Word","OLEControl", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Word","OLEControl", throwOnError);
 			if(null != proxy)
 				return new NetOffice.WordApi.OLEControl(null, proxy);
 			else
@@ -157,14 +170,14 @@ namespace NetOffice.WordApi
 		#region Events
 
 		/// <summary>
-		/// SupportByVersion Word, 9,10,11,12,14,15
+		/// SupportByVersion Word, 9,10,11,12,14,15,16
 		/// </summary>
 		private event OLEControl_GotFocusEventHandler _GotFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Word 9 10 11 12 14 15
+		/// SupportByVersion Word 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Word", 9,10,11,12,14,15)]
+		[SupportByVersion("Word", 9,10,11,12,14,15,16)]
 		public event OLEControl_GotFocusEventHandler GotFocusEvent
 		{
 			add
@@ -179,14 +192,14 @@ namespace NetOffice.WordApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Word, 9,10,11,12,14,15
+		/// SupportByVersion Word, 9,10,11,12,14,15,16
 		/// </summary>
 		private event OLEControl_LostFocusEventHandler _LostFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Word 9 10 11 12 14 15
+		/// SupportByVersion Word 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Word", 9,10,11,12,14,15)]
+		[SupportByVersion("Word", 9,10,11,12,14,15,16)]
 		public event OLEControl_LostFocusEventHandler LostFocusEvent
 		{
 			add
@@ -205,7 +218,7 @@ namespace NetOffice.WordApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -227,6 +240,9 @@ namespace NetOffice.WordApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -235,7 +251,10 @@ namespace NetOffice.WordApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -255,6 +274,9 @@ namespace NetOffice.WordApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -274,7 +296,10 @@ namespace NetOffice.WordApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -293,8 +318,14 @@ namespace NetOffice.WordApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -326,6 +357,9 @@ namespace NetOffice.WordApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

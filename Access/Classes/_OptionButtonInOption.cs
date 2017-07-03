@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.AccessApi
 {
 
@@ -28,9 +30,9 @@ namespace NetOffice.AccessApi
 
 	///<summary>
 	/// CoClass _OptionButtonInOption 
-	/// SupportByVersion Access, 9,10,11,12,14,15
+	/// SupportByVersion Access, 9,10,11,12,14,15,16
 	///</summary>
-	[SupportByVersionAttribute("Access", 9,10,11,12,14,15)]
+	[SupportByVersionAttribute("Access", 9,10,11,12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsCoClass)]
 	public class _OptionButtonInOption : _OptionButton,IEventBinding
 	{
@@ -46,6 +48,17 @@ namespace NetOffice.AccessApi
 		#endregion
 
 		#region Type Information
+
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
 
         private static Type _type;
 		
@@ -67,14 +80,14 @@ namespace NetOffice.AccessApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public _OptionButtonInOption(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public _OptionButtonInOption(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public _OptionButtonInOption(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public _OptionButtonInOption(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -84,7 +97,7 @@ namespace NetOffice.AccessApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _OptionButtonInOption(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public _OptionButtonInOption(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -93,20 +106,20 @@ namespace NetOffice.AccessApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _OptionButtonInOption(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public _OptionButtonInOption(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _OptionButtonInOption(COMObject replacedObject) : base(replacedObject)
+		public _OptionButtonInOption(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of _OptionButtonInOption 
+        /// Creates a new instance of _OptionButtonInOption 
         ///</summary>		
 		public _OptionButtonInOption():base("Access._OptionButtonInOption")
 		{
@@ -114,7 +127,7 @@ namespace NetOffice.AccessApi
 		}
 		
 		///<summary>
-        ///creates a new instance of _OptionButtonInOption
+        /// Creates a new instance of _OptionButtonInOption
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public _OptionButtonInOption(string progId):base(progId)
@@ -127,12 +140,12 @@ namespace NetOffice.AccessApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running Access._OptionButtonInOption objects from the running object table(ROT)
+        /// Returns all running Access._OptionButtonInOption objects from the environment/system
         /// </summary>
         /// <returns>an Access._OptionButtonInOption array</returns>
 		public static NetOffice.AccessApi._OptionButtonInOption[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("Access","_OptionButtonInOption");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Access","_OptionButtonInOption");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.AccessApi._OptionButtonInOption> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.AccessApi._OptionButtonInOption>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.AccessApi._OptionButtonInOption(null, proxy) );
@@ -140,12 +153,12 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-        /// returns a running Access._OptionButtonInOption object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running Access._OptionButtonInOption object from the environment/system.
         /// </summary>
         /// <returns>an Access._OptionButtonInOption object or null</returns>
 		public static NetOffice.AccessApi._OptionButtonInOption GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Access","_OptionButtonInOption", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Access","_OptionButtonInOption", false);
 			if(null != proxy)
 				return new NetOffice.AccessApi._OptionButtonInOption(null, proxy);
 			else
@@ -153,13 +166,13 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-        /// returns a running Access._OptionButtonInOption object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running Access._OptionButtonInOption object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an Access._OptionButtonInOption object or null</returns>
 		public static NetOffice.AccessApi._OptionButtonInOption GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Access","_OptionButtonInOption", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Access","_OptionButtonInOption", throwOnError);
 			if(null != proxy)
 				return new NetOffice.AccessApi._OptionButtonInOption(null, proxy);
 			else
@@ -170,14 +183,14 @@ namespace NetOffice.AccessApi
 		#region Events
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_GotFocusEventHandler _GotFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_GotFocusEventHandler GotFocusEvent
 		{
 			add
@@ -192,14 +205,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_LostFocusEventHandler _LostFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_LostFocusEventHandler LostFocusEvent
 		{
 			add
@@ -214,14 +227,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_MouseDownEventHandler _MouseDownEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_MouseDownEventHandler MouseDownEvent
 		{
 			add
@@ -236,14 +249,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_MouseMoveEventHandler _MouseMoveEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_MouseMoveEventHandler MouseMoveEvent
 		{
 			add
@@ -258,14 +271,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_MouseUpEventHandler _MouseUpEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_MouseUpEventHandler MouseUpEvent
 		{
 			add
@@ -280,14 +293,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_KeyDownEventHandler _KeyDownEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_KeyDownEventHandler KeyDownEvent
 		{
 			add
@@ -302,14 +315,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_KeyPressEventHandler _KeyPressEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_KeyPressEventHandler KeyPressEvent
 		{
 			add
@@ -324,14 +337,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 9,10,11,12,14,15
+		/// SupportByVersion Access, 9,10,11,12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_KeyUpEventHandler _KeyUpEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 9 10 11 12 14 15
+		/// SupportByVersion Access 9 10 11 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 9,10,11,12,14,15)]
+		[SupportByVersion("Access", 9,10,11,12,14,15,16)]
 		public event _OptionButtonInOption_KeyUpEventHandler KeyUpEvent
 		{
 			add
@@ -346,14 +359,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_ClickEventHandler _ClickEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_ClickEventHandler ClickEvent
 		{
 			add
@@ -368,14 +381,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_BeforeUpdateEventHandler _BeforeUpdateEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_BeforeUpdateEventHandler BeforeUpdateEvent
 		{
 			add
@@ -390,14 +403,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_AfterUpdateEventHandler _AfterUpdateEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_AfterUpdateEventHandler AfterUpdateEvent
 		{
 			add
@@ -412,14 +425,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_EnterEventHandler _EnterEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_EnterEventHandler EnterEvent
 		{
 			add
@@ -434,14 +447,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_ExitEventHandler _ExitEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_ExitEventHandler ExitEvent
 		{
 			add
@@ -456,14 +469,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access, 12,14,15
+		/// SupportByVersion Access, 12,14,15,16
 		/// </summary>
 		private event _OptionButtonInOption_DblClickEventHandler _DblClickEvent;
 
 		/// <summary>
-		/// SupportByVersion Access 12 14 15
+		/// SupportByVersion Access 12 14 15,16
 		/// </summary>
-		[SupportByVersion("Access", 12,14,15)]
+		[SupportByVersion("Access", 12,14,15,16)]
 		public event _OptionButtonInOption_DblClickEventHandler DblClickEvent
 		{
 			add
@@ -482,7 +495,7 @@ namespace NetOffice.AccessApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -510,6 +523,9 @@ namespace NetOffice.AccessApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -518,7 +534,10 @@ namespace NetOffice.AccessApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -538,6 +557,9 @@ namespace NetOffice.AccessApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -557,7 +579,10 @@ namespace NetOffice.AccessApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -576,8 +601,14 @@ namespace NetOffice.AccessApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -609,6 +640,9 @@ namespace NetOffice.AccessApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

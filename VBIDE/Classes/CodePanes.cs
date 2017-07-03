@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.VBIDEApi
 {
 
@@ -31,6 +33,17 @@ namespace NetOffice.VBIDEApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -51,14 +64,14 @@ namespace NetOffice.VBIDEApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public CodePanes(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public CodePanes(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public CodePanes(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public CodePanes(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +81,7 @@ namespace NetOffice.VBIDEApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public CodePanes(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public CodePanes(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +90,20 @@ namespace NetOffice.VBIDEApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public CodePanes(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public CodePanes(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public CodePanes(COMObject replacedObject) : base(replacedObject)
+		public CodePanes(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of CodePanes 
+        /// Creates a new instance of CodePanes 
         ///</summary>		
 		public CodePanes():base("VBIDE.CodePanes")
 		{
@@ -98,7 +111,7 @@ namespace NetOffice.VBIDEApi
 		}
 		
 		///<summary>
-        ///creates a new instance of CodePanes
+        /// Creates a new instance of CodePanes
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public CodePanes(string progId):base(progId)
@@ -111,12 +124,12 @@ namespace NetOffice.VBIDEApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running VBIDE.CodePanes objects from the running object table(ROT)
+        /// Returns all running VBIDE.CodePanes objects from the environment/system
         /// </summary>
         /// <returns>an VBIDE.CodePanes array</returns>
 		public static NetOffice.VBIDEApi.CodePanes[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("VBIDE","CodePanes");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("VBIDE","CodePanes");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.VBIDEApi.CodePanes> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.VBIDEApi.CodePanes>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.VBIDEApi.CodePanes(null, proxy) );
@@ -124,12 +137,12 @@ namespace NetOffice.VBIDEApi
 		}
 
 		/// <summary>
-        /// returns a running VBIDE.CodePanes object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running VBIDE.CodePanes object from the environment/system.
         /// </summary>
         /// <returns>an VBIDE.CodePanes object or null</returns>
 		public static NetOffice.VBIDEApi.CodePanes GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("VBIDE","CodePanes", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("VBIDE","CodePanes", false);
 			if(null != proxy)
 				return new NetOffice.VBIDEApi.CodePanes(null, proxy);
 			else
@@ -137,13 +150,13 @@ namespace NetOffice.VBIDEApi
 		}
 
 		/// <summary>
-        /// returns a running VBIDE.CodePanes object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running VBIDE.CodePanes object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an VBIDE.CodePanes object or null</returns>
 		public static NetOffice.VBIDEApi.CodePanes GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("VBIDE","CodePanes", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("VBIDE","CodePanes", throwOnError);
 			if(null != proxy)
 				return new NetOffice.VBIDEApi.CodePanes(null, proxy);
 			else
@@ -158,7 +171,7 @@ namespace NetOffice.VBIDEApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -175,6 +188,9 @@ namespace NetOffice.VBIDEApi
  
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +199,10 @@ namespace NetOffice.VBIDEApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +222,9 @@ namespace NetOffice.VBIDEApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +244,10 @@ namespace NetOffice.VBIDEApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +266,14 @@ namespace NetOffice.VBIDEApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,6 +305,9 @@ namespace NetOffice.VBIDEApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

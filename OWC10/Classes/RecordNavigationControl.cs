@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.OWC10Api
 {
 
@@ -33,6 +35,17 @@ namespace NetOffice.OWC10Api
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -53,14 +66,14 @@ namespace NetOffice.OWC10Api
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public RecordNavigationControl(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public RecordNavigationControl(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public RecordNavigationControl(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public RecordNavigationControl(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -70,7 +83,7 @@ namespace NetOffice.OWC10Api
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public RecordNavigationControl(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public RecordNavigationControl(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -79,20 +92,20 @@ namespace NetOffice.OWC10Api
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public RecordNavigationControl(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public RecordNavigationControl(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public RecordNavigationControl(COMObject replacedObject) : base(replacedObject)
+		public RecordNavigationControl(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of RecordNavigationControl 
+        /// Creates a new instance of RecordNavigationControl 
         ///</summary>		
 		public RecordNavigationControl():base("OWC10.RecordNavigationControl")
 		{
@@ -100,7 +113,7 @@ namespace NetOffice.OWC10Api
 		}
 		
 		///<summary>
-        ///creates a new instance of RecordNavigationControl
+        /// Creates a new instance of RecordNavigationControl
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public RecordNavigationControl(string progId):base(progId)
@@ -113,12 +126,12 @@ namespace NetOffice.OWC10Api
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running OWC10.RecordNavigationControl objects from the running object table(ROT)
+        /// Returns all running OWC10.RecordNavigationControl objects from the environment/system
         /// </summary>
         /// <returns>an OWC10.RecordNavigationControl array</returns>
 		public static NetOffice.OWC10Api.RecordNavigationControl[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("OWC10","RecordNavigationControl");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("OWC10","RecordNavigationControl");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.RecordNavigationControl> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.RecordNavigationControl>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.OWC10Api.RecordNavigationControl(null, proxy) );
@@ -126,12 +139,12 @@ namespace NetOffice.OWC10Api
 		}
 
 		/// <summary>
-        /// returns a running OWC10.RecordNavigationControl object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running OWC10.RecordNavigationControl object from the environment/system.
         /// </summary>
         /// <returns>an OWC10.RecordNavigationControl object or null</returns>
 		public static NetOffice.OWC10Api.RecordNavigationControl GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("OWC10","RecordNavigationControl", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","RecordNavigationControl", false);
 			if(null != proxy)
 				return new NetOffice.OWC10Api.RecordNavigationControl(null, proxy);
 			else
@@ -139,13 +152,13 @@ namespace NetOffice.OWC10Api
 		}
 
 		/// <summary>
-        /// returns a running OWC10.RecordNavigationControl object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running OWC10.RecordNavigationControl object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an OWC10.RecordNavigationControl object or null</returns>
 		public static NetOffice.OWC10Api.RecordNavigationControl GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("OWC10","RecordNavigationControl", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","RecordNavigationControl", throwOnError);
 			if(null != proxy)
 				return new NetOffice.OWC10Api.RecordNavigationControl(null, proxy);
 			else
@@ -182,7 +195,7 @@ namespace NetOffice.OWC10Api
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -204,6 +217,9 @@ namespace NetOffice.OWC10Api
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -212,7 +228,10 @@ namespace NetOffice.OWC10Api
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -232,6 +251,9 @@ namespace NetOffice.OWC10Api
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -251,7 +273,10 @@ namespace NetOffice.OWC10Api
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -270,8 +295,14 @@ namespace NetOffice.OWC10Api
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -303,6 +334,9 @@ namespace NetOffice.OWC10Api
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

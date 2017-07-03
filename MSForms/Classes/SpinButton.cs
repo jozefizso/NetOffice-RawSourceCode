@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.MSFormsApi
 {
 
@@ -41,6 +43,17 @@ namespace NetOffice.MSFormsApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -61,14 +74,14 @@ namespace NetOffice.MSFormsApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public SpinButton(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public SpinButton(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public SpinButton(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public SpinButton(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -78,7 +91,7 @@ namespace NetOffice.MSFormsApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public SpinButton(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public SpinButton(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -87,20 +100,20 @@ namespace NetOffice.MSFormsApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public SpinButton(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public SpinButton(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public SpinButton(COMObject replacedObject) : base(replacedObject)
+		public SpinButton(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of SpinButton 
+        /// Creates a new instance of SpinButton 
         ///</summary>		
 		public SpinButton():base("MSForms.SpinButton")
 		{
@@ -108,7 +121,7 @@ namespace NetOffice.MSFormsApi
 		}
 		
 		///<summary>
-        ///creates a new instance of SpinButton
+        /// Creates a new instance of SpinButton
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public SpinButton(string progId):base(progId)
@@ -121,12 +134,12 @@ namespace NetOffice.MSFormsApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running MSForms.SpinButton objects from the running object table(ROT)
+        /// Returns all running MSForms.SpinButton objects from the environment/system
         /// </summary>
         /// <returns>an MSForms.SpinButton array</returns>
 		public static NetOffice.MSFormsApi.SpinButton[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("MSForms","SpinButton");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSForms","SpinButton");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.SpinButton> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.SpinButton>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.MSFormsApi.SpinButton(null, proxy) );
@@ -134,12 +147,12 @@ namespace NetOffice.MSFormsApi
 		}
 
 		/// <summary>
-        /// returns a running MSForms.SpinButton object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running MSForms.SpinButton object from the environment/system.
         /// </summary>
         /// <returns>an MSForms.SpinButton object or null</returns>
 		public static NetOffice.MSFormsApi.SpinButton GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSForms","SpinButton", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","SpinButton", false);
 			if(null != proxy)
 				return new NetOffice.MSFormsApi.SpinButton(null, proxy);
 			else
@@ -147,13 +160,13 @@ namespace NetOffice.MSFormsApi
 		}
 
 		/// <summary>
-        /// returns a running MSForms.SpinButton object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running MSForms.SpinButton object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an MSForms.SpinButton object or null</returns>
 		public static NetOffice.MSFormsApi.SpinButton GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSForms","SpinButton", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","SpinButton", throwOnError);
 			if(null != proxy)
 				return new NetOffice.MSFormsApi.SpinButton(null, proxy);
 			else
@@ -366,7 +379,7 @@ namespace NetOffice.MSFormsApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -388,6 +401,9 @@ namespace NetOffice.MSFormsApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -396,7 +412,10 @@ namespace NetOffice.MSFormsApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -416,6 +435,9 @@ namespace NetOffice.MSFormsApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -435,7 +457,10 @@ namespace NetOffice.MSFormsApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -454,8 +479,14 @@ namespace NetOffice.MSFormsApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -487,6 +518,9 @@ namespace NetOffice.MSFormsApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.MSHTMLApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
@@ -31,6 +32,17 @@ namespace NetOffice.MSHTMLApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -51,14 +63,14 @@ namespace NetOffice.MSHTMLApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public COpsProfile(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public COpsProfile(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public COpsProfile(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public COpsProfile(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +80,7 @@ namespace NetOffice.MSHTMLApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public COpsProfile(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public COpsProfile(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +89,20 @@ namespace NetOffice.MSHTMLApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public COpsProfile(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public COpsProfile(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public COpsProfile(COMObject replacedObject) : base(replacedObject)
+		public COpsProfile(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of COpsProfile 
+        /// Creates a new instance of COpsProfile 
         ///</summary>		
 		public COpsProfile():base("MSHTML.COpsProfile")
 		{
@@ -98,7 +110,7 @@ namespace NetOffice.MSHTMLApi
 		}
 		
 		///<summary>
-        ///creates a new instance of COpsProfile
+        /// Creates a new instance of COpsProfile
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public COpsProfile(string progId):base(progId)
@@ -111,12 +123,12 @@ namespace NetOffice.MSHTMLApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running MSHTML.COpsProfile objects from the running object table(ROT)
+        /// Returns all running MSHTML.COpsProfile objects from the environment/system
         /// </summary>
         /// <returns>an MSHTML.COpsProfile array</returns>
 		public static NetOffice.MSHTMLApi.COpsProfile[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("MSHTML","COpsProfile");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSHTML","COpsProfile");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSHTMLApi.COpsProfile> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSHTMLApi.COpsProfile>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.MSHTMLApi.COpsProfile(null, proxy) );
@@ -124,12 +136,12 @@ namespace NetOffice.MSHTMLApi
 		}
 
 		/// <summary>
-        /// returns a running MSHTML.COpsProfile object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running MSHTML.COpsProfile object from the environment/system.
         /// </summary>
         /// <returns>an MSHTML.COpsProfile object or null</returns>
 		public static NetOffice.MSHTMLApi.COpsProfile GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSHTML","COpsProfile", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSHTML","COpsProfile", false);
 			if(null != proxy)
 				return new NetOffice.MSHTMLApi.COpsProfile(null, proxy);
 			else
@@ -137,13 +149,13 @@ namespace NetOffice.MSHTMLApi
 		}
 
 		/// <summary>
-        /// returns a running MSHTML.COpsProfile object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running MSHTML.COpsProfile object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an MSHTML.COpsProfile object or null</returns>
 		public static NetOffice.MSHTMLApi.COpsProfile GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSHTML","COpsProfile", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSHTML","COpsProfile", throwOnError);
 			if(null != proxy)
 				return new NetOffice.MSHTMLApi.COpsProfile(null, proxy);
 			else
@@ -158,7 +170,7 @@ namespace NetOffice.MSHTMLApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -175,6 +187,9 @@ namespace NetOffice.MSHTMLApi
  
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +198,10 @@ namespace NetOffice.MSHTMLApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +221,9 @@ namespace NetOffice.MSHTMLApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +243,10 @@ namespace NetOffice.MSHTMLApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +265,14 @@ namespace NetOffice.MSHTMLApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,6 +304,9 @@ namespace NetOffice.MSHTMLApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

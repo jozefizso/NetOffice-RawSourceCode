@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.ExcelApi
 {
 
@@ -16,10 +18,10 @@ namespace NetOffice.ExcelApi
 
 	///<summary>
 	/// CoClass OLEObject 
-	/// SupportByVersion Excel, 9,10,11,12,14,15
+	/// SupportByVersion Excel, 9,10,11,12,14,15,16
 	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff838421.aspx
 	///</summary>
-	[SupportByVersionAttribute("Excel", 9,10,11,12,14,15)]
+	[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsCoClass)]
 	public class OLEObject : _OLEObject,IEventBinding
 	{
@@ -34,6 +36,17 @@ namespace NetOffice.ExcelApi
 		#endregion
 
 		#region Type Information
+
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
 
         private static Type _type;
 		
@@ -55,14 +68,14 @@ namespace NetOffice.ExcelApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public OLEObject(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public OLEObject(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public OLEObject(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public OLEObject(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -72,7 +85,7 @@ namespace NetOffice.ExcelApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEObject(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public OLEObject(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -81,20 +94,20 @@ namespace NetOffice.ExcelApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEObject(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public OLEObject(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public OLEObject(COMObject replacedObject) : base(replacedObject)
+		public OLEObject(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of OLEObject 
+        /// Creates a new instance of OLEObject 
         ///</summary>		
 		public OLEObject():base("Excel.OLEObject")
 		{
@@ -102,7 +115,7 @@ namespace NetOffice.ExcelApi
 		}
 		
 		///<summary>
-        ///creates a new instance of OLEObject
+        /// Creates a new instance of OLEObject
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public OLEObject(string progId):base(progId)
@@ -115,12 +128,12 @@ namespace NetOffice.ExcelApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running Excel.OLEObject objects from the running object table(ROT)
+        /// Returns all running Excel.OLEObject objects from the environment/system
         /// </summary>
         /// <returns>an Excel.OLEObject array</returns>
 		public static NetOffice.ExcelApi.OLEObject[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("Excel","OLEObject");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Excel","OLEObject");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.ExcelApi.OLEObject> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.ExcelApi.OLEObject>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.ExcelApi.OLEObject(null, proxy) );
@@ -128,12 +141,12 @@ namespace NetOffice.ExcelApi
 		}
 
 		/// <summary>
-        /// returns a running Excel.OLEObject object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running Excel.OLEObject object from the environment/system.
         /// </summary>
         /// <returns>an Excel.OLEObject object or null</returns>
 		public static NetOffice.ExcelApi.OLEObject GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Excel","OLEObject", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Excel","OLEObject", false);
 			if(null != proxy)
 				return new NetOffice.ExcelApi.OLEObject(null, proxy);
 			else
@@ -141,13 +154,13 @@ namespace NetOffice.ExcelApi
 		}
 
 		/// <summary>
-        /// returns a running Excel.OLEObject object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running Excel.OLEObject object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an Excel.OLEObject object or null</returns>
 		public static NetOffice.ExcelApi.OLEObject GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("Excel","OLEObject", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("Excel","OLEObject", throwOnError);
 			if(null != proxy)
 				return new NetOffice.ExcelApi.OLEObject(null, proxy);
 			else
@@ -158,15 +171,15 @@ namespace NetOffice.ExcelApi
 		#region Events
 
 		/// <summary>
-		/// SupportByVersion Excel, 9,10,11,12,14,15
+		/// SupportByVersion Excel, 9,10,11,12,14,15,16
 		/// </summary>
 		private event OLEObject_GotFocusEventHandler _GotFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Excel 9 10 11 12 14 15
+		/// SupportByVersion Excel 9 10 11 12 14 15,16
 		/// </summary>
 		///<remarks> MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff195806.aspx </remarks>
-		[SupportByVersion("Excel", 9,10,11,12,14,15)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		public event OLEObject_GotFocusEventHandler GotFocusEvent
 		{
 			add
@@ -181,15 +194,15 @@ namespace NetOffice.ExcelApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Excel, 9,10,11,12,14,15
+		/// SupportByVersion Excel, 9,10,11,12,14,15,16
 		/// </summary>
 		private event OLEObject_LostFocusEventHandler _LostFocusEvent;
 
 		/// <summary>
-		/// SupportByVersion Excel 9 10 11 12 14 15
+		/// SupportByVersion Excel 9 10 11 12 14 15,16
 		/// </summary>
 		///<remarks> MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff836813.aspx </remarks>
-		[SupportByVersion("Excel", 9,10,11,12,14,15)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		public event OLEObject_LostFocusEventHandler LostFocusEvent
 		{
 			add
@@ -208,7 +221,7 @@ namespace NetOffice.ExcelApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -230,6 +243,9 @@ namespace NetOffice.ExcelApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -238,7 +254,10 @@ namespace NetOffice.ExcelApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -258,6 +277,9 @@ namespace NetOffice.ExcelApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -277,7 +299,10 @@ namespace NetOffice.ExcelApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -296,8 +321,14 @@ namespace NetOffice.ExcelApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -329,6 +360,9 @@ namespace NetOffice.ExcelApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -10,9 +10,9 @@ namespace NetOffice.AccessApi
 {
 	///<summary>
 	/// DispatchInterface _SqmProxyReceiver 
-	/// SupportByVersion Access, 15
+	/// SupportByVersion Access, 15, 16
 	///</summary>
-	[SupportByVersionAttribute("Access", 15)]
+	[SupportByVersionAttribute("Access", 15, 16)]
 	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
 	public class _SqmProxyReceiver : COMObject
 	{
@@ -40,7 +40,7 @@ namespace NetOffice.AccessApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public _SqmProxyReceiver(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public _SqmProxyReceiver(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -48,7 +48,7 @@ namespace NetOffice.AccessApi
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _SqmProxyReceiver(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public _SqmProxyReceiver(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -57,7 +57,7 @@ namespace NetOffice.AccessApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _SqmProxyReceiver(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public _SqmProxyReceiver(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
@@ -66,13 +66,13 @@ namespace NetOffice.AccessApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _SqmProxyReceiver(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public _SqmProxyReceiver(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public _SqmProxyReceiver(COMObject replacedObject) : base(replacedObject)
+		public _SqmProxyReceiver(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 		
@@ -96,13 +96,13 @@ namespace NetOffice.AccessApi
 		#region Methods
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
 		/// <param name="dwValue">UIntPtr dwValue</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void SetDataPoint(UIntPtr id, UIntPtr dwValue)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dwValue);
@@ -110,13 +110,13 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
 		/// <param name="dwValue">UIntPtr dwValue</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void SetDataPointMax(UIntPtr id, UIntPtr dwValue)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dwValue);
@@ -124,13 +124,13 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
 		/// <param name="dwValue">UIntPtr dwValue</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void SetDataPointMin(UIntPtr id, UIntPtr dwValue)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dwValue);
@@ -138,7 +138,7 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
@@ -146,7 +146,7 @@ namespace NetOffice.AccessApi
 		/// <param name="width">UIntPtr Width</param>
 		/// <param name="maxRows">UIntPtr maxRows</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void CreateStream(UIntPtr id, UIntPtr type, UIntPtr width, UIntPtr maxRows)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, type, width, maxRows);
@@ -154,13 +154,13 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
 		/// <param name="dw1">UIntPtr dw1</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void AddStreamData1(UIntPtr id, UIntPtr dw1)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dw1);
@@ -168,14 +168,14 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
 		/// <param name="dw1">UIntPtr dw1</param>
 		/// <param name="dw2">UIntPtr dw2</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void AddStreamData2(UIntPtr id, UIntPtr dw1, UIntPtr dw2)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dw1, dw2);
@@ -183,7 +183,7 @@ namespace NetOffice.AccessApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Access 15
+		/// SupportByVersion Access 15,16
 		/// 
 		/// </summary>
 		/// <param name="id">UIntPtr id</param>
@@ -196,7 +196,7 @@ namespace NetOffice.AccessApi
 		/// <param name="dw7">UIntPtr dw7</param>
 		/// <param name="dw8">UIntPtr dw8</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 15)]
+		[SupportByVersionAttribute("Access", 15, 16)]
 		public void AddStreamData8(UIntPtr id, UIntPtr dw1, UIntPtr dw2, UIntPtr dw3, UIntPtr dw4, UIntPtr dw5, UIntPtr dw6, UIntPtr dw7, UIntPtr dw8)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(id, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8);

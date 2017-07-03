@@ -8,7 +8,7 @@ namespace NetOffice.Tools
     /// <summary>
     /// Specify an embedded XML File for RibbonUI
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Class)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
     public class CustomUIAttribute : System.Attribute
     {
         /// <summary>
@@ -63,12 +63,8 @@ namespace NetOffice.Tools
 
             if (useAssemblyNamespace)
             {
-                string result = "";
-                string[] validation = new string[] { resourcePath.Substring(0, 1), assemblyNamespace.Substring(resourcePath.Length - 1) };
-                if (validation[0].Equals(".", StringComparison.InvariantCultureIgnoreCase) || validation[1].Equals(".", StringComparison.InvariantCultureIgnoreCase))
-                    result = assemblyNamespace + resourcePath;
-                else
-                    result = assemblyNamespace + "." + resourcePath;
+                string result = assemblyNamespace + "." + resourcePath;
+                result = result.Replace("..", ".");
                 return result;
             }
             else

@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.DAOApi
 {
 
@@ -31,6 +33,17 @@ namespace NetOffice.DAOApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -51,14 +64,14 @@ namespace NetOffice.DAOApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public PrivDBEngine(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public PrivDBEngine(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public PrivDBEngine(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public PrivDBEngine(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +81,7 @@ namespace NetOffice.DAOApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PrivDBEngine(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public PrivDBEngine(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +90,20 @@ namespace NetOffice.DAOApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PrivDBEngine(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public PrivDBEngine(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public PrivDBEngine(COMObject replacedObject) : base(replacedObject)
+		public PrivDBEngine(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of PrivDBEngine 
+        /// Creates a new instance of PrivDBEngine 
         ///</summary>		
 		public PrivDBEngine():base("DAO.PrivDBEngine")
 		{
@@ -98,7 +111,7 @@ namespace NetOffice.DAOApi
 		}
 		
 		///<summary>
-        ///creates a new instance of PrivDBEngine
+        /// Creates a new instance of PrivDBEngine
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public PrivDBEngine(string progId):base(progId)
@@ -111,12 +124,12 @@ namespace NetOffice.DAOApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running DAO.PrivDBEngine objects from the running object table(ROT)
+        /// Returns all running DAO.PrivDBEngine objects from the environment/system
         /// </summary>
         /// <returns>an DAO.PrivDBEngine array</returns>
 		public static NetOffice.DAOApi.PrivDBEngine[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("DAO","PrivDBEngine");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("DAO","PrivDBEngine");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.DAOApi.PrivDBEngine> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.DAOApi.PrivDBEngine>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.DAOApi.PrivDBEngine(null, proxy) );
@@ -124,12 +137,12 @@ namespace NetOffice.DAOApi
 		}
 
 		/// <summary>
-        /// returns a running DAO.PrivDBEngine object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running DAO.PrivDBEngine object from the environment/system.
         /// </summary>
         /// <returns>an DAO.PrivDBEngine object or null</returns>
 		public static NetOffice.DAOApi.PrivDBEngine GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("DAO","PrivDBEngine", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("DAO","PrivDBEngine", false);
 			if(null != proxy)
 				return new NetOffice.DAOApi.PrivDBEngine(null, proxy);
 			else
@@ -137,13 +150,13 @@ namespace NetOffice.DAOApi
 		}
 
 		/// <summary>
-        /// returns a running DAO.PrivDBEngine object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running DAO.PrivDBEngine object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an DAO.PrivDBEngine object or null</returns>
 		public static NetOffice.DAOApi.PrivDBEngine GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("DAO","PrivDBEngine", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("DAO","PrivDBEngine", throwOnError);
 			if(null != proxy)
 				return new NetOffice.DAOApi.PrivDBEngine(null, proxy);
 			else
@@ -158,7 +171,7 @@ namespace NetOffice.DAOApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -171,10 +184,11 @@ namespace NetOffice.DAOApi
 	
             if (null == _activeSinkId)
 				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, null);
-
- 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +197,10 @@ namespace NetOffice.DAOApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +220,9 @@ namespace NetOffice.DAOApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +242,10 @@ namespace NetOffice.DAOApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +264,14 @@ namespace NetOffice.DAOApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,10 +303,12 @@ namespace NetOffice.DAOApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {
-
 			_connectPoint = null;
 		}
         

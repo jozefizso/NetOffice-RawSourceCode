@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.MSProjectApi
 {
 
@@ -88,6 +90,17 @@ namespace NetOffice.MSProjectApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -108,7 +121,7 @@ namespace NetOffice.MSProjectApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Application(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public Application(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 			GlobalHelperModules.GlobalModule.Instance = this;
@@ -116,7 +129,7 @@ namespace NetOffice.MSProjectApi
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Application(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public Application(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 			GlobalHelperModules.GlobalModule.Instance = this;
@@ -127,7 +140,7 @@ namespace NetOffice.MSProjectApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Application(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public Application(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -136,20 +149,20 @@ namespace NetOffice.MSProjectApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Application(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public Application(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Application(COMObject replacedObject) : base(replacedObject)
+		public Application(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of Application 
+        /// Creates a new instance of Application 
         ///</summary>		
 		public Application():base("MSProject.Application")
 		{
@@ -158,7 +171,7 @@ namespace NetOffice.MSProjectApi
 		}
 		
 		///<summary>
-        ///creates a new instance of Application
+        /// Creates a new instance of Application
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public Application(string progId):base(progId)
@@ -193,12 +206,12 @@ namespace NetOffice.MSProjectApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running MSProject.Application objects from the running object table(ROT)
+        /// Returns all running MSProject.Application objects from the environment/system
         /// </summary>
         /// <returns>an MSProject.Application array</returns>
 		public static NetOffice.MSProjectApi.Application[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("MSProject","Application");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSProject","Application");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSProjectApi.Application> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSProjectApi.Application>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.MSProjectApi.Application(null, proxy) );
@@ -206,12 +219,12 @@ namespace NetOffice.MSProjectApi
 		}
 
 		/// <summary>
-        /// returns a running MSProject.Application object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running MSProject.Application object from the environment/system.
         /// </summary>
         /// <returns>an MSProject.Application object or null</returns>
 		public static NetOffice.MSProjectApi.Application GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSProject","Application", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSProject","Application", false);
 			if(null != proxy)
 				return new NetOffice.MSProjectApi.Application(null, proxy);
 			else
@@ -219,13 +232,13 @@ namespace NetOffice.MSProjectApi
 		}
 
 		/// <summary>
-        /// returns a running MSProject.Application object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running MSProject.Application object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an MSProject.Application object or null</returns>
 		public static NetOffice.MSProjectApi.Application GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSProject","Application", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSProject","Application", throwOnError);
 			if(null != proxy)
 				return new NetOffice.MSProjectApi.Application(null, proxy);
 			else
@@ -1450,7 +1463,7 @@ namespace NetOffice.MSProjectApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -1472,6 +1485,9 @@ namespace NetOffice.MSProjectApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -1480,7 +1496,10 @@ namespace NetOffice.MSProjectApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -1500,6 +1519,9 @@ namespace NetOffice.MSProjectApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -1519,7 +1541,10 @@ namespace NetOffice.MSProjectApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -1538,8 +1563,14 @@ namespace NetOffice.MSProjectApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -1571,6 +1602,9 @@ namespace NetOffice.MSProjectApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

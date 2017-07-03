@@ -18,12 +18,12 @@ using NetOffice;
 [assembly: AssemblyCopyright("Sebastian Lange")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.7.3.0")]
-[assembly: AssemblyFileVersion("1.7.3.0")]
+[assembly: AssemblyVersion("1.7.4.0")]
+[assembly: AssemblyFileVersion("1.7.4.0")]
 [assembly: PrimaryInteropAssembly(1, 0)]
 [assembly: ImportedFromTypeLib("MSHTML")]
 [assembly: Guid("3050F1C5-98B5-11CF-BB82-00AA00BDCE0B")]
-[assembly: NetOfficeAssemblyAttribute("1.6.0.0")]
+[assembly: NetOfficeAssemblyAttribute("1.7.4.0")]
 [assembly: Dependency("NetOffice.dll", LoadHint.Default)]
 
 

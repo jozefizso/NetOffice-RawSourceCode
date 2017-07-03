@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.MSComctlLibApi
 {
 
@@ -31,6 +33,17 @@ namespace NetOffice.MSComctlLibApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -51,14 +64,14 @@ namespace NetOffice.MSComctlLibApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Node(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public Node(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Node(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public Node(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +81,7 @@ namespace NetOffice.MSComctlLibApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Node(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public Node(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +90,20 @@ namespace NetOffice.MSComctlLibApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Node(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public Node(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Node(COMObject replacedObject) : base(replacedObject)
+		public Node(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of Node 
+        /// Creates a new instance of Node 
         ///</summary>		
 		public Node():base("MSComctlLib.Node")
 		{
@@ -98,7 +111,7 @@ namespace NetOffice.MSComctlLibApi
 		}
 		
 		///<summary>
-        ///creates a new instance of Node
+        /// Creates a new instance of Node
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public Node(string progId):base(progId)
@@ -111,12 +124,12 @@ namespace NetOffice.MSComctlLibApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running MSComctlLib.Node objects from the running object table(ROT)
+        /// Returns all running MSComctlLib.Node objects from the environment/system
         /// </summary>
         /// <returns>an MSComctlLib.Node array</returns>
 		public static NetOffice.MSComctlLibApi.Node[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("MSComctlLib","Node");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSComctlLib","Node");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSComctlLibApi.Node> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSComctlLibApi.Node>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.MSComctlLibApi.Node(null, proxy) );
@@ -124,12 +137,12 @@ namespace NetOffice.MSComctlLibApi
 		}
 
 		/// <summary>
-        /// returns a running MSComctlLib.Node object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running MSComctlLib.Node object from the environment/system.
         /// </summary>
         /// <returns>an MSComctlLib.Node object or null</returns>
 		public static NetOffice.MSComctlLibApi.Node GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSComctlLib","Node", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSComctlLib","Node", false);
 			if(null != proxy)
 				return new NetOffice.MSComctlLibApi.Node(null, proxy);
 			else
@@ -137,13 +150,13 @@ namespace NetOffice.MSComctlLibApi
 		}
 
 		/// <summary>
-        /// returns a running MSComctlLib.Node object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running MSComctlLib.Node object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an MSComctlLib.Node object or null</returns>
 		public static NetOffice.MSComctlLibApi.Node GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("MSComctlLib","Node", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSComctlLib","Node", throwOnError);
 			if(null != proxy)
 				return new NetOffice.MSComctlLibApi.Node(null, proxy);
 			else
@@ -158,7 +171,7 @@ namespace NetOffice.MSComctlLibApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -175,6 +188,9 @@ namespace NetOffice.MSComctlLibApi
  
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +199,10 @@ namespace NetOffice.MSComctlLibApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +222,9 @@ namespace NetOffice.MSComctlLibApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +244,10 @@ namespace NetOffice.MSComctlLibApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +266,14 @@ namespace NetOffice.MSComctlLibApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,6 +305,9 @@ namespace NetOffice.MSComctlLibApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

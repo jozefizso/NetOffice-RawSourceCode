@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.PowerPointApi
 {
 
@@ -14,10 +16,10 @@ namespace NetOffice.PowerPointApi
 
 	///<summary>
 	/// CoClass Slide 
-	/// SupportByVersion PowerPoint, 9,10,11,12,14,15
+	/// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
 	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff745958.aspx
 	///</summary>
-	[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15)]
+	[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsCoClass)]
 	public class Slide : _Slide,IEventBinding
 	{
@@ -32,6 +34,17 @@ namespace NetOffice.PowerPointApi
 		#endregion
 
 		#region Type Information
+
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
 
         private static Type _type;
 		
@@ -53,14 +66,14 @@ namespace NetOffice.PowerPointApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Slide(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public Slide(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Slide(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public Slide(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -70,7 +83,7 @@ namespace NetOffice.PowerPointApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Slide(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public Slide(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -79,20 +92,20 @@ namespace NetOffice.PowerPointApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Slide(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public Slide(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Slide(COMObject replacedObject) : base(replacedObject)
+		public Slide(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of Slide 
+        /// Creates a new instance of Slide 
         ///</summary>		
 		public Slide():base("PowerPoint.Slide")
 		{
@@ -100,7 +113,7 @@ namespace NetOffice.PowerPointApi
 		}
 		
 		///<summary>
-        ///creates a new instance of Slide
+        /// Creates a new instance of Slide
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public Slide(string progId):base(progId)
@@ -113,12 +126,12 @@ namespace NetOffice.PowerPointApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running PowerPoint.Slide objects from the running object table(ROT)
+        /// Returns all running PowerPoint.Slide objects from the environment/system
         /// </summary>
         /// <returns>an PowerPoint.Slide array</returns>
 		public static NetOffice.PowerPointApi.Slide[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("PowerPoint","Slide");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("PowerPoint","Slide");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.Slide> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.Slide>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.PowerPointApi.Slide(null, proxy) );
@@ -126,12 +139,12 @@ namespace NetOffice.PowerPointApi
 		}
 
 		/// <summary>
-        /// returns a running PowerPoint.Slide object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running PowerPoint.Slide object from the environment/system.
         /// </summary>
         /// <returns>an PowerPoint.Slide object or null</returns>
 		public static NetOffice.PowerPointApi.Slide GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("PowerPoint","Slide", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","Slide", false);
 			if(null != proxy)
 				return new NetOffice.PowerPointApi.Slide(null, proxy);
 			else
@@ -139,13 +152,13 @@ namespace NetOffice.PowerPointApi
 		}
 
 		/// <summary>
-        /// returns a running PowerPoint.Slide object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running PowerPoint.Slide object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an PowerPoint.Slide object or null</returns>
 		public static NetOffice.PowerPointApi.Slide GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("PowerPoint","Slide", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","Slide", throwOnError);
 			if(null != proxy)
 				return new NetOffice.PowerPointApi.Slide(null, proxy);
 			else
@@ -160,7 +173,7 @@ namespace NetOffice.PowerPointApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -182,6 +195,9 @@ namespace NetOffice.PowerPointApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -190,7 +206,10 @@ namespace NetOffice.PowerPointApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -210,6 +229,9 @@ namespace NetOffice.PowerPointApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -229,7 +251,10 @@ namespace NetOffice.PowerPointApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -248,8 +273,14 @@ namespace NetOffice.PowerPointApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -281,6 +312,9 @@ namespace NetOffice.PowerPointApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

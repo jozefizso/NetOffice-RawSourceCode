@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
@@ -10,9 +10,9 @@ namespace NetOffice.VisioApi
 {
 	///<summary>
 	/// Interface LPVISIOREPLACESHAPESEVENT 
-	/// SupportByVersion Visio, 15
+	/// SupportByVersion Visio, 15, 16
 	///</summary>
-	[SupportByVersionAttribute("Visio", 15)]
+	[SupportByVersionAttribute("Visio", 15, 16)]
 	[EntityTypeAttribute(EntityType.IsInterface)]
 	public class LPVISIOREPLACESHAPESEVENT : COMObject
 	{
@@ -40,7 +40,7 @@ namespace NetOffice.VisioApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public LPVISIOREPLACESHAPESEVENT(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public LPVISIOREPLACESHAPESEVENT(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -48,7 +48,7 @@ namespace NetOffice.VisioApi
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public LPVISIOREPLACESHAPESEVENT(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public LPVISIOREPLACESHAPESEVENT(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -57,7 +57,7 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public LPVISIOREPLACESHAPESEVENT(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public LPVISIOREPLACESHAPESEVENT(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
@@ -66,13 +66,13 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public LPVISIOREPLACESHAPESEVENT(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public LPVISIOREPLACESHAPESEVENT(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public LPVISIOREPLACESHAPESEVENT(COMObject replacedObject) : base(replacedObject)
+		public LPVISIOREPLACESHAPESEVENT(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 		
@@ -92,10 +92,10 @@ namespace NetOffice.VisioApi
 		#region Properties
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVApplication Application
 		{
 			get
@@ -108,10 +108,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public Int16 ObjectType
 		{
 			get
@@ -123,27 +123,27 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public object ReplacementMaster
 		{
 			get
 			{
 				object[] paramsArray = null;
 				object returnItem = Invoker.PropertyGet(this, "ReplacementMaster", paramsArray);
-				COMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
+				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
 				return newObject;
 			}
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public NetOffice.VisioApi.IVSelection SelectionSource
 		{
 			get
@@ -156,10 +156,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public Int32 ReplaceFlags
 		{
 			get
@@ -171,10 +171,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 15
+		/// SupportByVersion Visio 15,16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 15)]
+		[SupportByVersionAttribute("Visio", 15, 16)]
 		public Int16 Stat
 		{
 			get

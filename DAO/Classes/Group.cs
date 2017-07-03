@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.DAOApi
 {
 
@@ -31,6 +33,17 @@ namespace NetOffice.DAOApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -51,14 +64,14 @@ namespace NetOffice.DAOApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Group(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public Group(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Group(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public Group(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -68,7 +81,7 @@ namespace NetOffice.DAOApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Group(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public Group(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -77,20 +90,20 @@ namespace NetOffice.DAOApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Group(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public Group(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Group(COMObject replacedObject) : base(replacedObject)
+		public Group(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of Group 
+        /// Creates a new instance of Group 
         ///</summary>		
 		public Group():base("DAO.Group")
 		{
@@ -98,7 +111,7 @@ namespace NetOffice.DAOApi
 		}
 		
 		///<summary>
-        ///creates a new instance of Group
+        /// Creates a new instance of Group
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public Group(string progId):base(progId)
@@ -111,12 +124,12 @@ namespace NetOffice.DAOApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running DAO.Group objects from the running object table(ROT)
+        /// Returns all running DAO.Group objects from the environment/system
         /// </summary>
         /// <returns>an DAO.Group array</returns>
 		public static NetOffice.DAOApi.Group[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("DAO","Group");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("DAO","Group");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.DAOApi.Group> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.DAOApi.Group>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.DAOApi.Group(null, proxy) );
@@ -124,12 +137,12 @@ namespace NetOffice.DAOApi
 		}
 
 		/// <summary>
-        /// returns a running DAO.Group object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running DAO.Group object from the environment/system.
         /// </summary>
         /// <returns>an DAO.Group object or null</returns>
 		public static NetOffice.DAOApi.Group GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("DAO","Group", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("DAO","Group", false);
 			if(null != proxy)
 				return new NetOffice.DAOApi.Group(null, proxy);
 			else
@@ -137,13 +150,13 @@ namespace NetOffice.DAOApi
 		}
 
 		/// <summary>
-        /// returns a running DAO.Group object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running DAO.Group object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an DAO.Group object or null</returns>
 		public static NetOffice.DAOApi.Group GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("DAO","Group", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("DAO","Group", throwOnError);
 			if(null != proxy)
 				return new NetOffice.DAOApi.Group(null, proxy);
 			else
@@ -158,7 +171,7 @@ namespace NetOffice.DAOApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -175,6 +188,9 @@ namespace NetOffice.DAOApi
  
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -183,7 +199,10 @@ namespace NetOffice.DAOApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -203,6 +222,9 @@ namespace NetOffice.DAOApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -222,7 +244,10 @@ namespace NetOffice.DAOApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -241,8 +266,14 @@ namespace NetOffice.DAOApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -274,6 +305,9 @@ namespace NetOffice.DAOApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

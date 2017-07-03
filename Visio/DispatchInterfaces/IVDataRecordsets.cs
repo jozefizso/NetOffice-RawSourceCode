@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -11,9 +11,9 @@ namespace NetOffice.VisioApi
 {
 	///<summary>
 	/// DispatchInterface IVDataRecordsets 
-	/// SupportByVersion Visio, 12,14,15
+	/// SupportByVersion Visio, 12,14,15,16
 	///</summary>
-	[SupportByVersionAttribute("Visio", 12,14,15)]
+	[SupportByVersionAttribute("Visio", 12,14,15,16)]
 	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
 	public class IVDataRecordsets : COMObject ,IEnumerable<NetOffice.VisioApi.IVDataRecordset>
 	{
@@ -41,7 +41,7 @@ namespace NetOffice.VisioApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public IVDataRecordsets(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public IVDataRecordsets(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
@@ -49,7 +49,7 @@ namespace NetOffice.VisioApi
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVDataRecordsets(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public IVDataRecordsets(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 		}
 		
@@ -58,7 +58,7 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVDataRecordsets(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public IVDataRecordsets(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 
 		}
@@ -67,13 +67,13 @@ namespace NetOffice.VisioApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVDataRecordsets(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public IVDataRecordsets(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public IVDataRecordsets(COMObject replacedObject) : base(replacedObject)
+		public IVDataRecordsets(ICOMObject replacedObject) : base(replacedObject)
 		{
 		}
 		
@@ -93,10 +93,10 @@ namespace NetOffice.VisioApi
 		#region Properties
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVApplication Application
 		{
 			get
@@ -109,10 +109,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public Int16 Stat
 		{
 			get
@@ -124,10 +124,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDocument Document
 		{
 			get
@@ -140,10 +140,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public Int16 ObjectType
 		{
 			get
@@ -155,10 +155,10 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public Int32 Count
 		{
 			get
@@ -170,11 +170,11 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
 		/// <param name="index">Int32 Index</param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
 		public NetOffice.VisioApi.IVDataRecordset this[Int32 index]
 		{
@@ -188,11 +188,11 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
 		/// <param name="iD">Int32 ID</param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public NetOffice.VisioApi.IVDataRecordset get_ItemFromID(Int32 iD)
 		{		
@@ -203,21 +203,21 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Alias for get_ItemFromID
 		/// </summary>
 		/// <param name="iD">Int32 ID</param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset ItemFromID(Int32 iD)
 		{
 			return get_ItemFromID(iD);
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVEventList EventList
 		{
 			get
@@ -234,14 +234,14 @@ namespace NetOffice.VisioApi
 		#region Methods
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="connectionIDOrString">object ConnectionIDOrString</param>
 		/// <param name="commandString">string CommandString</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		/// <param name="name">optional string Name = </param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset Add(object connectionIDOrString, string commandString, Int32 addOptions, object name)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(connectionIDOrString, commandString, addOptions, name);
@@ -251,14 +251,14 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="connectionIDOrString">object ConnectionIDOrString</param>
 		/// <param name="commandString">string CommandString</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset Add(object connectionIDOrString, string commandString, Int32 addOptions)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(connectionIDOrString, commandString, addOptions);
@@ -268,13 +268,13 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="xMLString">string XMLString</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		/// <param name="name">optional string Name = </param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset AddFromXML(string xMLString, Int32 addOptions, object name)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(xMLString, addOptions, name);
@@ -284,13 +284,13 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="xMLString">string XMLString</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset AddFromXML(string xMLString, Int32 addOptions)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(xMLString, addOptions);
@@ -300,13 +300,13 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="fileName">string FileName</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		/// <param name="name">optional string Name = </param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset AddFromConnectionFile(string fileName, Int32 addOptions, object name)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(fileName, addOptions, name);
@@ -316,13 +316,13 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="fileName">string FileName</param>
 		/// <param name="addOptions">Int32 AddOptions</param>
 		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public NetOffice.VisioApi.IVDataRecordset AddFromConnectionFile(string fileName, Int32 addOptions)
 		{
 			object[] paramsArray = Invoker.ValidateParamsArray(fileName, addOptions);
@@ -332,13 +332,13 @@ namespace NetOffice.VisioApi
 		}
 
 		/// <summary>
-		/// SupportByVersion Visio 12, 14, 15
+		/// SupportByVersion Visio 12, 14, 15, 16
 		/// 
 		/// </summary>
 		/// <param name="dataErrorCode">Int32 DataErrorCode</param>
 		/// <param name="dataErrorDescription">string DataErrorDescription</param>
 		/// <param name="recordsetID">Int32 RecordsetID</param>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		public void GetLastDataError(out Int32 dataErrorCode, out string dataErrorDescription, out Int32 recordsetID)
 		{
 			ParameterModifier[] modifiers = Invoker.CreateParamModifiers(true,true,true);
@@ -357,9 +357,9 @@ namespace NetOffice.VisioApi
        #region IEnumerable<NetOffice.VisioApi.IVDataRecordset> Member
         
         /// <summary>
-		/// SupportByVersionAttribute Visio, 12,14,15
+		/// SupportByVersionAttribute Visio, 12,14,15,16
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
        public IEnumerator<NetOffice.VisioApi.IVDataRecordset> GetEnumerator()  
        {
            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
@@ -372,9 +372,9 @@ namespace NetOffice.VisioApi
 		#region IEnumerable Members
        
 		/// <summary>
-		/// SupportByVersionAttribute Visio, 12,14,15
+		/// SupportByVersionAttribute Visio, 12,14,15,16
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 12,14,15)]
+		[SupportByVersionAttribute("Visio", 12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
 			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);

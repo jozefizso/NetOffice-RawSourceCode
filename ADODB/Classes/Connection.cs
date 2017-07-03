@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
 using NetOffice;
+using NetOffice.Misc;
+
 namespace NetOffice.ADODBApi
 {
 
@@ -41,6 +43,17 @@ namespace NetOffice.ADODBApi
 
 		#region Type Information
 
+        /// <summary>
+        /// Instance Type
+        /// </summary>
+        public override Type InstanceType
+        {
+            get
+            {
+                return LateBindingApiWrapperType;
+            }
+        }
+
         private static Type _type;
 		
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
@@ -61,14 +74,14 @@ namespace NetOffice.ADODBApi
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Connection(Core factory, COMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
+		public Connection(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
 		{
 			
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
-		public Connection(COMObject parentObject, object comProxy) : base(parentObject, comProxy)
+		public Connection(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
 		{
 			
 		}
@@ -78,7 +91,7 @@ namespace NetOffice.ADODBApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Connection(Core factory, COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
+		public Connection(Core factory, ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(factory, parentObject, comProxy, comProxyType)
 		{
 			
 		}
@@ -87,20 +100,20 @@ namespace NetOffice.ADODBApi
         ///<param name="comProxy">inner wrapped COM proxy</param>
         ///<param name="comProxyType">Type of inner wrapped COM proxy"</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Connection(COMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
+		public Connection(ICOMObject parentObject, object comProxy, NetRuntimeSystem.Type comProxyType) : base(parentObject, comProxy, comProxyType)
 		{
 			
 		}
 		
 		///<param name="replacedObject">object to replaced. replacedObject are not usable after this action</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public Connection(COMObject replacedObject) : base(replacedObject)
+		public Connection(ICOMObject replacedObject) : base(replacedObject)
 		{
 			
 		}
 		
 		///<summary>
-        ///creates a new instance of Connection 
+        /// Creates a new instance of Connection 
         ///</summary>		
 		public Connection():base("ADODB.Connection")
 		{
@@ -108,7 +121,7 @@ namespace NetOffice.ADODBApi
 		}
 		
 		///<summary>
-        ///creates a new instance of Connection
+        /// Creates a new instance of Connection
         ///</summary>
         ///<param name="progId">registered ProgID</param>
 		public Connection(string progId):base(progId)
@@ -121,12 +134,12 @@ namespace NetOffice.ADODBApi
 		#region Static CoClass Methods
 
 		/// <summary>
-        /// returns all running ADODB.Connection objects from the running object table(ROT)
+        /// Returns all running ADODB.Connection objects from the environment/system
         /// </summary>
         /// <returns>an ADODB.Connection array</returns>
 		public static NetOffice.ADODBApi.Connection[] GetActiveInstances()
 		{		
-			NetRuntimeSystem.Collections.Generic.List<object> proxyList = NetOffice.RunningObjectTable.GetActiveProxiesFromROT("ADODB","Connection");
+			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("ADODB","Connection");
 			NetRuntimeSystem.Collections.Generic.List<NetOffice.ADODBApi.Connection> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.ADODBApi.Connection>();
 			foreach(object proxy in proxyList)
 				resultList.Add( new NetOffice.ADODBApi.Connection(null, proxy) );
@@ -134,12 +147,12 @@ namespace NetOffice.ADODBApi
 		}
 
 		/// <summary>
-        /// returns a running ADODB.Connection object from the running object table(ROT). the method takes the first element from the table
+        /// Returns a running ADODB.Connection object from the environment/system.
         /// </summary>
         /// <returns>an ADODB.Connection object or null</returns>
 		public static NetOffice.ADODBApi.Connection GetActiveInstance()
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("ADODB","Connection", false);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("ADODB","Connection", false);
 			if(null != proxy)
 				return new NetOffice.ADODBApi.Connection(null, proxy);
 			else
@@ -147,13 +160,13 @@ namespace NetOffice.ADODBApi
 		}
 
 		/// <summary>
-        /// returns a running ADODB.Connection object from the running object table(ROT).  the method takes the first element from the table
+        /// Returns a running ADODB.Connection object from the environment/system. 
         /// </summary>
 	    /// <param name="throwOnError">throw an exception if no object was found</param>
         /// <returns>an ADODB.Connection object or null</returns>
 		public static NetOffice.ADODBApi.Connection GetActiveInstance(bool throwOnError)
 		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxyFromROT("ADODB","Connection", throwOnError);
+			object proxy  = NetOffice.ProxyService.GetActiveInstance("ADODB","Connection", throwOnError);
 			if(null != proxy)
 				return new NetOffice.ADODBApi.Connection(null, proxy);
 			else
@@ -366,7 +379,7 @@ namespace NetOffice.ADODBApi
 	    #region IEventBinding Member
         
 		/// <summary>
-        /// creates active sink helper
+        /// Creates active sink helper
         /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public void CreateEventBridge()
@@ -388,6 +401,9 @@ namespace NetOffice.ADODBApi
 			} 
         }
 
+        /// <summary>
+        /// The instance use currently an event listener 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool EventBridgeInitialized
         {
@@ -396,7 +412,10 @@ namespace NetOffice.ADODBApi
                 return (null != _connectPoint);
             }
         }
-        
+
+        /// <summary>
+        ///  The instance has currently one or more event recipients 
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
@@ -416,6 +435,9 @@ namespace NetOffice.ADODBApi
 			return false;
         }
         
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
@@ -435,7 +457,10 @@ namespace NetOffice.ADODBApi
             else
                 return new Delegate[0];
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
@@ -454,8 +479,14 @@ namespace NetOffice.ADODBApi
             }
             else
                 return 0;
-        }
-
+           }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
@@ -487,6 +518,9 @@ namespace NetOffice.ADODBApi
                 return 0;
 		}
 
+        /// <summary>
+        /// Stop listening events for the instance
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {

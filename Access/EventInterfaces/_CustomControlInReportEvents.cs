@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
@@ -10,7 +10,7 @@ namespace NetOffice.AccessApi
 	
 	#region SinkPoint Interface
 
-	[SupportByVersionAttribute("Access", 9,10,11,12,14,15)]
+	[SupportByVersionAttribute("Access", 9,10,11,12,14,15,16)]
 	[ComImport, Guid("300471E2-7426-11CE-AB64-00AA0042B7CE"), InterfaceType(ComInterfaceType.InterfaceIsIDispatch), TypeLibType((short)0x1010)]
 	public interface _CustomControlInReportEvents
 	{

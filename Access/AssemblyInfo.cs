@@ -12,7 +12,7 @@ using NetOffice;
 	Access - Microsoft Access 12.0 Object Library - 12
 	Access - Microsoft Access 14.0 Object Library - 14
 	Access - Microsoft Access 15.0 Object Library - 15
-
+    Access - Microsoft Access 15.0 Object Library - 16
 */
 
 [assembly: AssemblyTitle("Access")]
@@ -23,12 +23,12 @@ using NetOffice;
 [assembly: AssemblyCopyright("Sebastian Lange")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.7.3.0")]
-[assembly: AssemblyFileVersion("1.7.3.0")]
+[assembly: AssemblyVersion("1.7.4.0")]
+[assembly: AssemblyFileVersion("1.7.4.0")]
 [assembly: PrimaryInteropAssembly(1, 0)]
 [assembly: ImportedFromTypeLib("Access")]
 [assembly: Guid("4AFFC9A0-5F99-101B-AF4E-00AA003F0F07")]
-[assembly: NetOfficeAssemblyAttribute("1.6.0.0")]
+[assembly: NetOfficeAssemblyAttribute("1.7.4.0")]
 [assembly: Dependency("OfficeApi.dll", LoadHint.Default)]
 [assembly: Dependency("DAOApi.dll", LoadHint.Default)]
 [assembly: Dependency("VBIDEApi.dll", LoadHint.Default)]
