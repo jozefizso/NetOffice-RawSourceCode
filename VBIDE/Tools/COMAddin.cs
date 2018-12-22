@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.ComponentModel;
+using NetOffice.Attributes;
 using NetOffice.Tools;
 using NetOffice.VBIDEApi;
 
@@ -65,7 +66,12 @@ namespace NetOffice.VBIDEApi.Tools
         /// Host Application Instance
         /// </summary>
         protected internal VBE Application { get; private set; }
-        
+
+        /// <summary>
+        /// Custom addin object if created
+        /// </summary>
+        protected internal object CustomObject { get; private set; }
+
         /// <summary>
         /// Cached Error Method Delegate
         /// </summary>
@@ -244,7 +250,7 @@ namespace NetOffice.VBIDEApi.Tools
 
         #region IDTExtensibility2 Members
 
-        void IDTExtensibility2.OnStartupComplete(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnStartupComplete(ref Array custom)
         {
             try
             {             
@@ -259,7 +265,7 @@ namespace NetOffice.VBIDEApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref Array custom)
         {
             try
             {
@@ -271,6 +277,7 @@ namespace NetOffice.VBIDEApi.Tools
                 }
 
                 this.Application = new VBE(null, application);
+                TryCreateCustomObject(AddInInst);
                 RaiseOnConnection(this.Application, ConnectMode, AddInInst, ref custom);
             }
             catch (System.Exception exception)
@@ -280,14 +287,14 @@ namespace NetOffice.VBIDEApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
         {
             try
             {                 
                 try
-                {
-                    Tweaks.DisposeTweaks(Factory, this, Type);
+                {                  
                     RaiseOnDisconnection(RemoveMode, ref custom);
+                    Tweaks.DisposeTweaks(Factory, this, Type);
                 }
                 catch (System.Exception exception)
                 {
@@ -311,7 +318,7 @@ namespace NetOffice.VBIDEApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnAddInsUpdate(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnAddInsUpdate(ref Array custom)
         {
             try
             {
@@ -324,7 +331,7 @@ namespace NetOffice.VBIDEApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnBeginShutdown(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnBeginShutdown(ref Array custom)
         {
             try
             {
@@ -371,10 +378,44 @@ namespace NetOffice.VBIDEApi.Tools
         {
 
         }
-        
+
         #endregion
 
-        #region Virtual Methods
+        #region Methods
+
+        /// <summary>
+        /// Returns an instance to publish them as addin custom object.
+        /// External code like vba can access this object if instance is available as COM component.
+        /// This object is available as Appplication.COMAddins(?).Object
+        /// </summary>
+        /// <returns>addin instance object or null(Nothing in Visual Basic)</returns>
+        protected virtual object OnCreateObjectInstance()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Try to create a custom addin object instance
+        /// </summary>
+        /// <param name="addInInst">given instance from OnConnection event</param>
+        private void TryCreateCustomObject(object addInInst)
+        {
+            try
+            {
+                CustomObject = OnCreateObjectInstance();
+                if (null != CustomObject)
+                {
+                    object[] param = new object[1];
+                    param[0] = CustomObject;
+                    addInInst.GetType().InvokeMember("Object", System.Reflection.BindingFlags.SetProperty, null, addInInst, param);
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Factory.Console.WriteException(exception);
+                OnError(ErrorMethodKind.CreateCustomAddinInstance, exception);
+            }
+        }
 
         /// <summary>
         /// Create the used factory. The method was called as first in the base ctor
@@ -386,7 +427,7 @@ namespace NetOffice.VBIDEApi.Tools
             ForceInitializeAttribute attribute = AttributeReflector.GetForceInitializeAttribute(Type);
             if (null != attribute)
             {
-                core.Settings.EnableDebugOutput = attribute.EnableDebugOutput;
+                core.Settings.EnableMoreDebugOutput = attribute.EnableMoreDebugOutput;
                 core.CheckInitialize();
             }
             return core;
@@ -434,10 +475,13 @@ namespace NetOffice.VBIDEApi.Tools
         /// <param name="type">Type information for the class</param>
         [ComRegisterFunction, Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public static void RegisterFunction(Type type)
-        {         
+        {
             if (null == type)
                 throw new ArgumentNullException("type");
-            RegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, OfficeRegisterKeyState.NeedToCreate);
+            if (null != type.GetCustomAttribute<DontRegisterAddinAttribute>())
+                return;
+
+            COMAddinRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, OfficeRegisterKeyState.NeedToCreate);
         }
 
         /// <summary>
@@ -449,7 +493,10 @@ namespace NetOffice.VBIDEApi.Tools
         {
             if (null == type)
                 throw new ArgumentNullException("type");
-            UnRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, OfficeUnRegisterKeyState.NeedToDelete);
+            if (null != type.GetCustomAttribute<DontRegisterAddinAttribute>())
+                return;
+
+            COMAddinUnRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, OfficeUnRegisterKeyState.NeedToDelete);
         }
 
         /// <summary>
@@ -463,9 +510,11 @@ namespace NetOffice.VBIDEApi.Tools
         {
             if (null == type)
                 throw new ArgumentNullException("type");
+            if (null != type.GetCustomAttribute<DontRegisterAddinAttribute>())
+                return;
 
             OfficeRegisterKeyState currentKeyState = (OfficeRegisterKeyState)keyState;
-            RegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, currentKeyState);
+            COMAddinRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, currentKeyState);
         }
 
         /// <summary>
@@ -479,9 +528,11 @@ namespace NetOffice.VBIDEApi.Tools
         {
             if (null == type)
                 throw new ArgumentNullException("type");
-         
+            if (null != type.GetCustomAttribute<DontRegisterAddinAttribute>())
+                return;
+
             OfficeUnRegisterKeyState currentKeyState = (OfficeUnRegisterKeyState)keyState;
-            UnRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, currentKeyState);
+            COMAddinUnRegisterHandler.ProceedUser(type, new string[] { _addinOfficeRegistryKey, _addinOfficeRegistryKey64 }, currentKeyState);
         }
 
         /// <summary>

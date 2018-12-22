@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetOffice;
+using NetOffice.Attributes;
 
 /*
     Contains the following Type Libraries:
@@ -16,19 +17,19 @@ using NetOffice;
 */
 
 [assembly: AssemblyTitle("Outlook")]
-[assembly: AssemblyDescription("NetOffice Outlook Api")]
+[assembly: AssemblyDescription("Netoffice Outlook Api")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("netoffice.codeplex.com")]
+[assembly: AssemblyCompany("https://osdn.net/projects/netoffice")]
 [assembly: AssemblyProduct("NetOffice")]
 [assembly: AssemblyCopyright("Sebastian Lange")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.7.4.0")]
-[assembly: AssemblyFileVersion("1.7.4.0")]
+[assembly: AssemblyVersion("1.7.4.3")]
+[assembly: AssemblyFileVersion("1.7.4.3")]
 [assembly: PrimaryInteropAssembly(1, 0)]
 [assembly: ImportedFromTypeLib("Outlook")]
 [assembly: Guid("00062FFF-0000-0000-C000-000000000046")]
-[assembly: NetOfficeAssemblyAttribute("1.7.4.0")]
+[assembly: NetOfficeAssembly("1.7.4.1")]
 [assembly: Dependency("OfficeApi.dll", LoadHint.Default)]
 [assembly: Dependency("NetOffice.dll", LoadHint.Default)]
 

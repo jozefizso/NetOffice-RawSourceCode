@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.PublisherApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface MailMergeFilters 
 	/// SupportByVersion Publisher, 14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Publisher", 14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class MailMergeFilters : NetOffice.OfficeApi._IMsoDispObj ,IEnumerable<object>
+	/// </summary>
+	[SupportByVersion("Publisher", 14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Variant, EnumeratorInvoke.Custom), HasIndexProperty(IndexInvoke.Method, "Item")]
+	public class MailMergeFilters : NetOffice.OfficeApi._IMsoDispObj, NetOffice.CollectionsGeneric.IEnumerableProvider<object>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.PublisherApi
             {
                 if (null == _type)
                     _type = typeof(MailMergeFilters);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public MailMergeFilters(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.PublisherApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public MailMergeFilters(string progId) : base(progId)
 		{
@@ -96,14 +114,12 @@ namespace NetOffice.PublisherApi
 		/// SupportByVersion Publisher 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -112,15 +128,12 @@ namespace NetOffice.PublisherApi
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16), ProxyResult]
 		public object Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Parent");
 			}
 		}
 
@@ -130,133 +143,137 @@ namespace NetOffice.PublisherApi
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">Int32 Index</param>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">Int32 index</param>
+		[SupportByVersion("Publisher", 14,15,16)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public object this[Int32 index]
 		{
 			get
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(index);
-				object returnItem = Invoker.MethodReturn(this, "Item", paramsArray);
-				object newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteVariantMethodGet(this, "Item", index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="column">string Column</param>
-		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison Comparison</param>
-		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction Conjunction</param>
+		/// <param name="column">string column</param>
+		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison comparison</param>
+		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction</param>
 		/// <param name="bstrCompareTo">optional string bstrCompareTo = </param>
 		/// <param name="deferUpdate">optional bool DeferUpdate = false</param>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public void Add(string column, NetOffice.OfficeApi.Enums.MsoFilterComparison comparison, NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction, object bstrCompareTo, object deferUpdate)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(column, comparison, conjunction, bstrCompareTo, deferUpdate);
-			Invoker.Method(this, "Add", paramsArray);
+			 Factory.ExecuteMethod(this, "Add", new object[]{ column, comparison, conjunction, bstrCompareTo, deferUpdate });
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="column">string Column</param>
-		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison Comparison</param>
-		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction Conjunction</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		/// <param name="column">string column</param>
+		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison comparison</param>
+		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction</param>
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public void Add(string column, NetOffice.OfficeApi.Enums.MsoFilterComparison comparison, NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(column, comparison, conjunction);
-			Invoker.Method(this, "Add", paramsArray);
+			 Factory.ExecuteMethod(this, "Add", column, comparison, conjunction);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="column">string Column</param>
-		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison Comparison</param>
-		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction Conjunction</param>
+		/// <param name="column">string column</param>
+		/// <param name="comparison">NetOffice.OfficeApi.Enums.MsoFilterComparison comparison</param>
+		/// <param name="conjunction">NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction</param>
 		/// <param name="bstrCompareTo">optional string bstrCompareTo = </param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public void Add(string column, NetOffice.OfficeApi.Enums.MsoFilterComparison comparison, NetOffice.OfficeApi.Enums.MsoFilterConjunction conjunction, object bstrCompareTo)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(column, comparison, conjunction, bstrCompareTo);
-			Invoker.Method(this, "Add", paramsArray);
+			 Factory.ExecuteMethod(this, "Add", column, comparison, conjunction, bstrCompareTo);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">Int32 Index</param>
+		/// <param name="index">Int32 index</param>
 		/// <param name="deferUpdate">optional bool DeferUpdate = false</param>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public void Delete(Int32 index, object deferUpdate)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(index, deferUpdate);
-			Invoker.Method(this, "Delete", paramsArray);
+			 Factory.ExecuteMethod(this, "Delete", index, deferUpdate);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">Int32 Index</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		/// <param name="index">Int32 index</param>
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public void Delete(Int32 index)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			Invoker.Method(this, "Delete", paramsArray);
+			 Factory.ExecuteMethod(this, "Delete", index);
 		}
 
-		#endregion
-       #region IEnumerable<object> Member
-        
-        /// <summary>
-		/// SupportByVersionAttribute Publisher, 14,15,16
-		/// This is a custom enumerator from NetOffice
-		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
-        [CustomEnumerator]
-       public IEnumerator<object> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (object item in innerEnumerator)
-               yield return item;
-       }
+        #endregion
 
-       #endregion
-   
-       #region IEnumerable Members
-        
-       /// <summary>
-		/// SupportByVersionAttribute Publisher, 14,15,16
-		/// This is a custom enumerator from NetOffice
-		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+        #region IEnumerableProvider<object>
+
+        ICOMObject IEnumerableProvider<object>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return this;
+        }
+
+        IEnumerable IEnumerableProvider<object>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (object item in innerEnumerator)
+                yield return item;
+        }
+
+        #endregion
+
+        #region IEnumerable<object>
+
+        /// <summary>
+        /// SupportByVersion Publisher, 14,15,16
+        /// This is a custom enumerator from NetOffice
+        /// </summary>
+        [SupportByVersion("Publisher", 14, 15, 16)]
+        [CustomEnumerator]
+        public IEnumerator<object> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (object item in innerEnumerator)
+                yield return item;
+        }
+
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion Publisher, 14,15,16
+        /// This is a custom enumerator from NetOffice
+        /// </summary>
+        [SupportByVersion("Publisher", 14, 15, 16)]
         [CustomEnumerator]
         IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
-       {
+        {
             int count = Count;
             object[] enumeratorObjects = new object[count];
             for (int i = 0; i < count; i++)
-                enumeratorObjects[i] = this[i+1];
+                enumeratorObjects[i] = this[i + 1];
 
             foreach (object item in enumeratorObjects)
                 yield return item;
-       }
+        }
 
-       #endregion
-       		#pragma warning restore
-	}
+        #endregion
+
+        #pragma warning restore
+    }
 }

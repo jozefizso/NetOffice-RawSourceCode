@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.PowerPointApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface DiagramNodes 
 	/// SupportByVersion PowerPoint, 10,11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class DiagramNodes : COMObject ,IEnumerable<NetOffice.PowerPointApi.DiagramNode>
+	/// </summary>
+	[SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Method, "Item")]
+	public class DiagramNodes : COMObject, IEnumerableProvider<NetOffice.PowerPointApi.DiagramNode>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.PowerPointApi
             {
                 if (null == _type)
                     _type = typeof(DiagramNodes);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public DiagramNodes(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.PowerPointApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public DiagramNodes(string progId) : base(progId)
 		{
@@ -97,15 +115,12 @@ namespace NetOffice.PowerPointApi
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16), ProxyResult]
 		public object Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Application");
 			}
 		}
 
@@ -113,14 +128,12 @@ namespace NetOffice.PowerPointApi
 		/// SupportByVersion PowerPoint 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
 		public Int32 Creator
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Creator", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Creator");
 			}
 		}
 
@@ -129,15 +142,12 @@ namespace NetOffice.PowerPointApi
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16), ProxyResult]
 		public object Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Parent");
 			}
 		}
 
@@ -145,14 +155,12 @@ namespace NetOffice.PowerPointApi
 		/// SupportByVersion PowerPoint 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -162,62 +170,71 @@ namespace NetOffice.PowerPointApi
 
 		/// <summary>
 		/// SupportByVersion PowerPoint 10, 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.PowerPointApi.DiagramNode this[object index]
 		{
 			get
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(index);
-				object returnItem = Invoker.MethodReturn(this, "Item", paramsArray);
-				NetOffice.PowerPointApi.DiagramNode newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PowerPointApi.DiagramNode.LateBindingApiWrapperType) as NetOffice.PowerPointApi.DiagramNode;
-				return newObject;
+				return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PowerPointApi.DiagramNode>(this, "Item", NetOffice.PowerPointApi.DiagramNode.LateBindingApiWrapperType, index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion PowerPoint 10, 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
 		public void SelectAll()
 		{
-			object[] paramsArray = null;
-			Invoker.Method(this, "SelectAll", paramsArray);
+			 Factory.ExecuteMethod(this, "SelectAll");
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.PowerPointApi.DiagramNode> Member
-        
+        #region IEnumerableProvider<NetOffice.PowerPointApi.DiagramNode>
+
+        ICOMObject IEnumerableProvider<NetOffice.PowerPointApi.DiagramNode>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.PowerPointApi.DiagramNode>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, true);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.PowerPointApi.DiagramNode>
+
         /// <summary>
-		/// SupportByVersionAttribute PowerPoint, 10,11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
-       public IEnumerator<NetOffice.PowerPointApi.DiagramNode> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.PowerPointApi.DiagramNode item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion PowerPoint, 10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("PowerPoint", 10, 11, 12, 14, 15, 16)]
+        public IEnumerator<NetOffice.PowerPointApi.DiagramNode> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.PowerPointApi.DiagramNode item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute PowerPoint, 10,11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 10,11,12,14,15,16)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion PowerPoint, 10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("PowerPoint", 10,11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

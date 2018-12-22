@@ -1,53 +1,54 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.VisioApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void Windows_WindowOpenedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_SelectionChangedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_BeforeWindowClosedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_WindowActivatedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_BeforeWindowSelDeleteEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_BeforeWindowPageTurnEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_WindowTurnedToPageEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_WindowChangedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_ViewChangedEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_QueryCancelWindowCloseEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_WindowCloseCanceledEventHandler(NetOffice.VisioApi.IVWindow Window);
-	public delegate void Windows_OnKeystrokeMessageForAddonEventHandler(NetOffice.VisioApi.IVMSGWrap MSG);
-	public delegate void Windows_MouseDownEventHandler(Int32 Button, Int32 KeyButtonState, Double x, Double y, ref bool CancelDefault);
-	public delegate void Windows_MouseMoveEventHandler(Int32 Button, Int32 KeyButtonState, Double x, Double y, ref bool CancelDefault);
-	public delegate void Windows_MouseUpEventHandler(Int32 Button, Int32 KeyButtonState, Double x, Double y, ref bool CancelDefault);
-	public delegate void Windows_KeyDownEventHandler(Int32 KeyCode, Int32 KeyButtonState, ref bool CancelDefault);
-	public delegate void Windows_KeyPressEventHandler(Int32 KeyAscii, ref bool CancelDefault);
-	public delegate void Windows_KeyUpEventHandler(Int32 KeyCode, Int32 KeyButtonState, ref bool CancelDefault);
+	public delegate void Windows_WindowOpenedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_SelectionChangedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_BeforeWindowClosedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_WindowActivatedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_BeforeWindowSelDeleteEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_BeforeWindowPageTurnEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_WindowTurnedToPageEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_WindowChangedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_ViewChangedEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_QueryCancelWindowCloseEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_WindowCloseCanceledEventHandler(NetOffice.VisioApi.IVWindow window);
+	public delegate void Windows_OnKeystrokeMessageForAddonEventHandler(NetOffice.VisioApi.IVMSGWrap msg);
+	public delegate void Windows_MouseDownEventHandler(Int32 button, Int32 keyButtonState, Double x, Double y, ref bool cancelDefault);
+	public delegate void Windows_MouseMoveEventHandler(Int32 button, Int32 keyButtonState, Double x, Double y, ref bool cancelDefault);
+	public delegate void Windows_MouseUpEventHandler(Int32 button, Int32 keyButtonState, Double x, Double y, ref bool cancelDefault);
+	public delegate void Windows_KeyDownEventHandler(Int32 keyCode, Int32 keyButtonState, ref bool cancelDefault);
+	public delegate void Windows_KeyPressEventHandler(Int32 keyAscii, ref bool CancelDefault);
+	public delegate void Windows_KeyUpEventHandler(Int32 keyCode, Int32 keyButtonState, ref bool cancelDefault);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Windows 
 	/// SupportByVersion Visio, 11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/ff769453(v=office.14).aspx
-	///</summary>
-	[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Windows : IVWindows,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/ff769453(v=office.14).aspx </remarks>
+	[SupportByVersion("Visio", 11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.EWindows_SinkHelper))]
+    [ComEventInterface(typeof(Events.EWindows))]
+    public class Windows : IVWindows, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		EWindows_SinkHelper _eWindows_SinkHelper;
+        private static Type _type;
+        private Events.EWindows_SinkHelper _eWindows_SinkHelper;
 	
 		#endregion
 
@@ -56,6 +57,7 @@ namespace NetOffice.VisioApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -63,9 +65,10 @@ namespace NetOffice.VisioApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+        
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -122,17 +125,17 @@ namespace NetOffice.VisioApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Windows 
-        ///</summary>		
+        /// </summary>		
 		public Windows():base("Visio.Windows")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Windows
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Windows(string progId):base(progId)
 		{
@@ -142,46 +145,6 @@ namespace NetOffice.VisioApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Visio.Windows objects from the environment/system
-        /// </summary>
-        /// <returns>an Visio.Windows array</returns>
-		public static NetOffice.VisioApi.Windows[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Visio","Windows");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Windows> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Windows>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.VisioApi.Windows(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Windows object from the environment/system.
-        /// </summary>
-        /// <returns>an Visio.Windows object or null</returns>
-		public static NetOffice.VisioApi.Windows GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Windows", false);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Windows(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Windows object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Visio.Windows object or null</returns>
-		public static NetOffice.VisioApi.Windows GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Windows", throwOnError);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Windows(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -602,7 +565,7 @@ namespace NetOffice.VisioApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -617,12 +580,12 @@ namespace NetOffice.VisioApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, EWindows_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.EWindows_SinkHelper.Id);
 
 
-			if(EWindows_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.EWindows_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_eWindows_SinkHelper = new EWindows_SinkHelper(this, _connectPoint);
+				_eWindows_SinkHelper = new Events.EWindows_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -638,50 +601,34 @@ namespace NetOffice.VisioApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -690,22 +637,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -716,34 +649,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>

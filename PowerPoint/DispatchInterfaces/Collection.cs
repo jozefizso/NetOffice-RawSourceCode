@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.PowerPointApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface Collection 
 	/// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class Collection : COMObject , IEnumerable<object>
+	/// </summary>
+	[SupportByVersion("PowerPoint", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType, Enumerator(Enumerator.Reference, EnumeratorInvoke.Property)]
+	public class Collection : COMObject, IEnumerableProvider<object>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.PowerPointApi
             {
                 if (null == _type)
                     _type = typeof(Collection);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Collection(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.PowerPointApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public Collection(string progId) : base(progId)
 		{
@@ -96,14 +114,12 @@ namespace NetOffice.PowerPointApi
 		/// SupportByVersion PowerPoint 9, 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 9,10,11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -113,54 +129,58 @@ namespace NetOffice.PowerPointApi
 
 		/// <summary>
 		/// SupportByVersion PowerPoint 9, 10, 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
 		/// <param name="index">Int32 index</param>
-		[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
+		[SupportByVersion("PowerPoint", 9,10,11,12,14,15,16)]
 		public object _Index(Int32 index)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.MethodReturn(this, "_Index", paramsArray);
-			if((null != returnItem) && (returnItem is MarshalByRefObject))
-			{
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
-				return newObject;
-			}
-			else
-			{
-				return  returnItem;
-			}
+			return Factory.ExecuteVariantMethodGet(this, "_Index", index);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<object> Member
-        
-       /// <summary>
-	   /// SupportByVersionAttribute PowerPoint, 9,10,11,12,14,15,16
-	   /// </summary>
-	   [SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
-       public IEnumerator<object> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (object item in innerEnumerator)
-               yield return item;
-       }
+        #region IEnumerableProvider<object>
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute PowerPoint, 9,10,11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
+        ICOMObject IEnumerableProvider<object>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<object>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, true);
+        }
+
+        #endregion
+
+        #region IEnumerable<object>
+
+        /// <summary>
+        /// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("PowerPoint", 9, 10, 11, 12, 14, 15, 16)]
+        public IEnumerator<object> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (object item in innerEnumerator)
+                yield return item;
+        }
+
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("PowerPoint", 9,10,11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, true);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

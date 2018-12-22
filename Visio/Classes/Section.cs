@@ -1,37 +1,38 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.VisioApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void Section_CellChangedEventHandler(NetOffice.VisioApi.IVCell Cell);
-	public delegate void Section_FormulaChangedEventHandler(NetOffice.VisioApi.IVCell Cell);
+	public delegate void Section_CellChangedEventHandler(NetOffice.VisioApi.IVCell cell);
+	public delegate void Section_FormulaChangedEventHandler(NetOffice.VisioApi.IVCell cell);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Section 
 	/// SupportByVersion Visio, 11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/ff769382(v=office.14).aspx
-	///</summary>
-	[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Section : IVSection,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/ff769382(v=office.14).aspx </remarks>
+	[SupportByVersion("Visio", 11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.ESection_SinkHelper))]
+    [ComEventInterface(typeof(Events.ESection))]
+    public class Section : IVSection, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		ESection_SinkHelper _eSection_SinkHelper;
+        private static Type _type;
+        private Events.ESection_SinkHelper _eSection_SinkHelper;
 	
 		#endregion
 
@@ -40,6 +41,7 @@ namespace NetOffice.VisioApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -48,8 +50,9 @@ namespace NetOffice.VisioApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -106,17 +109,17 @@ namespace NetOffice.VisioApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Section 
-        ///</summary>		
+        /// </summary>		
 		public Section():base("Visio.Section")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Section
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Section(string progId):base(progId)
 		{
@@ -126,46 +129,6 @@ namespace NetOffice.VisioApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Visio.Section objects from the environment/system
-        /// </summary>
-        /// <returns>an Visio.Section array</returns>
-		public static NetOffice.VisioApi.Section[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Visio","Section");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Section> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Section>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.VisioApi.Section(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Section object from the environment/system.
-        /// </summary>
-        /// <returns>an Visio.Section object or null</returns>
-		public static NetOffice.VisioApi.Section GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Section", false);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Section(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Section object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Visio.Section object or null</returns>
-		public static NetOffice.VisioApi.Section GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Section", throwOnError);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Section(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -218,7 +181,7 @@ namespace NetOffice.VisioApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -233,12 +196,12 @@ namespace NetOffice.VisioApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, ESection_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.ESection_SinkHelper.Id);
 
 
-			if(ESection_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.ESection_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_eSection_SinkHelper = new ESection_SinkHelper(this, _connectPoint);
+				_eSection_SinkHelper = new Events.ESection_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -254,50 +217,34 @@ namespace NetOffice.VisioApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -306,22 +253,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -332,34 +265,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -380,3 +287,4 @@ namespace NetOffice.VisioApi
 		#pragma warning restore
 	}
 }
+

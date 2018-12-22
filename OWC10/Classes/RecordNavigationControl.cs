@@ -1,35 +1,36 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OWC10Api
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void RecordNavigationControl_ButtonClickEventHandler(NetOffice.OWC10Api.Enums.NavButtonEnum NavButton);
+	public delegate void RecordNavigationControl_ButtonClickEventHandler(NetOffice.OWC10Api.Enums.NavButtonEnum navButton);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass RecordNavigationControl 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class RecordNavigationControl : INavigationControl,IEventBinding
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events._NavigationEvent_SinkHelper))]
+    [ComEventInterface(typeof(Events._NavigationEvent))]
+    public class RecordNavigationControl : INavigationControl, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_NavigationEvent_SinkHelper __NavigationEvent_SinkHelper;
+        private static Type _type;
+        private Events._NavigationEvent_SinkHelper __NavigationEvent_SinkHelper;
 	
 		#endregion
 
@@ -38,6 +39,7 @@ namespace NetOffice.OWC10Api
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -46,8 +48,9 @@ namespace NetOffice.OWC10Api
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -104,17 +107,17 @@ namespace NetOffice.OWC10Api
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of RecordNavigationControl 
-        ///</summary>		
+        /// </summary>		
 		public RecordNavigationControl():base("OWC10.RecordNavigationControl")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of RecordNavigationControl
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public RecordNavigationControl(string progId):base(progId)
 		{
@@ -124,46 +127,6 @@ namespace NetOffice.OWC10Api
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running OWC10.RecordNavigationControl objects from the environment/system
-        /// </summary>
-        /// <returns>an OWC10.RecordNavigationControl array</returns>
-		public static NetOffice.OWC10Api.RecordNavigationControl[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("OWC10","RecordNavigationControl");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.RecordNavigationControl> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.RecordNavigationControl>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OWC10Api.RecordNavigationControl(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.RecordNavigationControl object from the environment/system.
-        /// </summary>
-        /// <returns>an OWC10.RecordNavigationControl object or null</returns>
-		public static NetOffice.OWC10Api.RecordNavigationControl GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","RecordNavigationControl", false);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.RecordNavigationControl(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.RecordNavigationControl object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an OWC10.RecordNavigationControl object or null</returns>
-		public static NetOffice.OWC10Api.RecordNavigationControl GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","RecordNavigationControl", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.RecordNavigationControl(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -192,7 +155,7 @@ namespace NetOffice.OWC10Api
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -207,12 +170,12 @@ namespace NetOffice.OWC10Api
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _NavigationEvent_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events._NavigationEvent_SinkHelper.Id);
 
 
-			if(_NavigationEvent_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events._NavigationEvent_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__NavigationEvent_SinkHelper = new _NavigationEvent_SinkHelper(this, _connectPoint);
+				__NavigationEvent_SinkHelper = new Events._NavigationEvent_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -228,50 +191,34 @@ namespace NetOffice.OWC10Api
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -280,22 +227,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -306,34 +239,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -354,3 +261,4 @@ namespace NetOffice.OWC10Api
 		#pragma warning restore
 	}
 }
+

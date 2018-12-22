@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.PublisherApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface TextStyles 
 	/// SupportByVersion Publisher, 14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Publisher", 14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class TextStyles : COMObject ,IEnumerable<NetOffice.PublisherApi.TextStyle>
+	/// </summary>
+	[SupportByVersion("Publisher", 14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Method, "Item")]
+	public class TextStyles : COMObject, NetOffice.CollectionsGeneric.IEnumerableProvider<NetOffice.PublisherApi.TextStyle>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.PublisherApi
             {
                 if (null == _type)
                     _type = typeof(TextStyles);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public TextStyles(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.PublisherApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public TextStyles(string progId) : base(progId)
 		{
@@ -96,15 +114,12 @@ namespace NetOffice.PublisherApi
 		/// SupportByVersion Publisher 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public NetOffice.PublisherApi.Application Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.PublisherApi.Application newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.PublisherApi.Application.LateBindingApiWrapperType) as NetOffice.PublisherApi.Application;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.PublisherApi.Application>(this, "Application", NetOffice.PublisherApi.Application.LateBindingApiWrapperType);
 			}
 		}
 
@@ -113,15 +128,12 @@ namespace NetOffice.PublisherApi
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16), ProxyResult]
 		public object Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Parent");
 			}
 		}
 
@@ -129,14 +141,12 @@ namespace NetOffice.PublisherApi
 		/// SupportByVersion Publisher 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -146,116 +156,111 @@ namespace NetOffice.PublisherApi
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("Publisher", 14,15,16)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.PublisherApi.TextStyle this[object index]
 		{
 			get
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(index);
-				object returnItem = Invoker.MethodReturn(this, "Item", paramsArray);
-				NetOffice.PublisherApi.TextStyle newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType) as NetOffice.PublisherApi.TextStyle;
-				return newObject;
+				return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PublisherApi.TextStyle>(this, "Item", NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType, index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="styleName">string StyleName</param>
+		/// <param name="styleName">string styleName</param>
 		/// <param name="basedOn">optional string BasedOn = </param>
-		/// <param name="font">optional NetOffice.PublisherApi.Font Font</param>
-		/// <param name="paragraphFormat">optional NetOffice.PublisherApi.ParagraphFormat ParagraphFormat</param>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		/// <param name="font">optional NetOffice.PublisherApi.Font font</param>
+		/// <param name="paragraphFormat">optional NetOffice.PublisherApi.ParagraphFormat paragraphFormat</param>
+		[SupportByVersion("Publisher", 14,15,16)]
 		public NetOffice.PublisherApi.TextStyle Add(string styleName, object basedOn, object font, object paragraphFormat)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(styleName, basedOn, font, paragraphFormat);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.PublisherApi.TextStyle newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType) as NetOffice.PublisherApi.TextStyle;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PublisherApi.TextStyle>(this, "Add", NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType, styleName, basedOn, font, paragraphFormat);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="styleName">string StyleName</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		/// <param name="styleName">string styleName</param>
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public NetOffice.PublisherApi.TextStyle Add(string styleName)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(styleName);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.PublisherApi.TextStyle newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType) as NetOffice.PublisherApi.TextStyle;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PublisherApi.TextStyle>(this, "Add", NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType, styleName);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="styleName">string StyleName</param>
+		/// <param name="styleName">string styleName</param>
 		/// <param name="basedOn">optional string BasedOn = </param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public NetOffice.PublisherApi.TextStyle Add(string styleName, object basedOn)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(styleName, basedOn);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.PublisherApi.TextStyle newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType) as NetOffice.PublisherApi.TextStyle;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PublisherApi.TextStyle>(this, "Add", NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType, styleName, basedOn);
 		}
 
 		/// <summary>
 		/// SupportByVersion Publisher 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="styleName">string StyleName</param>
+		/// <param name="styleName">string styleName</param>
 		/// <param name="basedOn">optional string BasedOn = </param>
-		/// <param name="font">optional NetOffice.PublisherApi.Font Font</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+		/// <param name="font">optional NetOffice.PublisherApi.Font font</param>
+		[CustomMethod]
+		[SupportByVersion("Publisher", 14,15,16)]
 		public NetOffice.PublisherApi.TextStyle Add(string styleName, object basedOn, object font)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(styleName, basedOn, font);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.PublisherApi.TextStyle newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType) as NetOffice.PublisherApi.TextStyle;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.PublisherApi.TextStyle>(this, "Add", NetOffice.PublisherApi.TextStyle.LateBindingApiWrapperType, styleName, basedOn, font);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.PublisherApi.TextStyle> Member
-        
+        #region IEnumerableProvider<NetOffice.PublisherApi.TextStyle>
+
+        ICOMObject IEnumerableProvider<NetOffice.PublisherApi.TextStyle>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.PublisherApi.TextStyle>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.PublisherApi.TextStyle>
+
         /// <summary>
-		/// SupportByVersionAttribute Publisher, 14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
-       public IEnumerator<NetOffice.PublisherApi.TextStyle> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.PublisherApi.TextStyle item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion Publisher, 14,15,16
+        /// </summary>
+        [SupportByVersion("Publisher", 14, 15, 16)]
+        public IEnumerator<NetOffice.PublisherApi.TextStyle> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.PublisherApi.TextStyle item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute Publisher, 14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Publisher", 14,15,16)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion Publisher, 14,15,16
+        /// </summary>
+        [SupportByVersion("Publisher", 14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

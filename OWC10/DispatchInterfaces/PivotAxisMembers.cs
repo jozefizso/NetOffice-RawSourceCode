@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.OWC10Api
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface PivotAxisMembers 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class PivotAxisMembers : COMObject ,IEnumerable<NetOffice.OWC10Api.PivotAxisMember>
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class PivotAxisMembers : COMObject, IEnumerableProvider<NetOffice.OWC10Api.PivotAxisMember>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.OWC10Api
             {
                 if (null == _type)
                     _type = typeof(PivotAxisMembers);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public PivotAxisMembers(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.OWC10Api
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public PivotAxisMembers(string progId) : base(progId)
 		{
@@ -96,17 +114,15 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("OWC10", 1)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("OWC10", 1)]
+		[BaseResult]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.OWC10Api.PivotAxisMember this[object index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.OWC10Api.PivotAxisMember newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.OWC10Api.PivotAxisMember;
-			return newObject;
+			{
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.OWC10Api.PivotAxisMember>(this, "Item", index);
 			}
 		}
 
@@ -114,50 +130,63 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.OWC10Api.PivotAxisMember> Member
-        
+        #region IEnumerableProvider<NetOffice.OWC10Api.PivotAxisMember>
+
+        ICOMObject IEnumerableProvider<NetOffice.OWC10Api.PivotAxisMember>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.OWC10Api.PivotAxisMember>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.OWC10Api.PivotAxisMember>
+
         /// <summary>
-		/// SupportByVersionAttribute OWC10, 1
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-       public IEnumerator<NetOffice.OWC10Api.PivotAxisMember> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.OWC10Api.PivotAxisMember item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion OWC10, 1
+        /// </summary>
+        [SupportByVersion("OWC10", 1)]
+        public IEnumerator<NetOffice.OWC10Api.PivotAxisMember> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.OWC10Api.PivotAxisMember item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute OWC10, 1
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion OWC10, 1
+        /// </summary>
+        [SupportByVersion("OWC10", 1)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

@@ -1,56 +1,57 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OWC10Api
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void DataSourceControl_CurrentEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeExpandEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeCollapseEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeFirstPageEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforePreviousPageEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeNextPageEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeLastPageEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_DataErrorEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_DataPageCompleteEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeInitialBindEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_RecordsetSaveProgressEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_AfterDeleteEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_AfterInsertEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_AfterUpdateEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeDeleteEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeInsertEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeOverwriteEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_BeforeUpdateEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_DirtyEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_RecordExitEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_UndoEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
-	public delegate void DataSourceControl_FocusEventHandler(NetOffice.OWC10Api.DSCEventInfo DSCEventInfo);
+	public delegate void DataSourceControl_CurrentEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeExpandEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeCollapseEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeFirstPageEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforePreviousPageEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeNextPageEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeLastPageEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_DataErrorEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_DataPageCompleteEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeInitialBindEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_RecordsetSaveProgressEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_AfterDeleteEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_AfterInsertEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_AfterUpdateEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeDeleteEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeInsertEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeOverwriteEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_BeforeUpdateEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_DirtyEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_RecordExitEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_UndoEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
+	public delegate void DataSourceControl_FocusEventHandler(NetOffice.OWC10Api.DSCEventInfo dSCEventInfo);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass DataSourceControl 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class DataSourceControl : IDataSourceControl,IEventBinding
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events._DataSourceControlEvent_SinkHelper))]
+    [ComEventInterface(typeof(Events._DataSourceControlEvent))]
+    public class DataSourceControl : IDataSourceControl, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_DataSourceControlEvent_SinkHelper __DataSourceControlEvent_SinkHelper;
+        private static Type _type;
+        private Events._DataSourceControlEvent_SinkHelper __DataSourceControlEvent_SinkHelper;
 	
 		#endregion
 
@@ -59,6 +60,7 @@ namespace NetOffice.OWC10Api
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -67,8 +69,9 @@ namespace NetOffice.OWC10Api
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -125,17 +128,17 @@ namespace NetOffice.OWC10Api
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of DataSourceControl 
-        ///</summary>		
+        /// </summary>		
 		public DataSourceControl():base("OWC10.DataSourceControl")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of DataSourceControl
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public DataSourceControl(string progId):base(progId)
 		{
@@ -145,46 +148,6 @@ namespace NetOffice.OWC10Api
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running OWC10.DataSourceControl objects from the environment/system
-        /// </summary>
-        /// <returns>an OWC10.DataSourceControl array</returns>
-		public static NetOffice.OWC10Api.DataSourceControl[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("OWC10","DataSourceControl");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.DataSourceControl> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.DataSourceControl>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OWC10Api.DataSourceControl(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.DataSourceControl object from the environment/system.
-        /// </summary>
-        /// <returns>an OWC10.DataSourceControl object or null</returns>
-		public static NetOffice.OWC10Api.DataSourceControl GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","DataSourceControl", false);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.DataSourceControl(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.DataSourceControl object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an OWC10.DataSourceControl object or null</returns>
-		public static NetOffice.OWC10Api.DataSourceControl GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","DataSourceControl", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.DataSourceControl(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -675,7 +638,7 @@ namespace NetOffice.OWC10Api
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -690,12 +653,12 @@ namespace NetOffice.OWC10Api
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _DataSourceControlEvent_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events._DataSourceControlEvent_SinkHelper.Id);
 
 
-			if(_DataSourceControlEvent_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events._DataSourceControlEvent_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__DataSourceControlEvent_SinkHelper = new _DataSourceControlEvent_SinkHelper(this, _connectPoint);
+				__DataSourceControlEvent_SinkHelper = new Events._DataSourceControlEvent_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -711,50 +674,34 @@ namespace NetOffice.OWC10Api
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -763,22 +710,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -789,34 +722,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -837,3 +744,4 @@ namespace NetOffice.OWC10Api
 		#pragma warning restore
 	}
 }
+

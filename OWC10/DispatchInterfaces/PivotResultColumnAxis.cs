@@ -1,23 +1,33 @@
-﻿using System;
+using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.OWC10Api
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface PivotResultColumnAxis 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class PivotResultColumnAxis : PivotResultGroupAxis
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsDispatchInterface)]
+ 	public class PivotResultColumnAxis : PivotResultGroupAxis
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.OWC10Api
             {
                 if (null == _type)
                     _type = typeof(PivotResultColumnAxis);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public PivotResultColumnAxis(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.OWC10Api
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public PivotResultColumnAxis(string progId) : base(progId)
 		{
@@ -95,123 +111,12 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public NetOffice.OWC10Api.PivotData Data
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Data", paramsArray);
-				NetOffice.OWC10Api.PivotData newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.PivotData.LateBindingApiWrapperType) as NetOffice.OWC10Api.PivotData;
-				return newObject;
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public NetOffice.OWC10Api.PivotAxis SourceAxis
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "SourceAxis", paramsArray);
-				NetOffice.OWC10Api.PivotAxis newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.OWC10Api.PivotAxis;
-				return newObject;
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public NetOffice.OWC10Api.PivotResultLabel Label
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Label", paramsArray);
-				NetOffice.OWC10Api.PivotResultLabel newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.PivotResultLabel.LateBindingApiWrapperType) as NetOffice.OWC10Api.PivotResultLabel;
-				return newObject;
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public Int32 Left
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Left", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public Int32 Top
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Top", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public Int32 Width
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Width", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-		public Int32 Height
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Height", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion OWC10 1
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
 		public NetOffice.OWC10Api.PivotGroupAxis SourceColumnAxis
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "SourceColumnAxis", paramsArray);
-				NetOffice.OWC10Api.PivotGroupAxis newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.PivotGroupAxis.LateBindingApiWrapperType) as NetOffice.OWC10Api.PivotGroupAxis;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.OWC10Api.PivotGroupAxis>(this, "SourceColumnAxis", NetOffice.OWC10Api.PivotGroupAxis.LateBindingApiWrapperType);
 			}
 		}
 
@@ -219,15 +124,12 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
 		public NetOffice.OWC10Api.PivotColumnMember ColumnMember
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "ColumnMember", paramsArray);
-				NetOffice.OWC10Api.PivotColumnMember newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.PivotColumnMember.LateBindingApiWrapperType) as NetOffice.OWC10Api.PivotColumnMember;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.OWC10Api.PivotColumnMember>(this, "ColumnMember", NetOffice.OWC10Api.PivotColumnMember.LateBindingApiWrapperType);
 			}
 		}
 
@@ -236,6 +138,7 @@ namespace NetOffice.OWC10Api
 		#region Methods
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

@@ -1,12 +1,10 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.VisioApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
@@ -16,66 +14,69 @@ namespace NetOffice.VisioApi
 	public delegate void Document_DocumentSavedAsEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_DocumentChangedEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_BeforeDocumentCloseEventHandler(NetOffice.VisioApi.IVDocument doc);
-	public delegate void Document_StyleAddedEventHandler(NetOffice.VisioApi.IVStyle Style);
-	public delegate void Document_StyleChangedEventHandler(NetOffice.VisioApi.IVStyle Style);
-	public delegate void Document_BeforeStyleDeleteEventHandler(NetOffice.VisioApi.IVStyle Style);
-	public delegate void Document_MasterAddedEventHandler(NetOffice.VisioApi.IVMaster Master);
-	public delegate void Document_MasterChangedEventHandler(NetOffice.VisioApi.IVMaster Master);
-	public delegate void Document_BeforeMasterDeleteEventHandler(NetOffice.VisioApi.IVMaster Master);
-	public delegate void Document_PageAddedEventHandler(NetOffice.VisioApi.IVPage Page);
-	public delegate void Document_PageChangedEventHandler(NetOffice.VisioApi.IVPage Page);
-	public delegate void Document_BeforePageDeleteEventHandler(NetOffice.VisioApi.IVPage Page);
-	public delegate void Document_ShapeAddedEventHandler(NetOffice.VisioApi.IVShape Shape);
-	public delegate void Document_BeforeSelectionDeleteEventHandler(NetOffice.VisioApi.IVSelection Selection);
+	public delegate void Document_StyleAddedEventHandler(NetOffice.VisioApi.IVStyle style);
+	public delegate void Document_StyleChangedEventHandler(NetOffice.VisioApi.IVStyle style);
+	public delegate void Document_BeforeStyleDeleteEventHandler(NetOffice.VisioApi.IVStyle style);
+	public delegate void Document_MasterAddedEventHandler(NetOffice.VisioApi.IVMaster master);
+	public delegate void Document_MasterChangedEventHandler(NetOffice.VisioApi.IVMaster master);
+	public delegate void Document_BeforeMasterDeleteEventHandler(NetOffice.VisioApi.IVMaster master);
+	public delegate void Document_PageAddedEventHandler(NetOffice.VisioApi.IVPage page);
+	public delegate void Document_PageChangedEventHandler(NetOffice.VisioApi.IVPage page);
+	public delegate void Document_BeforePageDeleteEventHandler(NetOffice.VisioApi.IVPage page);
+	public delegate void Document_ShapeAddedEventHandler(NetOffice.VisioApi.IVShape shape);
+	public delegate void Document_BeforeSelectionDeleteEventHandler(NetOffice.VisioApi.IVSelection selection);
 	public delegate void Document_RunModeEnteredEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_DesignModeEnteredEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_BeforeDocumentSaveEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_BeforeDocumentSaveAsEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_QueryCancelDocumentCloseEventHandler(NetOffice.VisioApi.IVDocument doc);
 	public delegate void Document_DocumentCloseCanceledEventHandler(NetOffice.VisioApi.IVDocument doc);
-	public delegate void Document_QueryCancelStyleDeleteEventHandler(NetOffice.VisioApi.IVStyle Style);
-	public delegate void Document_StyleDeleteCanceledEventHandler(NetOffice.VisioApi.IVStyle Style);
-	public delegate void Document_QueryCancelMasterDeleteEventHandler(NetOffice.VisioApi.IVMaster Master);
-	public delegate void Document_MasterDeleteCanceledEventHandler(NetOffice.VisioApi.IVMaster Master);
-	public delegate void Document_QueryCancelPageDeleteEventHandler(NetOffice.VisioApi.IVPage Page);
-	public delegate void Document_PageDeleteCanceledEventHandler(NetOffice.VisioApi.IVPage Page);
-	public delegate void Document_ShapeParentChangedEventHandler(NetOffice.VisioApi.IVShape Shape);
-	public delegate void Document_BeforeShapeTextEditEventHandler(NetOffice.VisioApi.IVShape Shape);
-	public delegate void Document_ShapeExitedTextEditEventHandler(NetOffice.VisioApi.IVShape Shape);
-	public delegate void Document_QueryCancelSelectionDeleteEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_SelectionDeleteCanceledEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_QueryCancelUngroupEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_UngroupCanceledEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_QueryCancelConvertToGroupEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_ConvertToGroupCanceledEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_QueryCancelGroupEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_GroupCanceledEventHandler(NetOffice.VisioApi.IVSelection Selection);
-	public delegate void Document_ShapeDataGraphicChangedEventHandler(NetOffice.VisioApi.IVShape Shape);
-	public delegate void Document_BeforeDataRecordsetDeleteEventHandler(NetOffice.VisioApi.IVDataRecordset DataRecordset);
-	public delegate void Document_DataRecordsetAddedEventHandler(NetOffice.VisioApi.IVDataRecordset DataRecordset);
+	public delegate void Document_QueryCancelStyleDeleteEventHandler(NetOffice.VisioApi.IVStyle style);
+	public delegate void Document_StyleDeleteCanceledEventHandler(NetOffice.VisioApi.IVStyle style);
+	public delegate void Document_QueryCancelMasterDeleteEventHandler(NetOffice.VisioApi.IVMaster master);
+	public delegate void Document_MasterDeleteCanceledEventHandler(NetOffice.VisioApi.IVMaster master);
+	public delegate void Document_QueryCancelPageDeleteEventHandler(NetOffice.VisioApi.IVPage page);
+	public delegate void Document_PageDeleteCanceledEventHandler(NetOffice.VisioApi.IVPage page);
+	public delegate void Document_ShapeParentChangedEventHandler(NetOffice.VisioApi.IVShape shape);
+	public delegate void Document_BeforeShapeTextEditEventHandler(NetOffice.VisioApi.IVShape shape);
+	public delegate void Document_ShapeExitedTextEditEventHandler(NetOffice.VisioApi.IVShape shape);
+	public delegate void Document_QueryCancelSelectionDeleteEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_SelectionDeleteCanceledEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_QueryCancelUngroupEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_UngroupCanceledEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_QueryCancelConvertToGroupEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_ConvertToGroupCanceledEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_QueryCancelGroupEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_GroupCanceledEventHandler(NetOffice.VisioApi.IVSelection selection);
+	public delegate void Document_ShapeDataGraphicChangedEventHandler(NetOffice.VisioApi.IVShape shape);
+	public delegate void Document_BeforeDataRecordsetDeleteEventHandler(NetOffice.VisioApi.IVDataRecordset dataRecordset);
+	public delegate void Document_DataRecordsetAddedEventHandler(NetOffice.VisioApi.IVDataRecordset dataRecordset);
 	public delegate void Document_AfterRemoveHiddenInformationEventHandler(NetOffice.VisioApi.IVDocument doc);
-	public delegate void Document_RuleSetValidatedEventHandler(NetOffice.VisioApi.IVValidationRuleSet RuleSet);
+	public delegate void Document_RuleSetValidatedEventHandler(NetOffice.VisioApi.IVValidationRuleSet ruleSet);
 	public delegate void Document_AfterDocumentMergeEventHandler(NetOffice.VisioApi.IVCoauthMergeEvent coauthMergeObjects);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Document 
 	/// SupportByVersion Visio, 11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/ff769268(v=office.14).aspx
-	///</summary>
-	[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Document : IVDocument,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/ff769268(v=office.14).aspx </remarks>
+	[SupportByVersion("Visio", 11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.EDocument_SinkHelper))]
+    [ComEventInterface(typeof(Events.EDocument))]
+    public class Document : IVDocument, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		EDocument_SinkHelper _eDocument_SinkHelper;
+        private static Type _type;
+        private Events.EDocument_SinkHelper _eDocument_SinkHelper;
 	
 		#endregion
 
@@ -84,6 +85,7 @@ namespace NetOffice.VisioApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -91,9 +93,10 @@ namespace NetOffice.VisioApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+        
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -150,17 +153,17 @@ namespace NetOffice.VisioApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Document 
-        ///</summary>		
+        /// </summary>		
 		public Document():base("Visio.Document")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Document
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Document(string progId):base(progId)
 		{
@@ -170,46 +173,6 @@ namespace NetOffice.VisioApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Visio.Document objects from the environment/system
-        /// </summary>
-        /// <returns>an Visio.Document array</returns>
-		public static NetOffice.VisioApi.Document[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Visio","Document");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Document> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.VisioApi.Document>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.VisioApi.Document(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Document object from the environment/system.
-        /// </summary>
-        /// <returns>an Visio.Document object or null</returns>
-		public static NetOffice.VisioApi.Document GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Document", false);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Document(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Visio.Document object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Visio.Document object or null</returns>
-		public static NetOffice.VisioApi.Document GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Visio","Document", throwOnError);
-			if(null != proxy)
-				return new NetOffice.VisioApi.Document(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -1273,7 +1236,7 @@ namespace NetOffice.VisioApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -1288,12 +1251,12 @@ namespace NetOffice.VisioApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, EDocument_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.EDocument_SinkHelper.Id);
 
 
-			if(EDocument_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if (Events.EDocument_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_eDocument_SinkHelper = new EDocument_SinkHelper(this, _connectPoint);
+				_eDocument_SinkHelper = new Events.EDocument_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -1309,50 +1272,34 @@ namespace NetOffice.VisioApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -1361,22 +1308,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -1387,34 +1320,8 @@ namespace NetOffice.VisioApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -1435,3 +1342,4 @@ namespace NetOffice.VisioApi
 		#pragma warning restore
 	}
 }
+

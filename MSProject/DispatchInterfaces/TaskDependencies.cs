@@ -1,25 +1,37 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.MSProjectApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface TaskDependencies 
 	/// SupportByVersion MSProject, 11,12,14
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff920720(v=office.14).aspx
-	///</summary>
-	[SupportByVersionAttribute("MSProject", 11,12,14)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class TaskDependencies : COMObject ,IEnumerable<NetOffice.MSProjectApi.TaskDependency>
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff920720(v=office.14).aspx </remarks>
+	[SupportByVersion("MSProject", 11,12,14)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class TaskDependencies : COMObject, IEnumerableProvider<NetOffice.MSProjectApi.TaskDependency>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -30,14 +42,20 @@ namespace NetOffice.MSProjectApi
             {
                 if (null == _type)
                     _type = typeof(TaskDependencies);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public TaskDependencies(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -83,7 +101,7 @@ namespace NetOffice.MSProjectApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public TaskDependencies(string progId) : base(progId)
 		{
@@ -97,17 +115,14 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11, 12, 14
 		/// Get
 		/// </summary>
-		/// <param name="index">Int32 Index</param>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">Int32 index</param>
+		[SupportByVersion("MSProject", 11,12,14)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.MSProjectApi.TaskDependency this[Int32 index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.MSProjectApi.TaskDependency newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType) as NetOffice.MSProjectApi.TaskDependency;
-			return newObject;
+			{
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.TaskDependency>(this, "Item", NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType, index);
 			}
 		}
 
@@ -115,14 +130,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11, 12, 14
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		[SupportByVersion("MSProject", 11,12,14)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -130,15 +143,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11, 12, 14
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		[SupportByVersion("MSProject", 11,12,14)]
 		public NetOffice.MSProjectApi.Task Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				NetOffice.MSProjectApi.Task newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.Task.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Task;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.Task>(this, "Parent", NetOffice.MSProjectApi.Task.LateBindingApiWrapperType);
 			}
 		}
 
@@ -146,15 +156,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11, 12, 14
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		[SupportByVersion("MSProject", 11,12,14)]
 		public NetOffice.MSProjectApi.Application Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.MSProjectApi.Application newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.Application.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Application;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.Application>(this, "Application", NetOffice.MSProjectApi.Application.LateBindingApiWrapperType);
 			}
 		}
 
@@ -164,80 +171,83 @@ namespace NetOffice.MSProjectApi
 
 		/// <summary>
 		/// SupportByVersion MSProject 11, 12, 14
-		/// 
 		/// </summary>
-		/// <param name="from">NetOffice.MSProjectApi.Task From</param>
+		/// <param name="from">NetOffice.MSProjectApi.Task from</param>
 		/// <param name="type">optional NetOffice.MSProjectApi.Enums.PjTaskLinkType Type = 1</param>
-		/// <param name="lag">optional object Lag</param>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		/// <param name="lag">optional object lag</param>
+		[SupportByVersion("MSProject", 11,12,14)]
 		public NetOffice.MSProjectApi.TaskDependency Add(NetOffice.MSProjectApi.Task from, object type, object lag)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(from, type, lag);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.MSProjectApi.TaskDependency newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType) as NetOffice.MSProjectApi.TaskDependency;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.MSProjectApi.TaskDependency>(this, "Add", NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType, from, type, lag);
 		}
 
 		/// <summary>
 		/// SupportByVersion MSProject 11, 12, 14
-		/// 
 		/// </summary>
-		/// <param name="from">NetOffice.MSProjectApi.Task From</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		/// <param name="from">NetOffice.MSProjectApi.Task from</param>
+		[CustomMethod]
+		[SupportByVersion("MSProject", 11,12,14)]
 		public NetOffice.MSProjectApi.TaskDependency Add(NetOffice.MSProjectApi.Task from)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(from);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.MSProjectApi.TaskDependency newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType) as NetOffice.MSProjectApi.TaskDependency;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.MSProjectApi.TaskDependency>(this, "Add", NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType, from);
 		}
 
 		/// <summary>
 		/// SupportByVersion MSProject 11, 12, 14
-		/// 
 		/// </summary>
-		/// <param name="from">NetOffice.MSProjectApi.Task From</param>
+		/// <param name="from">NetOffice.MSProjectApi.Task from</param>
 		/// <param name="type">optional NetOffice.MSProjectApi.Enums.PjTaskLinkType Type = 1</param>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+		[CustomMethod]
+		[SupportByVersion("MSProject", 11,12,14)]
 		public NetOffice.MSProjectApi.TaskDependency Add(NetOffice.MSProjectApi.Task from, object type)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(from, type);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.MSProjectApi.TaskDependency newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType) as NetOffice.MSProjectApi.TaskDependency;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.MSProjectApi.TaskDependency>(this, "Add", NetOffice.MSProjectApi.TaskDependency.LateBindingApiWrapperType, from, type);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.MSProjectApi.TaskDependency> Member
-        
+        #region IEnumerableProvider<NetOffice.MSProjectApi.TaskDependency>
+
+        ICOMObject IEnumerableProvider<NetOffice.MSProjectApi.TaskDependency>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.MSProjectApi.TaskDependency>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.MSProjectApi.TaskDependency>
+
         /// <summary>
-		/// SupportByVersionAttribute MSProject, 11,12,14
-		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
-       public IEnumerator<NetOffice.MSProjectApi.TaskDependency> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.MSProjectApi.TaskDependency item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion MSProject, 11,12,14
+        /// </summary>
+        [SupportByVersion("MSProject", 11, 12, 14)]
+        public IEnumerator<NetOffice.MSProjectApi.TaskDependency> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.MSProjectApi.TaskDependency item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute MSProject, 11,12,14
-		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11,12,14)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion MSProject, 11,12,14
+        /// </summary>
+        [SupportByVersion("MSProject", 11,12,14)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

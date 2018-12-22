@@ -1,17 +1,15 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.ADODBApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
 	public delegate void Recordset_WillChangeFieldEventHandler(Int32 cFields, object Fields, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
-	public delegate void Recordset_FieldChangeCompleteEventHandler(Int32 cFields, object Fields, NetOffice.ADODBApi.Error pError, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
+	public delegate void Recordset_FieldChangeCompleteEventHandler(Int32 cFields, object fields, NetOffice.ADODBApi.Error pError, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_WillChangeRecordEventHandler(NetOffice.ADODBApi.Enums.EventReasonEnum adReason, Int32 cRecords, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_RecordChangeCompleteEventHandler(NetOffice.ADODBApi.Enums.EventReasonEnum adReason, Int32 cRecords, NetOffice.ADODBApi.Error pError, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_WillChangeRecordsetEventHandler(NetOffice.ADODBApi.Enums.EventReasonEnum adReason, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
@@ -19,27 +17,30 @@ namespace NetOffice.ADODBApi
 	public delegate void Recordset_WillMoveEventHandler(NetOffice.ADODBApi.Enums.EventReasonEnum adReason, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_MoveCompleteEventHandler(NetOffice.ADODBApi.Enums.EventReasonEnum adReason, NetOffice.ADODBApi.Error pError, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_EndOfRecordsetEventHandler(ref bool fMoreData, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
-	public delegate void Recordset_FetchProgressEventHandler(Int32 Progress, Int32 MaxProgress, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
+	public delegate void Recordset_FetchProgressEventHandler(Int32 progress, Int32 maxProgress, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	public delegate void Recordset_FetchCompleteEventHandler(NetOffice.ADODBApi.Error pError, NetOffice.ADODBApi.Enums.EventStatusEnum adStatus, NetOffice.ADODBApi._Recordset pRecordset);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Recordset 
 	/// SupportByVersion ADODB, 2.1,2.5
-	///</summary>
-	[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Recordset : _Recordset,IEventBinding
+	/// </summary>
+	[SupportByVersion("ADODB", 2.1,2.5)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.RecordsetEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.RecordsetEvents))]
+    public class Recordset : _Recordset, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		RecordsetEvents_SinkHelper _recordsetEvents_SinkHelper;
+        private static Type _type;
+        private Events.RecordsetEvents_SinkHelper _recordsetEvents_SinkHelper;
 	
 		#endregion
 
@@ -48,6 +49,7 @@ namespace NetOffice.ADODBApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -56,8 +58,10 @@ namespace NetOffice.ADODBApi
             }
         }
 
-        private static Type _type;
-		
+       
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -114,17 +118,17 @@ namespace NetOffice.ADODBApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Recordset 
-        ///</summary>		
+        /// </summary>		
 		public Recordset():base("ADODB.Recordset")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Recordset
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Recordset(string progId):base(progId)
 		{
@@ -134,46 +138,6 @@ namespace NetOffice.ADODBApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running ADODB.Recordset objects from the environment/system
-        /// </summary>
-        /// <returns>an ADODB.Recordset array</returns>
-		public static NetOffice.ADODBApi.Recordset[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("ADODB","Recordset");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.ADODBApi.Recordset> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.ADODBApi.Recordset>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.ADODBApi.Recordset(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running ADODB.Recordset object from the environment/system.
-        /// </summary>
-        /// <returns>an ADODB.Recordset object or null</returns>
-		public static NetOffice.ADODBApi.Recordset GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("ADODB","Recordset", false);
-			if(null != proxy)
-				return new NetOffice.ADODBApi.Recordset(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running ADODB.Recordset object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an ADODB.Recordset object or null</returns>
-		public static NetOffice.ADODBApi.Recordset GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("ADODB","Recordset", throwOnError);
-			if(null != proxy)
-				return new NetOffice.ADODBApi.Recordset(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -422,7 +386,7 @@ namespace NetOffice.ADODBApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -437,12 +401,12 @@ namespace NetOffice.ADODBApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, RecordsetEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.RecordsetEvents_SinkHelper.Id);
 
 
-			if(RecordsetEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.RecordsetEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_recordsetEvents_SinkHelper = new RecordsetEvents_SinkHelper(this, _connectPoint);
+				_recordsetEvents_SinkHelper = new Events.RecordsetEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -458,50 +422,34 @@ namespace NetOffice.ADODBApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -510,22 +458,8 @@ namespace NetOffice.ADODBApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -536,34 +470,8 @@ namespace NetOffice.ADODBApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -584,3 +492,4 @@ namespace NetOffice.ADODBApi
 		#pragma warning restore
 	}
 }
+

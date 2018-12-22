@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.DAOApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface QueryDefs 
 	/// SupportByVersion DAO, 3.6,12.0
-	///</summary>
-	[SupportByVersionAttribute("DAO", 3.6,12.0)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class QueryDefs : _DynaCollection ,IEnumerable<NetOffice.DAOApi.QueryDef>
+	/// </summary>
+	[SupportByVersion("DAO", 3.6,12.0)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Method), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class QueryDefs : _DynaCollection, IEnumerableProvider<NetOffice.DAOApi.QueryDef>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.DAOApi
             {
                 if (null == _type)
                     _type = typeof(QueryDefs);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public QueryDefs(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.DAOApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public QueryDefs(string progId) : base(progId)
 		{
@@ -96,79 +114,65 @@ namespace NetOffice.DAOApi
 		/// SupportByVersion DAO 3.6, 12.0
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("DAO", 3.6,12.0)]
-		public Int16 Count
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt16(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion DAO 3.6, 12.0
-		/// Get
-		/// </summary>
-		/// <param name="item">object Item</param>
-		[SupportByVersionAttribute("DAO", 3.6,12.0)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="item">object item</param>
+		[SupportByVersion("DAO", 3.6,12.0)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.DAOApi.QueryDef this[object item]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(item);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.DAOApi.QueryDef newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.DAOApi.QueryDef.LateBindingApiWrapperType) as NetOffice.DAOApi.QueryDef;
-			return newObject;
+			{
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.DAOApi.QueryDef>(this, "Item", NetOffice.DAOApi.QueryDef.LateBindingApiWrapperType, item);
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// SupportByVersion DAO 3.6, 12.0
-		/// 
-		/// </summary>
-		[SupportByVersionAttribute("DAO", 3.6,12.0)]
-		public void Refresh()
-		{
-			object[] paramsArray = null;
-			Invoker.Method(this, "Refresh", paramsArray);
-		}
+        #endregion
 
-		#endregion
+        #region IEnumerableProvider<NetOffice.DAOApi.QueryDef>
 
-       #region IEnumerable<NetOffice.DAOApi.QueryDef> Member
-        
+        ICOMObject IEnumerableProvider<NetOffice.DAOApi.QueryDef>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsMethod(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.DAOApi.QueryDef>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, true);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.DAOApi.QueryDef>
+
         /// <summary>
-		/// SupportByVersionAttribute DAO, 3.6,12.0
-		/// </summary>
-		[SupportByVersionAttribute("DAO", 3.6,12.0)]
-       public IEnumerator<NetOffice.DAOApi.QueryDef> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.DAOApi.QueryDef item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion DAO, 3.6,12.0
+        /// </summary>
+        [SupportByVersion("DAO", 3.6, 12.0)]
+        public IEnumerator<NetOffice.DAOApi.QueryDef> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.DAOApi.QueryDef item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute DAO, 3.6,12.0
-		/// </summary>
-		[SupportByVersionAttribute("DAO", 3.6,12.0)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion DAO, 3.6,12.0
+        /// </summary>
+        [SupportByVersion("DAO", 3.6,12.0)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

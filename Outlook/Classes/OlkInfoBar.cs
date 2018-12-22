@@ -1,40 +1,41 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OutlookApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
 	public delegate void OlkInfoBar_ClickEventHandler();
 	public delegate void OlkInfoBar_DoubleClickEventHandler();
-	public delegate void OlkInfoBar_MouseDownEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton Button, NetOffice.OutlookApi.Enums.OlShiftState Shift, Single X, Single Y);
-	public delegate void OlkInfoBar_MouseMoveEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton Button, NetOffice.OutlookApi.Enums.OlShiftState Shift, Single X, Single Y);
-	public delegate void OlkInfoBar_MouseUpEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton Button, NetOffice.OutlookApi.Enums.OlShiftState Shift, Single X, Single Y);
+	public delegate void OlkInfoBar_MouseDownEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton button, NetOffice.OutlookApi.Enums.OlShiftState shift, Single x, Single y);
+	public delegate void OlkInfoBar_MouseMoveEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton button, NetOffice.OutlookApi.Enums.OlShiftState shift, Single x, Single y);
+	public delegate void OlkInfoBar_MouseUpEventHandler(NetOffice.OutlookApi.Enums.OlMouseButton button, NetOffice.OutlookApi.Enums.OlShiftState shift, Single x, Single y);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass OlkInfoBar 
 	/// SupportByVersion Outlook, 12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff861894.aspx
-	///</summary>
-	[SupportByVersionAttribute("Outlook", 12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class OlkInfoBar : _OlkInfoBar,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff861894.aspx </remarks>
+	[SupportByVersion("Outlook", 12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.OlkInfoBarEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.OlkInfoBarEvents))]
+    public class OlkInfoBar : _OlkInfoBar, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		OlkInfoBarEvents_SinkHelper _olkInfoBarEvents_SinkHelper;
+        private static Type _type;
+        private Events.OlkInfoBarEvents_SinkHelper _olkInfoBarEvents_SinkHelper;
 	
 		#endregion
 
@@ -43,6 +44,7 @@ namespace NetOffice.OutlookApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -51,8 +53,9 @@ namespace NetOffice.OutlookApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -109,17 +112,17 @@ namespace NetOffice.OutlookApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of OlkInfoBar 
-        ///</summary>		
+        /// </summary>		
 		public OlkInfoBar():base("Outlook.OlkInfoBar")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of OlkInfoBar
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public OlkInfoBar(string progId):base(progId)
 		{
@@ -129,46 +132,6 @@ namespace NetOffice.OutlookApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Outlook.OlkInfoBar objects from the environment/system
-        /// </summary>
-        /// <returns>an Outlook.OlkInfoBar array</returns>
-		public static NetOffice.OutlookApi.OlkInfoBar[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Outlook","OlkInfoBar");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi.OlkInfoBar> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi.OlkInfoBar>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OutlookApi.OlkInfoBar(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Outlook.OlkInfoBar object from the environment/system.
-        /// </summary>
-        /// <returns>an Outlook.OlkInfoBar object or null</returns>
-		public static NetOffice.OutlookApi.OlkInfoBar GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","OlkInfoBar", false);
-			if(null != proxy)
-				return new NetOffice.OutlookApi.OlkInfoBar(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Outlook.OlkInfoBar object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Outlook.OlkInfoBar object or null</returns>
-		public static NetOffice.OutlookApi.OlkInfoBar GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","OlkInfoBar", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OutlookApi.OlkInfoBar(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -305,12 +268,12 @@ namespace NetOffice.OutlookApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, OlkInfoBarEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.OlkInfoBarEvents_SinkHelper.Id);
 
 
-			if(OlkInfoBarEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.OlkInfoBarEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_olkInfoBarEvents_SinkHelper = new OlkInfoBarEvents_SinkHelper(this, _connectPoint);
+				_olkInfoBarEvents_SinkHelper = new Events.OlkInfoBarEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -326,50 +289,34 @@ namespace NetOffice.OutlookApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -378,22 +325,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -404,34 +337,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -452,3 +359,4 @@ namespace NetOffice.OutlookApi
 		#pragma warning restore
 	}
 }
+

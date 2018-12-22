@@ -1,29 +1,30 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.ExcelApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface ListColumns 
 	/// SupportByVersion Excel, 11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff838649.aspx
-	///</summary>
-	[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class ListColumns : COMObject ,IEnumerable<NetOffice.ExcelApi.ListColumn>
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff838649.aspx </remarks>
+	[SupportByVersion("Excel", 11,12,14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "_Default")]
+	public class ListColumns : COMObject, IEnumerableProvider<NetOffice.ExcelApi.ListColumn>
 	{
 		#pragma warning disable
+
 		#region Type Information
 
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -41,14 +42,20 @@ namespace NetOffice.ExcelApi
             {
                 if (null == _type)
                     _type = typeof(ListColumns);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public ListColumns(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -94,7 +101,7 @@ namespace NetOffice.ExcelApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public ListColumns(string progId) : base(progId)
 		{
@@ -107,52 +114,43 @@ namespace NetOffice.ExcelApi
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
 		/// Get
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff840144.aspx
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff840144.aspx </remarks>
+		[SupportByVersion("Excel", 11,12,14,15,16)]
 		public NetOffice.ExcelApi.Application Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.ExcelApi.Application newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.ExcelApi.Application.LateBindingApiWrapperType) as NetOffice.ExcelApi.Application;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.ExcelApi.Application>(this, "Application", NetOffice.ExcelApi.Application.LateBindingApiWrapperType);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
 		/// Get
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff840704.aspx
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff840704.aspx </remarks>
+		[SupportByVersion("Excel", 11,12,14,15,16)]
 		public NetOffice.ExcelApi.Enums.XlCreator Creator
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Creator", paramsArray);
-				int intReturnItem = NetRuntimeSystem.Convert.ToInt32(returnItem);
-				return (NetOffice.ExcelApi.Enums.XlCreator)intReturnItem;
+				return Factory.ExecuteEnumPropertyGet<NetOffice.ExcelApi.Enums.XlCreator>(this, "Creator");
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
 		/// Get
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff820798.aspx
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff820798.aspx </remarks>
+		[SupportByVersion("Excel", 11,12,14,15,16), ProxyResult]
 		public object Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Parent");
 			}
 		}
 
@@ -160,33 +158,28 @@ namespace NetOffice.ExcelApi
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("Excel", 11,12,14,15,16)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.ExcelApi.ListColumn this[object index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "_Default", paramsArray);
-			NetOffice.ExcelApi.ListColumn newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType) as NetOffice.ExcelApi.ListColumn;
-			return newObject;
+			{
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.ExcelApi.ListColumn>(this, "_Default", NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType, index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
 		/// Get
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff837067.aspx
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff837067.aspx </remarks>
+		[SupportByVersion("Excel", 11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -196,61 +189,70 @@ namespace NetOffice.ExcelApi
 
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff837110.aspx
 		/// </summary>
-		/// <param name="position">optional object Position</param>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff837110.aspx </remarks>
+		/// <param name="position">optional object position</param>
+		[SupportByVersion("Excel", 11,12,14,15,16)]
 		public NetOffice.ExcelApi.ListColumn Add(object position)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(position);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.ExcelApi.ListColumn newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType) as NetOffice.ExcelApi.ListColumn;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.ExcelApi.ListColumn>(this, "Add", NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType, position);
 		}
 
 		/// <summary>
 		/// SupportByVersion Excel 11, 12, 14, 15, 16
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff837110.aspx
 		/// </summary>
-		[CustomMethodAttribute]
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff837110.aspx </remarks>
+		[CustomMethod]
+		[SupportByVersion("Excel", 11,12,14,15,16)]
 		public NetOffice.ExcelApi.ListColumn Add()
 		{
-			object[] paramsArray = null;
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.ExcelApi.ListColumn newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType) as NetOffice.ExcelApi.ListColumn;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.ExcelApi.ListColumn>(this, "Add", NetOffice.ExcelApi.ListColumn.LateBindingApiWrapperType);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.ExcelApi.ListColumn> Member
-        
+        #region IEnumerableProvider<NetOffice.ExcelApi.ListColumn>
+
+        ICOMObject IEnumerableProvider<NetOffice.ExcelApi.ListColumn>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.ExcelApi.ListColumn>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.ExcelApi.ListColumn>
+
         /// <summary>
-		/// SupportByVersionAttribute Excel, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
-       public IEnumerator<NetOffice.ExcelApi.ListColumn> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.ExcelApi.ListColumn item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion Excel, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Excel", 11, 12, 14, 15, 16)]
+        public IEnumerator<NetOffice.ExcelApi.ListColumn> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.ExcelApi.ListColumn item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute Excel, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Excel", 11,12,14,15,16)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion Excel, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Excel", 11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

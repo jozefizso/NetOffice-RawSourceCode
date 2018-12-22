@@ -1,57 +1,59 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
 
 namespace NetOffice.PublisherApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void Application_WindowActivateEventHandler(NetOffice.PublisherApi.Window Wn);
-	public delegate void Application_WindowDeactivateEventHandler(NetOffice.PublisherApi.Window Wn);
-	public delegate void Application_WindowPageChangeEventHandler(NetOffice.PublisherApi.View Vw);
+	public delegate void Application_WindowActivateEventHandler(NetOffice.PublisherApi.Window wn);
+	public delegate void Application_WindowDeactivateEventHandler(NetOffice.PublisherApi.Window wn);
+	public delegate void Application_WindowPageChangeEventHandler(NetOffice.PublisherApi.View vw);
 	public delegate void Application_QuitEventHandler();
-	public delegate void Application_NewDocumentEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_DocumentOpenEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_DocumentBeforeCloseEventHandler(NetOffice.PublisherApi._Document Doc, ref bool Cancel);
-	public delegate void Application_MailMergeAfterMergeEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_MailMergeAfterRecordMergeEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_MailMergeBeforeMergeEventHandler(NetOffice.PublisherApi._Document Doc, Int32 StartRecord, Int32 EndRecord, ref bool Cancel);
-	public delegate void Application_MailMergeBeforeRecordMergeEventHandler(NetOffice.PublisherApi._Document Doc, ref bool Cancel);
-	public delegate void Application_MailMergeDataSourceLoadEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_MailMergeWizardSendToCustomEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_MailMergeWizardStateChangeEventHandler(NetOffice.PublisherApi._Document Doc, Int32 FromState);
-	public delegate void Application_MailMergeDataSourceValidateEventHandler(NetOffice.PublisherApi._Document Doc, ref bool Handled);
-	public delegate void Application_MailMergeInsertBarcodeEventHandler(NetOffice.PublisherApi._Document Doc, ref bool OkToInsert);
-	public delegate void Application_MailMergeRecipientListCloseEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_MailMergeGenerateBarcodeEventHandler(NetOffice.PublisherApi._Document Doc, ref string bstrString);
-	public delegate void Application_MailMergeWizardFollowUpCustomEventHandler(NetOffice.PublisherApi._Document Doc);
-	public delegate void Application_BeforePrintEventHandler(NetOffice.PublisherApi._Document Doc, ref bool Cancel);
-	public delegate void Application_AfterPrintEventHandler(NetOffice.PublisherApi._Document Doc);
+	public delegate void Application_NewDocumentEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_DocumentOpenEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_DocumentBeforeCloseEventHandler(NetOffice.PublisherApi._Document doc, ref bool cancel);
+	public delegate void Application_MailMergeAfterMergeEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_MailMergeAfterRecordMergeEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_MailMergeBeforeMergeEventHandler(NetOffice.PublisherApi._Document doc, Int32 startRecord, Int32 endRecord, ref bool cancel);
+	public delegate void Application_MailMergeBeforeRecordMergeEventHandler(NetOffice.PublisherApi._Document doc, ref bool cancel);
+	public delegate void Application_MailMergeDataSourceLoadEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_MailMergeWizardSendToCustomEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_MailMergeWizardStateChangeEventHandler(NetOffice.PublisherApi._Document doc, Int32 fromState);
+	public delegate void Application_MailMergeDataSourceValidateEventHandler(NetOffice.PublisherApi._Document doc, ref bool handled);
+	public delegate void Application_MailMergeInsertBarcodeEventHandler(NetOffice.PublisherApi._Document doc, ref bool okToInsert);
+	public delegate void Application_MailMergeRecipientListCloseEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_MailMergeGenerateBarcodeEventHandler(NetOffice.PublisherApi._Document doc, ref string bstrString);
+	public delegate void Application_MailMergeWizardFollowUpCustomEventHandler(NetOffice.PublisherApi._Document doc);
+	public delegate void Application_BeforePrintEventHandler(NetOffice.PublisherApi._Document doc, ref bool cancel);
+	public delegate void Application_AfterPrintEventHandler(NetOffice.PublisherApi._Document doc);
 	public delegate void Application_ShowCatalogUIEventHandler();
 	public delegate void Application_HideCatalogUIEventHandler();
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Application 
 	/// SupportByVersion Publisher, 14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Publisher", 14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Application : _Application,IEventBinding
+	/// </summary>
+	[SupportByVersion("Publisher", 14,15,16)]
+	[EntityType(EntityType.IsCoClass), ComProgId("Publisher.Application"), ModuleProvider(typeof(GlobalHelperModules.GlobalModule))]
+	[EventSink(typeof(Events.ApplicationEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.ApplicationEvents))]
+    public class Application : _Application, ICloneable<Application>, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		ApplicationEvents_SinkHelper _applicationEvents_SinkHelper;
+        private static Type _type;
+        private Events.ApplicationEvents_SinkHelper _applicationEvents_SinkHelper;
 	
 		#endregion
 
@@ -60,6 +62,7 @@ namespace NetOffice.PublisherApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -68,8 +71,9 @@ namespace NetOffice.PublisherApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -83,22 +87,28 @@ namespace NetOffice.PublisherApi
         
         #endregion
         		
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Application(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+			_callQuitInDispose = true;
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
 		public Application(Core factory, ICOMObject parentObject, object comProxy) : base(factory, parentObject, comProxy)
-		{
-			
+		{			
 			GlobalHelperModules.GlobalModule.Instance = this;
 		}
 
         ///<param name="parentObject">object there has created the proxy</param>
         ///<param name="comProxy">inner wrapped COM proxy</param>
 		public Application(ICOMObject parentObject, object comProxy) : base(parentObject, comProxy)
-		{
-			
+		{		
 			GlobalHelperModules.GlobalModule.Instance = this;
 		}
 
@@ -128,29 +138,28 @@ namespace NetOffice.PublisherApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         ///creates a new instance of Application 
-        ///</summary>		
+        /// </summary>		
 		public Application():base("Publisher.Application")
-		{
-			
+		{	
 			GlobalHelperModules.GlobalModule.Instance = this;
 		}
 		
-		///<summary>
+		/// <summary>
         ///creates a new instance of Application
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Application(string progId):base(progId)
-		{
-			
+		{			
 			GlobalHelperModules.GlobalModule.Instance = this;
 		}
 		
-/// <summary>
+        /// <summary>
 		/// NetOffice method: dispose instance and all child instances
 		/// </summary>
 		/// <param name="disposeEventBinding">dispose event exported proxies with one or more event recipients</param>
+		[Category("NetOffice"), CoreOverridden]
 		public override void Dispose(bool disposeEventBinding)
 		{
 			if(this.Equals(GlobalHelperModules.GlobalModule.Instance))
@@ -161,6 +170,7 @@ namespace NetOffice.PublisherApi
 		/// <summary>
 		/// NetOffice method: dispose instance and all child instances
 		/// </summary>
+		[Category("NetOffice"), CoreOverridden]
 		public override void Dispose()
 		{
 			if(this.Equals(GlobalHelperModules.GlobalModule.Instance))
@@ -168,57 +178,37 @@ namespace NetOffice.PublisherApi
 			base.Dispose();
 		}
 
-		#endregion
+        #endregion
 
-		#region Static CoClass Methods
+        #region Static CoClass Methods
 
-		/// <summary>
-        /// returns all running Publisher.Application objects from the running object table(ROT)
+        /// <summary>
+        /// Returns all running Publisher.Application instances from the environment/system
         /// </summary>
-        /// <returns>an Publisher.Application array</returns>
-		public static NetOffice.PublisherApi.Application[] GetActiveInstances()
-		{
-            IDisposableEnumeration proxyList = NetOffice.RunningObjectTable.GetActiveProxies("Publisher","Application");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.PublisherApi.Application> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.PublisherApi.Application>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.PublisherApi.Application(null, proxy));
-			return resultList.ToArray();
-		}
+        /// <returns>Publisher.Application sequence</returns>
+        public static IDisposableSequence<Application> GetActiveInstances()
+        {
+            return Running.ProxyService.GetActiveInstances<Application>("Publisher", "Application");
+        }
 
-		/// <summary>
-        /// returns a running Publisher.Application object from the running object table(ROT). the method takes the first element from the table
+        /// <summary>
+        /// Returns a running Publisher.Application instance from the environment/system
         /// </summary>
-        /// <returns>an Publisher.Application object or null</returns>
-		public static NetOffice.PublisherApi.Application GetActiveInstance()
-		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxy("Publisher","Application", false);
-			if(null != proxy)
-				return new NetOffice.PublisherApi.Application(null, proxy);
-			else
-				return null;
-		}
+        /// <param name="throwExceptionIfNotFound">throw exception if unable to find an instance</param>
+        /// <returns>Publisher.Application instance or null</returns>
+        public static Application GetActiveInstance(bool throwExceptionIfNotFound = false)
+        {
+            return Running.ProxyService.GetActiveInstance<Application>("Publisher", "Application", throwExceptionIfNotFound);
+        }
 
-		/// <summary>
-        /// returns a running Publisher.Application object from the running object table(ROT).  the method takes the first element from the table
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// SupportByVersion Publisher, 14,15,16
         /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Publisher.Application object or null</returns>
-		public static NetOffice.PublisherApi.Application GetActiveInstance(bool throwOnError)
-		{
-			object proxy = NetOffice.RunningObjectTable.GetActiveProxy("Publisher","Application", throwOnError);
-			if(null != proxy)
-				return new NetOffice.PublisherApi.Application(null, proxy);
-			else
-				return null;
-		}
-		#endregion
-
-		#region Events
-
-		/// <summary>
-		/// SupportByVersion Publisher, 14,15,16
-		/// </summary>
-		private event Application_WindowActivateEventHandler _WindowActivateEvent;
+        private event Application_WindowActivateEventHandler _WindowActivateEvent;
 
 		/// <summary>
 		/// SupportByVersion Publisher 14 15 16
@@ -723,7 +713,7 @@ namespace NetOffice.PublisherApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// creates active sink helper
@@ -738,12 +728,12 @@ namespace NetOffice.PublisherApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, ApplicationEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.ApplicationEvents_SinkHelper.Id);
 
 
-			if(ApplicationEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.ApplicationEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_applicationEvents_SinkHelper = new ApplicationEvents_SinkHelper(this, _connectPoint);
+				_applicationEvents_SinkHelper = new Events.ApplicationEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -756,97 +746,56 @@ namespace NetOffice.PublisherApi
                 return (null != _connectPoint);
             }
         }
-        
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
+        /// <summary>
+        /// Target methods from its actual event recipients
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
-
+       
+        /// <summary>
+        /// Returns the current count of event recipients
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-        }
-
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
+        
+        /// <summary>
+        /// Raise an instance event
+        /// </summary>
+        /// <param name="eventName">name of the event without 'Event' at the end</param>
+        /// <param name="paramsArray">custom arguments for the event</param>
+        /// <returns>count of called event recipients</returns>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Core.Default.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public void DisposeEventBridge()
         {
@@ -858,9 +807,23 @@ namespace NetOffice.PublisherApi
 
 			_connectPoint = null;
 		}
-        
+
         #endregion
 
-		#pragma warning restore
-	}
+        #region ICloneable<Application>
+
+        /// <summary>
+        /// Creates a new Application that is a copy of the current instance
+        /// </summary>
+        /// <returns>A new Application that is a copy of this instance</returns>
+        /// <exception cref="CloneException">An unexpected error occured. See inner exception(s) for details.</exception>
+        public new virtual Application Clone()
+        {
+            return base.Clone() as Application;
+        }
+
+        #endregion
+
+        #pragma warning restore
+    }
 }

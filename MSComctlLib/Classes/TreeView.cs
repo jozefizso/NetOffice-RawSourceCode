@@ -1,54 +1,55 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.MSComctlLibApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void TreeView_BeforeLabelEditEventHandler(ref Int16 Cancel);
-	public delegate void TreeView_AfterLabelEditEventHandler(ref Int16 Cancel, ref string NewString);
-	public delegate void TreeView_CollapseEventHandler(NetOffice.MSComctlLibApi.Node Node);
-	public delegate void TreeView_ExpandEventHandler(NetOffice.MSComctlLibApi.Node Node);
-	public delegate void TreeView_NodeClickEventHandler(NetOffice.MSComctlLibApi.Node Node);
-	public delegate void TreeView_KeyDownEventHandler(ref Int16 KeyCode, Int16 Shift);
-	public delegate void TreeView_KeyUpEventHandler(ref Int16 KeyCode, Int16 Shift);
-	public delegate void TreeView_KeyPressEventHandler(ref Int16 KeyAscii);
-	public delegate void TreeView_MouseDownEventHandler(Int16 Button, Int16 Shift, Int32 x, Int32 y);
-	public delegate void TreeView_MouseMoveEventHandler(Int16 Button, Int16 Shift, Int32 x, Int32 y);
-	public delegate void TreeView_MouseUpEventHandler(Int16 Button, Int16 Shift, Int32 x, Int32 y);
+	public delegate void TreeView_BeforeLabelEditEventHandler(ref Int16 cancel);
+	public delegate void TreeView_AfterLabelEditEventHandler(ref Int16 cancel, ref string newString);
+	public delegate void TreeView_CollapseEventHandler(NetOffice.MSComctlLibApi.Node node);
+	public delegate void TreeView_ExpandEventHandler(NetOffice.MSComctlLibApi.Node node);
+	public delegate void TreeView_NodeClickEventHandler(NetOffice.MSComctlLibApi.Node node);
+	public delegate void TreeView_KeyDownEventHandler(ref Int16 keyCode, Int16 shift);
+	public delegate void TreeView_KeyUpEventHandler(ref Int16 keyCode, Int16 shift);
+	public delegate void TreeView_KeyPressEventHandler(ref Int16 keyAscii);
+	public delegate void TreeView_MouseDownEventHandler(Int16 button, Int16 shift, Int32 x, Int32 y);
+	public delegate void TreeView_MouseMoveEventHandler(Int16 button, Int16 shift, Int32 x, Int32 y);
+	public delegate void TreeView_MouseUpEventHandler(Int16 button, Int16 shift, Int32 x, Int32 y);
 	public delegate void TreeView_ClickEventHandler();
 	public delegate void TreeView_DblClickEventHandler();
-	public delegate void TreeView_NodeCheckEventHandler(NetOffice.MSComctlLibApi.Node Node);
-	public delegate void TreeView_OLEStartDragEventHandler(ref NetOffice.MSComctlLibApi.DataObject Data, ref Int32 AllowedEffects);
-	public delegate void TreeView_OLEGiveFeedbackEventHandler(ref Int32 Effect, ref bool DefaultCursors);
-	public delegate void TreeView_OLESetDataEventHandler(ref NetOffice.MSComctlLibApi.DataObject Data, ref Int16 DataFormat);
-	public delegate void TreeView_OLECompleteDragEventHandler(ref Int32 Effect);
-	public delegate void TreeView_OLEDragOverEventHandler(ref NetOffice.MSComctlLibApi.DataObject Data, ref Int32 Effect, ref Int16 Button, ref Int16 Shift, ref Single x, ref Single y, ref Int16 State);
-	public delegate void TreeView_OLEDragDropEventHandler(ref NetOffice.MSComctlLibApi.DataObject Data, ref Int32 Effect, ref Int16 Button, ref Int16 Shift, ref Single x, ref Single y);
+	public delegate void TreeView_NodeCheckEventHandler(NetOffice.MSComctlLibApi.Node node);
+	public delegate void TreeView_OLEStartDragEventHandler(ref NetOffice.MSComctlLibApi.DataObject data, ref Int32 allowedEffects);
+	public delegate void TreeView_OLEGiveFeedbackEventHandler(ref Int32 effect, ref bool defaultCursors);
+	public delegate void TreeView_OLESetDataEventHandler(ref NetOffice.MSComctlLibApi.DataObject data, ref Int16 dataFormat);
+	public delegate void TreeView_OLECompleteDragEventHandler(ref Int32 effect);
+	public delegate void TreeView_OLEDragOverEventHandler(ref NetOffice.MSComctlLibApi.DataObject data, ref Int32 effect, ref Int16 button, ref Int16 shift, ref Single x, ref Single y, ref Int16 state);
+	public delegate void TreeView_OLEDragDropEventHandler(ref NetOffice.MSComctlLibApi.DataObject data, ref Int32 effect, ref Int16 button, ref Int16 shift, ref Single x, ref Single y);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass TreeView 
 	/// SupportByVersion MSComctlLib, 6
-	///</summary>
-	[SupportByVersionAttribute("MSComctlLib", 6)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class TreeView : ITreeView,IEventBinding
+	/// </summary>
+	[SupportByVersion("MSComctlLib", 6)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.ITreeViewEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.ITreeViewEvents))]
+    public class TreeView : ITreeView, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		ITreeViewEvents_SinkHelper _iTreeViewEvents_SinkHelper;
+        private static Type _type;
+        private Events.ITreeViewEvents_SinkHelper _iTreeViewEvents_SinkHelper;
 	
 		#endregion
 
@@ -57,6 +58,7 @@ namespace NetOffice.MSComctlLibApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -64,9 +66,10 @@ namespace NetOffice.MSComctlLibApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+        
+		/// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -123,17 +126,17 @@ namespace NetOffice.MSComctlLibApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of TreeView 
-        ///</summary>		
+        /// </summary>		
 		public TreeView():base("MSComctlLib.TreeView")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of TreeView
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public TreeView(string progId):base(progId)
 		{
@@ -143,46 +146,6 @@ namespace NetOffice.MSComctlLibApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running MSComctlLib.TreeView objects from the environment/system
-        /// </summary>
-        /// <returns>an MSComctlLib.TreeView array</returns>
-		public static NetOffice.MSComctlLibApi.TreeView[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSComctlLib","TreeView");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSComctlLibApi.TreeView> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSComctlLibApi.TreeView>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.MSComctlLibApi.TreeView(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running MSComctlLib.TreeView object from the environment/system.
-        /// </summary>
-        /// <returns>an MSComctlLib.TreeView object or null</returns>
-		public static NetOffice.MSComctlLibApi.TreeView GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSComctlLib","TreeView", false);
-			if(null != proxy)
-				return new NetOffice.MSComctlLibApi.TreeView(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running MSComctlLib.TreeView object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an MSComctlLib.TreeView object or null</returns>
-		public static NetOffice.MSComctlLibApi.TreeView GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSComctlLib","TreeView", throwOnError);
-			if(null != proxy)
-				return new NetOffice.MSComctlLibApi.TreeView(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -629,7 +592,7 @@ namespace NetOffice.MSComctlLibApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -644,12 +607,12 @@ namespace NetOffice.MSComctlLibApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, ITreeViewEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.ITreeViewEvents_SinkHelper.Id);
 
 
-			if(ITreeViewEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.ITreeViewEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_iTreeViewEvents_SinkHelper = new ITreeViewEvents_SinkHelper(this, _connectPoint);
+				_iTreeViewEvents_SinkHelper = new Events.ITreeViewEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -665,50 +628,34 @@ namespace NetOffice.MSComctlLibApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -717,22 +664,8 @@ namespace NetOffice.MSComctlLibApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -743,34 +676,8 @@ namespace NetOffice.MSComctlLibApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -791,3 +698,4 @@ namespace NetOffice.MSComctlLibApi
 		#pragma warning restore
 	}
 }
+

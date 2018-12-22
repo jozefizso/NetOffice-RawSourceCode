@@ -1,28 +1,29 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.ExcelApi
 {
-	///<summary>
+	/// <summary>
 	/// Interface ILegendEntries 
 	/// SupportByVersion Excel, 9,10,11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsInterface)]
-	public class ILegendEntries : COMObject ,IEnumerable<NetOffice.ExcelApi.LegendEntry>
+	/// </summary>
+	[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Method), HasIndexProperty(IndexInvoke.Method, "_Default")]
+	public class ILegendEntries : COMObject, IEnumerableProvider<NetOffice.ExcelApi.LegendEntry>
 	{
 		#pragma warning disable
+
 		#region Type Information
 
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -40,14 +41,20 @@ namespace NetOffice.ExcelApi
             {
                 if (null == _type)
                     _type = typeof(ILegendEntries);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public ILegendEntries(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -93,7 +100,7 @@ namespace NetOffice.ExcelApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public ILegendEntries(string progId) : base(progId)
 		{
@@ -107,15 +114,12 @@ namespace NetOffice.ExcelApi
 		/// SupportByVersion Excel 9, 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		public NetOffice.ExcelApi.Application Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.ExcelApi.Application newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.ExcelApi.Application.LateBindingApiWrapperType) as NetOffice.ExcelApi.Application;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.ExcelApi.Application>(this, "Application", NetOffice.ExcelApi.Application.LateBindingApiWrapperType);
 			}
 		}
 
@@ -123,15 +127,12 @@ namespace NetOffice.ExcelApi
 		/// SupportByVersion Excel 9, 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		public NetOffice.ExcelApi.Enums.XlCreator Creator
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Creator", paramsArray);
-				int intReturnItem = NetRuntimeSystem.Convert.ToInt32(returnItem);
-				return (NetOffice.ExcelApi.Enums.XlCreator)intReturnItem;
+				return Factory.ExecuteEnumPropertyGet<NetOffice.ExcelApi.Enums.XlCreator>(this, "Creator");
 			}
 		}
 
@@ -140,15 +141,12 @@ namespace NetOffice.ExcelApi
 		/// Get
 		/// Unknown COM Proxy
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16), ProxyResult]
 		public object Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
+				return Factory.ExecuteReferencePropertyGet(this, "Parent");
 			}
 		}
 
@@ -156,14 +154,12 @@ namespace NetOffice.ExcelApi
 		/// SupportByVersion Excel 9, 10, 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
+		[SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -173,51 +169,62 @@ namespace NetOffice.ExcelApi
 
 		/// <summary>
 		/// SupportByVersion Excel 12, 14, 15, 16
-		/// 
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("Excel", 12,14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("Excel", 12,14,15,16)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.ExcelApi.LegendEntry this[object index]
 		{
 			get
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(index);
-				object returnItem = Invoker.MethodReturn(this, "_Default", paramsArray);
-				NetOffice.ExcelApi.LegendEntry newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.ExcelApi.LegendEntry.LateBindingApiWrapperType) as NetOffice.ExcelApi.LegendEntry;
-				return newObject;
+				return Factory.ExecuteKnownReferenceMethodGet<NetOffice.ExcelApi.LegendEntry>(this, "_Default", NetOffice.ExcelApi.LegendEntry.LateBindingApiWrapperType, index);
 			}
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.ExcelApi.LegendEntry> Member
-        
+        #region IEnumerableProvider<NetOffice.ExcelApi.LegendEntry>
+
+        ICOMObject IEnumerableProvider<NetOffice.ExcelApi.LegendEntry>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsMethod(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.ExcelApi.LegendEntry>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.ExcelApi.LegendEntry>
+
         /// <summary>
-		/// SupportByVersionAttribute Excel, 9,10,11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
-       public IEnumerator<NetOffice.ExcelApi.LegendEntry> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.ExcelApi.LegendEntry item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion Excel, 9,10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Excel", 9, 10, 11, 12, 14, 15, 16)]
+        public IEnumerator<NetOffice.ExcelApi.LegendEntry> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.ExcelApi.LegendEntry item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute Excel, 9,10,11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Excel", 9,10,11,12,14,15,16)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion Excel, 9,10,11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Excel", 9,10,11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

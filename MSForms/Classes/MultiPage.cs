@@ -1,51 +1,52 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.MSFormsApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void MultiPage_AddControlEventHandler(Int32 Index, NetOffice.MSFormsApi.Control Control);
-	public delegate void MultiPage_BeforeDragOverEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.Control Control, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.Enums.fmDragState State, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
-	public delegate void MultiPage_BeforeDropOrPasteEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.Control Control, NetOffice.MSFormsApi.Enums.fmAction Action, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
+	public delegate void MultiPage_AddControlEventHandler(Int32 index, NetOffice.MSFormsApi.Control control);
+	public delegate void MultiPage_BeforeDragOverEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.Control control, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.Enums.fmDragState state, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
+	public delegate void MultiPage_BeforeDropOrPasteEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.Control control, NetOffice.MSFormsApi.Enums.fmAction action, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
 	public delegate void MultiPage_ChangeEventHandler();
-	public delegate void MultiPage_ClickEventHandler(Int32 Index);
-	public delegate void MultiPage_DblClickEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel);
-	public delegate void MultiPage_ErrorEventHandler(Int32 Index, Int16 Number, NetOffice.MSFormsApi.ReturnString Description, Int32 SCode, string Source, string HelpFile, Int32 HelpContext, NetOffice.MSFormsApi.ReturnBoolean CancelDisplay);
-	public delegate void MultiPage_KeyDownEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyCode, Int16 Shift);
-	public delegate void MultiPage_KeyPressEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyAscii);
-	public delegate void MultiPage_KeyUpEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyCode, Int16 Shift);
-	public delegate void MultiPage_LayoutEventHandler(Int32 Index);
-	public delegate void MultiPage_MouseDownEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void MultiPage_MouseMoveEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void MultiPage_MouseUpEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void MultiPage_RemoveControlEventHandler(Int32 Index, NetOffice.MSFormsApi.Control Control);
-	public delegate void MultiPage_ScrollEventHandler(Int32 Index, NetOffice.MSFormsApi.Enums.fmScrollAction ActionX, NetOffice.MSFormsApi.Enums.fmScrollAction ActionY, Single RequestDx, Single RequestDy, NetOffice.MSFormsApi.ReturnSingle ActualDx, NetOffice.MSFormsApi.ReturnSingle ActualDy);
-	public delegate void MultiPage_ZoomEventHandler(Int32 Index, ref Int16 Percent);
+	public delegate void MultiPage_ClickEventHandler(Int32 index);
+	public delegate void MultiPage_DblClickEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel);
+	public delegate void MultiPage_ErrorEventHandler(Int32 index, Int16 number, NetOffice.MSFormsApi.ReturnString description, Int32 sCode, string source, string helpFile, Int32 helpContext, NetOffice.MSFormsApi.ReturnBoolean cancelDisplay);
+	public delegate void MultiPage_KeyDownEventHandler(NetOffice.MSFormsApi.ReturnInteger keyCode, Int16 shift);
+	public delegate void MultiPage_KeyPressEventHandler(NetOffice.MSFormsApi.ReturnInteger keyAscii);
+	public delegate void MultiPage_KeyUpEventHandler(NetOffice.MSFormsApi.ReturnInteger keyCode, Int16 shift);
+	public delegate void MultiPage_LayoutEventHandler(Int32 index);
+	public delegate void MultiPage_MouseDownEventHandler(Int32 index, Int16 button, Int16 shift, Single x, Single y);
+	public delegate void MultiPage_MouseMoveEventHandler(Int32 Index, Int16 button, Int16 shift, Single x, Single y);
+	public delegate void MultiPage_MouseUpEventHandler(Int32 index, Int16 button, Int16 shift, Single x, Single y);
+	public delegate void MultiPage_RemoveControlEventHandler(Int32 index, NetOffice.MSFormsApi.Control control);
+	public delegate void MultiPage_ScrollEventHandler(Int32 index, NetOffice.MSFormsApi.Enums.fmScrollAction actionX, NetOffice.MSFormsApi.Enums.fmScrollAction actionY, Single requestDx, Single requestDy, NetOffice.MSFormsApi.ReturnSingle actualDx, NetOffice.MSFormsApi.ReturnSingle actualDy);
+	public delegate void MultiPage_ZoomEventHandler(Int32 index, ref Int16 percent);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass MultiPage 
 	/// SupportByVersion MSForms, 2
-	///</summary>
-	[SupportByVersionAttribute("MSForms", 2)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class MultiPage : IMultiPage,IEventBinding
+	/// </summary>
+	[SupportByVersion("MSForms", 2)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.MultiPageEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.MultiPageEvents))]
+    public class MultiPage : IMultiPage, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		MultiPageEvents_SinkHelper _multiPageEvents_SinkHelper;
+        private static Type _type;
+        private Events.MultiPageEvents_SinkHelper _multiPageEvents_SinkHelper;
 	
 		#endregion
 
@@ -54,6 +55,7 @@ namespace NetOffice.MSFormsApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -61,9 +63,10 @@ namespace NetOffice.MSFormsApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+        
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -120,17 +123,17 @@ namespace NetOffice.MSFormsApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of MultiPage 
-        ///</summary>		
+        /// </summary>		
 		public MultiPage():base("MSForms.MultiPage")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of MultiPage
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public MultiPage(string progId):base(progId)
 		{
@@ -140,46 +143,6 @@ namespace NetOffice.MSFormsApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running MSForms.MultiPage objects from the environment/system
-        /// </summary>
-        /// <returns>an MSForms.MultiPage array</returns>
-		public static NetOffice.MSFormsApi.MultiPage[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSForms","MultiPage");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.MultiPage> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.MultiPage>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.MSFormsApi.MultiPage(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.MultiPage object from the environment/system.
-        /// </summary>
-        /// <returns>an MSForms.MultiPage object or null</returns>
-		public static NetOffice.MSFormsApi.MultiPage GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","MultiPage", false);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.MultiPage(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.MultiPage object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an MSForms.MultiPage object or null</returns>
-		public static NetOffice.MSFormsApi.MultiPage GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","MultiPage", throwOnError);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.MultiPage(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -560,7 +523,7 @@ namespace NetOffice.MSFormsApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -575,12 +538,12 @@ namespace NetOffice.MSFormsApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, MultiPageEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.MultiPageEvents_SinkHelper.Id);
 
 
-			if(MultiPageEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.MultiPageEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_multiPageEvents_SinkHelper = new MultiPageEvents_SinkHelper(this, _connectPoint);
+				_multiPageEvents_SinkHelper = new Events.MultiPageEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -596,50 +559,34 @@ namespace NetOffice.MSFormsApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -648,22 +595,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -674,34 +607,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -722,3 +629,4 @@ namespace NetOffice.MSFormsApi
 		#pragma warning restore
 	}
 }
+

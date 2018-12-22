@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.VBIDEApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface _LinkedWindows 
 	/// SupportByVersion VBIDE, 12,14,5.3
-	///</summary>
-	[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class _LinkedWindows : COMObject ,IEnumerable<NetOffice.VBIDEApi.Window>
+	/// </summary>
+	[SupportByVersion("VBIDE", 12,14,5.3)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType, Enumerator(Enumerator.Reference, EnumeratorInvoke.Method), HasIndexProperty(IndexInvoke.Method, "Item")]
+	public class _LinkedWindows : COMObject, IEnumerableProvider<NetOffice.VBIDEApi.Window>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.VBIDEApi
             {
                 if (null == _type)
                     _type = typeof(_LinkedWindows);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public _LinkedWindows(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.VBIDEApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public _LinkedWindows(string progId) : base(progId)
 		{
@@ -96,15 +114,12 @@ namespace NetOffice.VBIDEApi
 		/// SupportByVersion VBIDE 12, 14, 5.3
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+		[SupportByVersion("VBIDE", 12,14,5.3)]
 		public NetOffice.VBIDEApi.VBE VBE
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "VBE", paramsArray);
-				NetOffice.VBIDEApi.VBE newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.VBIDEApi.VBE.LateBindingApiWrapperType) as NetOffice.VBIDEApi.VBE;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.VBIDEApi.VBE>(this, "VBE", NetOffice.VBIDEApi.VBE.LateBindingApiWrapperType);
 			}
 		}
 
@@ -112,16 +127,13 @@ namespace NetOffice.VBIDEApi
 		/// SupportByVersion VBIDE 12, 14, 5.3
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+		[SupportByVersion("VBIDE", 12,14,5.3)]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public NetOffice.VBIDEApi.Window Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				NetOffice.VBIDEApi.Window newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.VBIDEApi.Window.LateBindingApiWrapperType) as NetOffice.VBIDEApi.Window;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.VBIDEApi.Window>(this, "Parent", NetOffice.VBIDEApi.Window.LateBindingApiWrapperType);
 			}
 		}
 
@@ -129,14 +141,12 @@ namespace NetOffice.VBIDEApi
 		/// SupportByVersion VBIDE 12, 14, 5.3
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+		[SupportByVersion("VBIDE", 12,14,5.3)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -146,75 +156,82 @@ namespace NetOffice.VBIDEApi
 
 		/// <summary>
 		/// SupportByVersion VBIDE 12, 14, 5.3
-		/// 
 		/// </summary>
 		/// <param name="index">object index</param>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		[SupportByVersion("VBIDE", 12,14,5.3)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.VBIDEApi.Window this[object index]
 		{
 			get
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(index);
-				object returnItem = Invoker.MethodReturn(this, "Item", paramsArray);
-				NetOffice.VBIDEApi.Window newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.VBIDEApi.Window.LateBindingApiWrapperType) as NetOffice.VBIDEApi.Window;
-				return newObject;
+				return Factory.ExecuteKnownReferenceMethodGet<NetOffice.VBIDEApi.Window>(this, "Item", NetOffice.VBIDEApi.Window.LateBindingApiWrapperType, index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion VBIDE 12, 14, 5.3
-		/// 
 		/// </summary>
-		/// <param name="window">NetOffice.VBIDEApi.Window Window</param>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+		/// <param name="window">NetOffice.VBIDEApi.Window window</param>
+		[SupportByVersion("VBIDE", 12,14,5.3)]
 		public void Remove(NetOffice.VBIDEApi.Window window)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(window);
-			Invoker.Method(this, "Remove", paramsArray);
+			 Factory.ExecuteMethod(this, "Remove", window);
 		}
 
 		/// <summary>
 		/// SupportByVersion VBIDE 12, 14, 5.3
-		/// 
 		/// </summary>
-		/// <param name="window">NetOffice.VBIDEApi.Window Window</param>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+		/// <param name="window">NetOffice.VBIDEApi.Window window</param>
+		[SupportByVersion("VBIDE", 12,14,5.3)]
 		public void Add(NetOffice.VBIDEApi.Window window)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(window);
-			Invoker.Method(this, "Add", paramsArray);
+			 Factory.ExecuteMethod(this, "Add", window);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.VBIDEApi.Window> Member
-        
+        #region IEnumerableProvider<NetOffice.VBIDEApi.Window>
+
+        ICOMObject IEnumerableProvider<NetOffice.VBIDEApi.Window>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsMethod(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.VBIDEApi.Window>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.VBIDEApi.Window>
+
         /// <summary>
-		/// SupportByVersionAttribute VBIDE, 12,14,5.3
-		/// </summary>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
-       public IEnumerator<NetOffice.VBIDEApi.Window> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.VBIDEApi.Window item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion VBIDE, 12,14,5.3
+        /// </summary>
+        [SupportByVersion("VBIDE", 12, 14, 5.3)]
+        public IEnumerator<NetOffice.VBIDEApi.Window> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.VBIDEApi.Window item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute VBIDE, 12,14,5.3
-		/// </summary>
-		[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
+        #endregion
+        
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion VBIDE, 12,14,5.3
+        /// </summary>
+        [SupportByVersion("VBIDE", 12,14,5.3)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

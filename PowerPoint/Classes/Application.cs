@@ -1,68 +1,70 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
 
 namespace NetOffice.PowerPointApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void Application_WindowSelectionChangeEventHandler(NetOffice.PowerPointApi.Selection Sel);
-	public delegate void Application_WindowBeforeRightClickEventHandler(NetOffice.PowerPointApi.Selection Sel, ref bool Cancel);
-	public delegate void Application_WindowBeforeDoubleClickEventHandler(NetOffice.PowerPointApi.Selection Sel, ref bool Cancel);
-	public delegate void Application_PresentationCloseEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_PresentationSaveEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_PresentationOpenEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_NewPresentationEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_PresentationNewSlideEventHandler(NetOffice.PowerPointApi.Slide Sld);
-	public delegate void Application_WindowActivateEventHandler(NetOffice.PowerPointApi.Presentation Pres, NetOffice.PowerPointApi.DocumentWindow Wn);
-	public delegate void Application_WindowDeactivateEventHandler(NetOffice.PowerPointApi.Presentation Pres, NetOffice.PowerPointApi.DocumentWindow Wn);
-	public delegate void Application_SlideShowBeginEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn);
-	public delegate void Application_SlideShowNextBuildEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn);
-	public delegate void Application_SlideShowNextSlideEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn);
-	public delegate void Application_SlideShowEndEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_PresentationPrintEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_SlideSelectionChangedEventHandler(NetOffice.PowerPointApi.SlideRange SldRange);
-	public delegate void Application_ColorSchemeChangedEventHandler(NetOffice.PowerPointApi.SlideRange SldRange);
-	public delegate void Application_PresentationBeforeSaveEventHandler(NetOffice.PowerPointApi.Presentation Pres, ref bool Cancel);
-	public delegate void Application_SlideShowNextClickEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn, NetOffice.PowerPointApi.Effect nEffect);
-	public delegate void Application_AfterNewPresentationEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_AfterPresentationOpenEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_PresentationSyncEventHandler(NetOffice.PowerPointApi.Presentation Pres, NetOffice.OfficeApi.Enums.MsoSyncEventType SyncEventType);
-	public delegate void Application_SlideShowOnNextEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn);
-	public delegate void Application_SlideShowOnPreviousEventHandler(NetOffice.PowerPointApi.SlideShowWindow Wn);
-	public delegate void Application_PresentationBeforeCloseEventHandler(NetOffice.PowerPointApi.Presentation Pres, ref bool Cancel);
-	public delegate void Application_ProtectedViewWindowOpenEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow ProtViewWindow);
-	public delegate void Application_ProtectedViewWindowBeforeEditEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow ProtViewWindow, ref bool Cancel);
-	public delegate void Application_ProtectedViewWindowBeforeCloseEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow ProtViewWindow, NetOffice.PowerPointApi.Enums.PpProtectedViewCloseReason ProtectedViewCloseReason, ref bool Cancel);
-	public delegate void Application_ProtectedViewWindowActivateEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow ProtViewWindow);
-	public delegate void Application_ProtectedViewWindowDeactivateEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow ProtViewWindow);
-	public delegate void Application_PresentationCloseFinalEventHandler(NetOffice.PowerPointApi.Presentation Pres);
-	public delegate void Application_AfterDragDropOnSlideEventHandler(NetOffice.PowerPointApi.Slide Sld, Single X, Single Y);
+	public delegate void Application_WindowSelectionChangeEventHandler(NetOffice.PowerPointApi.Selection sel);
+	public delegate void Application_WindowBeforeRightClickEventHandler(NetOffice.PowerPointApi.Selection sel, ref bool cancel);
+	public delegate void Application_WindowBeforeDoubleClickEventHandler(NetOffice.PowerPointApi.Selection sel, ref bool cancel);
+	public delegate void Application_PresentationCloseEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_PresentationSaveEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_PresentationOpenEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_NewPresentationEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_PresentationNewSlideEventHandler(NetOffice.PowerPointApi.Slide sld);
+	public delegate void Application_WindowActivateEventHandler(NetOffice.PowerPointApi.Presentation pres, NetOffice.PowerPointApi.DocumentWindow wn);
+	public delegate void Application_WindowDeactivateEventHandler(NetOffice.PowerPointApi.Presentation pres, NetOffice.PowerPointApi.DocumentWindow wn);
+	public delegate void Application_SlideShowBeginEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn);
+	public delegate void Application_SlideShowNextBuildEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn);
+	public delegate void Application_SlideShowNextSlideEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn);
+	public delegate void Application_SlideShowEndEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_PresentationPrintEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_SlideSelectionChangedEventHandler(NetOffice.PowerPointApi.SlideRange sldRange);
+	public delegate void Application_ColorSchemeChangedEventHandler(NetOffice.PowerPointApi.SlideRange sldRange);
+	public delegate void Application_PresentationBeforeSaveEventHandler(NetOffice.PowerPointApi.Presentation pres, ref bool Cancel);
+	public delegate void Application_SlideShowNextClickEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn, NetOffice.PowerPointApi.Effect nEffect);
+	public delegate void Application_AfterNewPresentationEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_AfterPresentationOpenEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_PresentationSyncEventHandler(NetOffice.PowerPointApi.Presentation pres, NetOffice.OfficeApi.Enums.MsoSyncEventType syncEventType);
+	public delegate void Application_SlideShowOnNextEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn);
+	public delegate void Application_SlideShowOnPreviousEventHandler(NetOffice.PowerPointApi.SlideShowWindow wn);
+	public delegate void Application_PresentationBeforeCloseEventHandler(NetOffice.PowerPointApi.Presentation pres, ref bool cancel);
+	public delegate void Application_ProtectedViewWindowOpenEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow protViewWindow);
+	public delegate void Application_ProtectedViewWindowBeforeEditEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow protViewWindow, ref bool Cancel);
+	public delegate void Application_ProtectedViewWindowBeforeCloseEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow protViewWindow, NetOffice.PowerPointApi.Enums.PpProtectedViewCloseReason protectedViewCloseReason, ref bool cancel);
+	public delegate void Application_ProtectedViewWindowActivateEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow protViewWindow);
+	public delegate void Application_ProtectedViewWindowDeactivateEventHandler(NetOffice.PowerPointApi.ProtectedViewWindow protViewWindow);
+	public delegate void Application_PresentationCloseFinalEventHandler(NetOffice.PowerPointApi.Presentation pres);
+	public delegate void Application_AfterDragDropOnSlideEventHandler(NetOffice.PowerPointApi.Slide sld, Single x, Single yY);
 	public delegate void Application_AfterShapeSizeChangeEventHandler(NetOffice.PowerPointApi.Shape shp);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Application 
 	/// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff745704.aspx
-	///</summary>
-	[SupportByVersionAttribute("PowerPoint", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Application : _Application,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff745704.aspx </remarks>
+	[SupportByVersion("PowerPoint", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass), ComProgId("PowerPoint.Application"), ModuleProvider(typeof(GlobalHelperModules.GlobalModule))]
+	[EventSink(typeof(Events.EApplication_SinkHelper))]
+    [ComEventInterface(typeof(Events.EApplication))]
+    public class Application : _Application, ICloneable<Application>, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		EApplication_SinkHelper _eApplication_SinkHelper;
+        private static Type _type;
+        private Events.EApplication_SinkHelper _eApplication_SinkHelper;
 	
 		#endregion
 
@@ -71,6 +73,7 @@ namespace NetOffice.PowerPointApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -78,9 +81,10 @@ namespace NetOffice.PowerPointApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+        
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -94,7 +98,15 @@ namespace NetOffice.PowerPointApi
         
         #endregion
         		
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Application(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+			_callQuitInDispose = true;
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -139,29 +151,60 @@ namespace NetOffice.PowerPointApi
 			_callQuitInDispose = true;
 		}
 		
-		///<summary>
-        /// Creates a new instance of Application 
-        ///</summary>		
-		public Application():base("PowerPoint.Application")
-		{
-			_callQuitInDispose = true;
-			GlobalHelperModules.GlobalModule.Instance = this;
-		}
-		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Application
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Application(string progId):base(progId)
 		{
 			_callQuitInDispose = true;
 			GlobalHelperModules.GlobalModule.Instance = this;
 		}
-		
-/// <summary>
+
+        /// <summary>
+        /// Creates a new instance of Application 
+        /// </summary>		
+        public Application() : this(false)
+        {
+            _callQuitInDispose = true;
+            GlobalHelperModules.GlobalModule.Instance = this;
+        }
+
+        /// <summary>
+        /// Creates a new instance of Application 
+        /// <param name="enableProxyService">try to get a running application first before create a new application</param>
+        /// </summary>		
+        public Application(bool enableProxyService = false) : base()
+        {
+            if (enableProxyService)
+            {
+                Factory = Core.Default;
+                object proxy = Running.ProxyService.GetActiveInstance("PowerPoint", "Application", false);
+                if (null != proxy)
+                {
+                    CreateFromProxy(proxy, true);
+                    FromProxyService = true;
+                }
+                else
+                {
+                    CreateFromProgId("PowerPoint.Application", true);
+                }
+            }
+            else
+            {
+                CreateFromProgId("PowerPoint.Application", true);
+            }
+
+            OnCreate();
+            _callQuitInDispose = true;
+            GlobalHelperModules.GlobalModule.Instance = this;
+        }
+
+        /// <summary>
 		/// NetOffice method: dispose instance and all child instances
 		/// </summary>
 		/// <param name="disposeEventBinding">dispose event exported proxies with one or more event recipients</param>
+		[Category("NetOffice"), CoreOverridden]
 		public override void Dispose(bool disposeEventBinding)
 		{
 			if(this.Equals(GlobalHelperModules.GlobalModule.Instance))
@@ -172,6 +215,7 @@ namespace NetOffice.PowerPointApi
 		/// <summary>
 		/// NetOffice method: dispose instance and all child instances
 		/// </summary>
+		[Category("NetOffice"), CoreOverridden]
 		public override void Dispose()
 		{
 			if(this.Equals(GlobalHelperModules.GlobalModule.Instance))
@@ -179,57 +223,47 @@ namespace NetOffice.PowerPointApi
 			base.Dispose();
 		}
 
-		#endregion
+        #endregion
 
-		#region Static CoClass Methods
+        #region Properties
 
-		/// <summary>
-        /// Returns all running PowerPoint.Application objects from the environment/system
+        /// <summary>
+        /// Instance is created from an already running application
         /// </summary>
-        /// <returns>an PowerPoint.Application array</returns>
-		public static NetOffice.PowerPointApi.Application[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("PowerPoint","Application");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.Application> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.PowerPointApi.Application>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.PowerPointApi.Application(null, proxy) );
-			return resultList.ToArray();
-		}
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public bool FromProxyService { get; private set; }
 
-		/// <summary>
-        /// Returns a running PowerPoint.Application object from the environment/system.
+        #endregion
+
+        #region Static CoClass Methods
+
+        /// <summary>
+        /// Returns all running PowerPoint.Application instances from the environment/system
         /// </summary>
-        /// <returns>an PowerPoint.Application object or null</returns>
-		public static NetOffice.PowerPointApi.Application GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","Application", false);
-			if(null != proxy)
-				return new NetOffice.PowerPointApi.Application(null, proxy);
-			else
-				return null;
-		}
+        /// <returns>PowerPoint.Application sequence</returns>
+        public static IDisposableSequence<Application> GetActiveInstances()
+        {
+            return Running.ProxyService.GetActiveInstances<Application>("PowerPoint", "Application");
+        }
 
-		/// <summary>
-        /// Returns a running PowerPoint.Application object from the environment/system. 
+        /// <summary>
+        /// Returns a running PowerPoint.Application instance from the environment/system
         /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an PowerPoint.Application object or null</returns>
-		public static NetOffice.PowerPointApi.Application GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("PowerPoint","Application", throwOnError);
-			if(null != proxy)
-				return new NetOffice.PowerPointApi.Application(null, proxy);
-			else
-				return null;
-		}
-		#endregion
+        /// <param name="throwExceptionIfNotFound">throw exception if unable to find an instance</param>
+        /// <returns>PowerPoint.Application instance or null</returns>
+        public static Application GetActiveInstance(bool throwExceptionIfNotFound = false)
+        {
+            return Running.ProxyService.GetActiveInstance<Application>("PowerPoint", "Application", throwExceptionIfNotFound);
+        }
 
-		#region Events
+        #endregion
 
-		/// <summary>
-		/// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
-		/// </summary>
-		private event Application_WindowSelectionChangeEventHandler _WindowSelectionChangeEvent;
+        #region Events
+
+        /// <summary>
+        /// SupportByVersion PowerPoint, 9,10,11,12,14,15,16
+        /// </summary>
+        private event Application_WindowSelectionChangeEventHandler _WindowSelectionChangeEvent;
 
 		/// <summary>
 		/// SupportByVersion PowerPoint 9 10 11 12 14 15,16
@@ -987,7 +1021,7 @@ namespace NetOffice.PowerPointApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -1002,12 +1036,12 @@ namespace NetOffice.PowerPointApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, EApplication_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.EApplication_SinkHelper.Id);
 
 
-			if(EApplication_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.EApplication_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_eApplication_SinkHelper = new EApplication_SinkHelper(this, _connectPoint);
+				_eApplication_SinkHelper = new Events.EApplication_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -1023,50 +1057,34 @@ namespace NetOffice.PowerPointApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -1075,22 +1093,8 @@ namespace NetOffice.PowerPointApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -1101,34 +1105,8 @@ namespace NetOffice.PowerPointApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -1143,9 +1121,23 @@ namespace NetOffice.PowerPointApi
 
 			_connectPoint = null;
 		}
-        
+
         #endregion
 
-		#pragma warning restore
-	}
+        #region ICloneable<Application>
+
+        /// <summary>
+        /// Creates a new Application that is a copy of the current instance
+        /// </summary>
+        /// <returns>A new Application that is a copy of this instance</returns>
+        /// <exception cref="CloneException">An unexpected error occured. See inner exception(s) for details.</exception>
+        public new virtual Application Clone()
+        {
+            return base.Clone() as Application;
+        }
+
+        #endregion
+
+        #pragma warning restore
+    }
 }

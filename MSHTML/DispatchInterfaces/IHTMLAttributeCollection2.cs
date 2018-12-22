@@ -1,23 +1,33 @@
-﻿using System;
+using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.MSHTMLApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IHTMLAttributeCollection2 
 	/// SupportByVersion MSHTML, 4
-	///</summary>
-	[SupportByVersionAttribute("MSHTML", 4)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IHTMLAttributeCollection2 : IHTMLAttributeCollection
+	/// </summary>
+	[SupportByVersion("MSHTML", 4)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType]
+ 	public class IHTMLAttributeCollection2 : IHTMLAttributeCollection
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.MSHTMLApi
             {
                 if (null == _type)
                     _type = typeof(IHTMLAttributeCollection2);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IHTMLAttributeCollection2(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.MSHTMLApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IHTMLAttributeCollection2(string progId) : base(progId)
 		{
@@ -95,49 +111,8 @@ namespace NetOffice.MSHTMLApi
 
 		#region Methods
 
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// 
-		/// </summary>
-		/// <param name="bstrName">string bstrName</param>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public NetOffice.MSHTMLApi.IHTMLDOMAttribute getNamedItem(string bstrName)
-		{
-			object[] paramsArray = Invoker.ValidateParamsArray(bstrName);
-			object returnItem = Invoker.MethodReturn(this, "getNamedItem", paramsArray);
-			NetOffice.MSHTMLApi.IHTMLDOMAttribute newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLDOMAttribute;
-			return newObject;
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// 
-		/// </summary>
-		/// <param name="ppNode">NetOffice.MSHTMLApi.IHTMLDOMAttribute ppNode</param>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public NetOffice.MSHTMLApi.IHTMLDOMAttribute setNamedItem(NetOffice.MSHTMLApi.IHTMLDOMAttribute ppNode)
-		{
-			object[] paramsArray = Invoker.ValidateParamsArray(ppNode);
-			object returnItem = Invoker.MethodReturn(this, "setNamedItem", paramsArray);
-			NetOffice.MSHTMLApi.IHTMLDOMAttribute newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLDOMAttribute;
-			return newObject;
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// 
-		/// </summary>
-		/// <param name="bstrName">string bstrName</param>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public NetOffice.MSHTMLApi.IHTMLDOMAttribute removeNamedItem(string bstrName)
-		{
-			object[] paramsArray = Invoker.ValidateParamsArray(bstrName);
-			object returnItem = Invoker.MethodReturn(this, "removeNamedItem", paramsArray);
-			NetOffice.MSHTMLApi.IHTMLDOMAttribute newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLDOMAttribute;
-			return newObject;
-		}
-
 		#endregion
+
 		#pragma warning restore
 	}
 }

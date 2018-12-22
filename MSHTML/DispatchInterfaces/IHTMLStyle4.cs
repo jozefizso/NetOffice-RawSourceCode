@@ -1,23 +1,33 @@
 ﻿using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.MSHTMLApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IHTMLStyle4 
 	/// SupportByVersion MSHTML, 4
-	///</summary>
-	[SupportByVersionAttribute("MSHTML", 4)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IHTMLStyle4 : IHTMLStyle3
+	/// </summary>
+	[SupportByVersion("MSHTML", 4)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType]
+ 	public class IHTMLStyle4 : IHTMLStyle3
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.MSHTMLApi
             {
                 if (null == _type)
                     _type = typeof(IHTMLStyle4);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IHTMLStyle4(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.MSHTMLApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IHTMLStyle4(string progId) : base(progId)
 		{
@@ -91,59 +107,12 @@ namespace NetOffice.MSHTMLApi
 		
 		#region Properties
 
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string textOverflow
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "textOverflow", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "textOverflow", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public object minHeight
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "minHeight", paramsArray);
-				if((null != returnItem) && (returnItem is MarshalByRefObject))
-				{
-					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
-					return newObject;
-				}
-				else
-				{
-					return  returnItem;
-				}
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "minHeight", paramsArray);
-			}
-		}
-
 		#endregion
 
 		#region Methods
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

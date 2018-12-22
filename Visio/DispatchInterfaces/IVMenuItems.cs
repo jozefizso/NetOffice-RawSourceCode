@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.VisioApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IVMenuItems 
 	/// SupportByVersion Visio, 11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IVMenuItems : COMObject ,IEnumerable<NetOffice.VisioApi.IVMenuItem>
+	/// </summary>
+	[SupportByVersion("Visio", 11,12,14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType, Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class IVMenuItems : COMObject, IEnumerableProvider<NetOffice.VisioApi.IVMenuItem>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.VisioApi
             {
                 if (null == _type)
                     _type = typeof(IVMenuItems);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IVMenuItems(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.VisioApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IVMenuItems(string progId) : base(progId)
 		{
@@ -97,16 +115,14 @@ namespace NetOffice.VisioApi
 		/// Get
 		/// </summary>
 		/// <param name="lIndex">Int32 lIndex</param>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
+		[BaseResult]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.VisioApi.IVMenuItem this[Int32 lIndex]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(lIndex);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.VisioApi.IVMenuItem newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.VisioApi.IVMenuItem;
-			return newObject;
+			{
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.VisioApi.IVMenuItem>(this, "Item", lIndex);
 			}
 		}
 
@@ -114,14 +130,12 @@ namespace NetOffice.VisioApi
 		/// SupportByVersion Visio 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -129,15 +143,13 @@ namespace NetOffice.VisioApi
 		/// SupportByVersion Visio 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
+		[BaseResult]
 		public NetOffice.VisioApi.IVMenu Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				NetOffice.VisioApi.IVMenu newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.VisioApi.IVMenu;
-				return newObject;
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.VisioApi.IVMenu>(this, "Parent");
 			}
 		}
 
@@ -145,15 +157,13 @@ namespace NetOffice.VisioApi
 		/// SupportByVersion Visio 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
+		[BaseResult]
 		public NetOffice.VisioApi.IVMenuItem ParentItem
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "ParentItem", paramsArray);
-				NetOffice.VisioApi.IVMenuItem newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.VisioApi.IVMenuItem;
-				return newObject;
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.VisioApi.IVMenuItem>(this, "ParentItem");
 			}
 		}
 
@@ -163,60 +173,69 @@ namespace NetOffice.VisioApi
 
 		/// <summary>
 		/// SupportByVersion Visio 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
+		[BaseResult]
 		public NetOffice.VisioApi.IVMenuItem Add()
 		{
-			object[] paramsArray = null;
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.VisioApi.IVMenuItem newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.VisioApi.IVMenuItem;
-			return newObject;
+			return Factory.ExecuteBaseReferenceMethodGet<NetOffice.VisioApi.IVMenuItem>(this, "Add");
 		}
 
 		/// <summary>
 		/// SupportByVersion Visio 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
 		/// <param name="lIndex">Int32 lIndex</param>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+		[SupportByVersion("Visio", 11,12,14,15,16)]
+		[BaseResult]
 		public NetOffice.VisioApi.IVMenuItem AddAt(Int32 lIndex)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(lIndex);
-			object returnItem = Invoker.MethodReturn(this, "AddAt", paramsArray);
-			NetOffice.VisioApi.IVMenuItem newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.VisioApi.IVMenuItem;
-			return newObject;
+			return Factory.ExecuteBaseReferenceMethodGet<NetOffice.VisioApi.IVMenuItem>(this, "AddAt", lIndex);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.VisioApi.IVMenuItem> Member
-        
+        #region IEnumerableProvider<NetOffice.VisioApi.IVMenuItem>
+
+        ICOMObject IEnumerableProvider<NetOffice.VisioApi.IVMenuItem>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.VisioApi.IVMenuItem>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.VisioApi.IVMenuItem>
+
         /// <summary>
-		/// SupportByVersionAttribute Visio, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
-       public IEnumerator<NetOffice.VisioApi.IVMenuItem> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.VisioApi.IVMenuItem item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion Visio, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Visio", 11, 12, 14, 15, 16)]
+        public IEnumerator<NetOffice.VisioApi.IVMenuItem> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.VisioApi.IVMenuItem item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute Visio, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Visio", 11,12,14,15,16)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion Visio, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Visio", 11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

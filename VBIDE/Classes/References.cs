@@ -1,36 +1,37 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.VBIDEApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void References_ItemAddedEventHandler(NetOffice.VBIDEApi.Reference Reference);
-	public delegate void References_ItemRemovedEventHandler(NetOffice.VBIDEApi.Reference Reference);
+	public delegate void References_ItemAddedEventHandler(NetOffice.VBIDEApi.Reference reference);
+	public delegate void References_ItemRemovedEventHandler(NetOffice.VBIDEApi.Reference reference);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass References 
 	/// SupportByVersion VBIDE, 12,14,5.3
-	///</summary>
-	[SupportByVersionAttribute("VBIDE", 12,14,5.3)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class References : _References,IEventBinding
+	/// </summary>
+	[SupportByVersion("VBIDE", 12,14,5.3)]
+	[EntityType(EntityType.IsCoClass)]
+    [EventSink(typeof(EventInterfaces._dispReferences_Events_SinkHelper))]
+    [ComEventInterface(typeof(EventInterfaces._dispReferences_Events))]
+    public class References : _References, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_dispReferences_Events_SinkHelper __dispReferences_Events_SinkHelper;
+        private static Type _type;
+        private EventInterfaces._dispReferences_Events_SinkHelper __dispReferences_Events_SinkHelper;
 	
 		#endregion
 
@@ -39,6 +40,7 @@ namespace NetOffice.VBIDEApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -47,8 +49,9 @@ namespace NetOffice.VBIDEApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -105,17 +108,17 @@ namespace NetOffice.VBIDEApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of References 
-        ///</summary>		
+        /// </summary>		
 		public References():base("VBIDE.References")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of References
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public References(string progId):base(progId)
 		{
@@ -125,46 +128,6 @@ namespace NetOffice.VBIDEApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running VBIDE.References objects from the environment/system
-        /// </summary>
-        /// <returns>an VBIDE.References array</returns>
-		public static NetOffice.VBIDEApi.References[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("VBIDE","References");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.VBIDEApi.References> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.VBIDEApi.References>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.VBIDEApi.References(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running VBIDE.References object from the environment/system.
-        /// </summary>
-        /// <returns>an VBIDE.References object or null</returns>
-		public static NetOffice.VBIDEApi.References GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("VBIDE","References", false);
-			if(null != proxy)
-				return new NetOffice.VBIDEApi.References(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running VBIDE.References object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an VBIDE.References object or null</returns>
-		public static NetOffice.VBIDEApi.References GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("VBIDE","References", throwOnError);
-			if(null != proxy)
-				return new NetOffice.VBIDEApi.References(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -215,7 +178,7 @@ namespace NetOffice.VBIDEApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -230,12 +193,12 @@ namespace NetOffice.VBIDEApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _dispReferences_Events_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, EventInterfaces._dispReferences_Events_SinkHelper.Id);
 
 
-			if(_dispReferences_Events_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(EventInterfaces._dispReferences_Events_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__dispReferences_Events_SinkHelper = new _dispReferences_Events_SinkHelper(this, _connectPoint);
+				__dispReferences_Events_SinkHelper = new EventInterfaces._dispReferences_Events_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -251,50 +214,34 @@ namespace NetOffice.VBIDEApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -303,22 +250,8 @@ namespace NetOffice.VBIDEApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -329,34 +262,8 @@ namespace NetOffice.VBIDEApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -377,3 +284,4 @@ namespace NetOffice.VBIDEApi
 		#pragma warning restore
 	}
 }
+

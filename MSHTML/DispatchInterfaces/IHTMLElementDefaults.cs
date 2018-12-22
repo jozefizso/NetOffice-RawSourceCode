@@ -1,23 +1,33 @@
-﻿using System;
+using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.MSHTMLApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IHTMLElementDefaults 
 	/// SupportByVersion MSHTML, 4
-	///</summary>
-	[SupportByVersionAttribute("MSHTML", 4)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IHTMLElementDefaults : DispHTMLDefaults
+	/// </summary>
+	[SupportByVersion("MSHTML", 4)]
+	[EntityType(EntityType.IsDispatchInterface)]
+ 	public class IHTMLElementDefaults : DispHTMLDefaults
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.MSHTMLApi
             {
                 if (null == _type)
                     _type = typeof(IHTMLElementDefaults);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IHTMLElementDefaults(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.MSHTMLApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IHTMLElementDefaults(string progId) : base(progId)
 		{
@@ -91,229 +107,12 @@ namespace NetOffice.MSHTMLApi
 		
 		#region Properties
 
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public NetOffice.MSHTMLApi.IHTMLStyle style
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "style", paramsArray);
-				NetOffice.MSHTMLApi.IHTMLStyle newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLStyle;
-				return newObject;
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool tabStop
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "tabStop", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "tabStop", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool viewInheritStyle
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "viewInheritStyle", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "viewInheritStyle", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool viewMasterTab
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "viewMasterTab", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "viewMasterTab", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public Int32 scrollSegmentX
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "scrollSegmentX", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "scrollSegmentX", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public Int32 scrollSegmentY
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "scrollSegmentY", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "scrollSegmentY", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool isMultiLine
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "isMultiLine", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "isMultiLine", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string contentEditable
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "contentEditable", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "contentEditable", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool canHaveHTML
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "canHaveHTML", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "canHaveHTML", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public NetOffice.MSHTMLApi.IHTMLDocument viewLink
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "viewLink", paramsArray);
-				NetOffice.MSHTMLApi.IHTMLDocument newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLDocument;
-				return newObject;
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "viewLink", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool frozen
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "frozen", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "frozen", paramsArray);
-			}
-		}
-
 		#endregion
 
 		#region Methods
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

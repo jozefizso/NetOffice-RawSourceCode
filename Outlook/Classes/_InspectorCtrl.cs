@@ -1,12 +1,10 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OutlookApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
@@ -14,21 +12,24 @@ namespace NetOffice.OutlookApi
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass _InspectorCtrl 
 	/// SupportByVersion Outlook, 10
-	///</summary>
-	[SupportByVersionAttribute("Outlook", 10)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class _InspectorCtrl : _DInspectorCtrl,IEventBinding
+	/// </summary>
+	[SupportByVersion("Outlook", 10)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events._DInspectorEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events._DInspectorEvents))]
+    public class _InspectorCtrl : _DInspectorCtrl, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_DInspectorEvents_SinkHelper __DInspectorEvents_SinkHelper;
+        private static Type _type;
+        private Events._DInspectorEvents_SinkHelper __DInspectorEvents_SinkHelper;
 	
 		#endregion
 
@@ -37,6 +38,7 @@ namespace NetOffice.OutlookApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -45,8 +47,9 @@ namespace NetOffice.OutlookApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -103,17 +106,17 @@ namespace NetOffice.OutlookApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of _InspectorCtrl 
-        ///</summary>		
+        /// </summary>		
 		public _InspectorCtrl():base("Outlook._InspectorCtrl")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of _InspectorCtrl
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public _InspectorCtrl(string progId):base(progId)
 		{
@@ -123,53 +126,13 @@ namespace NetOffice.OutlookApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Outlook._InspectorCtrl objects from the environment/system
-        /// </summary>
-        /// <returns>an Outlook._InspectorCtrl array</returns>
-		public static NetOffice.OutlookApi._InspectorCtrl[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Outlook","_InspectorCtrl");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi._InspectorCtrl> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi._InspectorCtrl>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OutlookApi._InspectorCtrl(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Outlook._InspectorCtrl object from the environment/system.
-        /// </summary>
-        /// <returns>an Outlook._InspectorCtrl object or null</returns>
-		public static NetOffice.OutlookApi._InspectorCtrl GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","_InspectorCtrl", false);
-			if(null != proxy)
-				return new NetOffice.OutlookApi._InspectorCtrl(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Outlook._InspectorCtrl object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Outlook._InspectorCtrl object or null</returns>
-		public static NetOffice.OutlookApi._InspectorCtrl GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","_InspectorCtrl", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OutlookApi._InspectorCtrl(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -184,12 +147,12 @@ namespace NetOffice.OutlookApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _DInspectorEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events._DInspectorEvents_SinkHelper.Id);
 
 
-			if(_DInspectorEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events._DInspectorEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__DInspectorEvents_SinkHelper = new _DInspectorEvents_SinkHelper(this, _connectPoint);
+				__DInspectorEvents_SinkHelper = new Events._DInspectorEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -205,50 +168,34 @@ namespace NetOffice.OutlookApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -257,22 +204,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -283,34 +216,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -331,3 +238,4 @@ namespace NetOffice.OutlookApi
 		#pragma warning restore
 	}
 }
+

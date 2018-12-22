@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.MSProjectApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface Reports 
 	/// SupportByVersion MSProject, 11
-	///</summary>
-	[SupportByVersionAttribute("MSProject", 11)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class Reports : COMObject ,IEnumerable<NetOffice.MSProjectApi.Report>
+	/// </summary>
+	[SupportByVersion("MSProject", 11)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class Reports : COMObject, IEnumerableProvider<NetOffice.MSProjectApi.Report>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.MSProjectApi
             {
                 if (null == _type)
                     _type = typeof(Reports);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Reports(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.MSProjectApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public Reports(string progId) : base(progId)
 		{
@@ -96,17 +114,14 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11
 		/// Get
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("MSProject", 11)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("MSProject", 11)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.MSProjectApi.Report this[object index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.MSProjectApi.Report newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.Report.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Report;
-			return newObject;
+			{
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.Report>(this, "Item", NetOffice.MSProjectApi.Report.LateBindingApiWrapperType, index);
 			}
 		}
 
@@ -114,14 +129,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11)]
+		[SupportByVersion("MSProject", 11)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -129,15 +142,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11)]
+		[SupportByVersion("MSProject", 11)]
 		public NetOffice.MSProjectApi.Project Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				NetOffice.MSProjectApi.Project newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.Project.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Project;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.Project>(this, "Parent", NetOffice.MSProjectApi.Project.LateBindingApiWrapperType);
 			}
 		}
 
@@ -145,15 +155,12 @@ namespace NetOffice.MSProjectApi
 		/// SupportByVersion MSProject 11
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11)]
+		[SupportByVersion("MSProject", 11)]
 		public NetOffice.MSProjectApi.Application Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.MSProjectApi.Application newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.MSProjectApi.Application.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Application;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.MSProjectApi.Application>(this, "Application", NetOffice.MSProjectApi.Application.LateBindingApiWrapperType);
 			}
 		}
 
@@ -163,75 +170,79 @@ namespace NetOffice.MSProjectApi
 
 		/// <summary>
 		/// SupportByVersion MSProject 11
-		/// 
 		/// </summary>
-		/// <param name="source">object Source</param>
-		/// <param name="newName">string NewName</param>
-		[SupportByVersionAttribute("MSProject", 11)]
+		/// <param name="source">object source</param>
+		/// <param name="newName">string newName</param>
+		[SupportByVersion("MSProject", 11)]
 		public NetOffice.MSProjectApi.Report Copy(object source, string newName)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(source, newName);
-			object returnItem = Invoker.MethodReturn(this, "Copy", paramsArray);
-			NetOffice.MSProjectApi.Report newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.MSProjectApi.Report.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Report;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.MSProjectApi.Report>(this, "Copy", NetOffice.MSProjectApi.Report.LateBindingApiWrapperType, source, newName);
 		}
 
 		/// <summary>
 		/// SupportByVersion MSProject 11
-		/// 
 		/// </summary>
-		/// <param name="name">string Name</param>
-		[SupportByVersionAttribute("MSProject", 11)]
+		/// <param name="name">string name</param>
+		[SupportByVersion("MSProject", 11)]
 		public NetOffice.MSProjectApi.Report Add(string name)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(name);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.MSProjectApi.Report newObject = Factory.CreateKnownObjectFromComProxy(this, returnItem,NetOffice.MSProjectApi.Report.LateBindingApiWrapperType) as NetOffice.MSProjectApi.Report;
-			return newObject;
+			return Factory.ExecuteKnownReferenceMethodGet<NetOffice.MSProjectApi.Report>(this, "Add", NetOffice.MSProjectApi.Report.LateBindingApiWrapperType, name);
 		}
 
 		/// <summary>
 		/// SupportByVersion MSProject 11
-		/// 
 		/// </summary>
-		/// <param name="name">string Name</param>
-		[SupportByVersionAttribute("MSProject", 11)]
+		/// <param name="name">string name</param>
+		[SupportByVersion("MSProject", 11)]
 		public bool IsPresent(string name)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(name);
-			object returnItem = Invoker.MethodReturn(this, "IsPresent", paramsArray);
-			return NetRuntimeSystem.Convert.ToBoolean(returnItem);
+			return Factory.ExecuteBoolMethodGet(this, "IsPresent", name);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.MSProjectApi.Report> Member
-        
+        #region IEnumerableProvider<NetOffice.MSProjectApi.Report>
+
+        ICOMObject IEnumerableProvider<NetOffice.MSProjectApi.Report>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.MSProjectApi.Report>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.MSProjectApi.Report>
+
         /// <summary>
-		/// SupportByVersionAttribute MSProject, 11
-		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11)]
-       public IEnumerator<NetOffice.MSProjectApi.Report> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.MSProjectApi.Report item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion MSProject, 11
+        /// </summary>
+        [SupportByVersion("MSProject", 11)]
+        public IEnumerator<NetOffice.MSProjectApi.Report> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.MSProjectApi.Report item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute MSProject, 11
-		/// </summary>
-		[SupportByVersionAttribute("MSProject", 11)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion MSProject, 11
+        /// </summary>
+        [SupportByVersion("MSProject", 11)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

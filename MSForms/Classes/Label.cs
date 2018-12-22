@@ -1,42 +1,43 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.MSFormsApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void Label_BeforeDragOverEventHandler(NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.Enums.fmDragState DragState, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
-	public delegate void Label_BeforeDropOrPasteEventHandler(NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.Enums.fmAction Action, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
+	public delegate void Label_BeforeDragOverEventHandler(NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.Enums.fmDragState dragState, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
+	public delegate void Label_BeforeDropOrPasteEventHandler(NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.Enums.fmAction action, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
 	public delegate void Label_ClickEventHandler();
-	public delegate void Label_DblClickEventHandler(NetOffice.MSFormsApi.ReturnBoolean Cancel);
-	public delegate void Label_ErrorEventHandler(Int16 Number, NetOffice.MSFormsApi.ReturnString Description, Int32 SCode, string Source, string HelpFile, Int32 HelpContext, NetOffice.MSFormsApi.ReturnBoolean CancelDisplay);
-	public delegate void Label_MouseDownEventHandler(Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void Label_MouseMoveEventHandler(Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void Label_MouseUpEventHandler(Int16 Button, Int16 Shift, Single X, Single Y);
+	public delegate void Label_DblClickEventHandler(NetOffice.MSFormsApi.ReturnBoolean cancel);
+	public delegate void Label_ErrorEventHandler(Int16 number, NetOffice.MSFormsApi.ReturnString description, Int32 sCode, string source, string helpFile, Int32 helpContext, NetOffice.MSFormsApi.ReturnBoolean cancelDisplay);
+	public delegate void Label_MouseDownEventHandler(Int16 button, Int16 shift, Single x, Single y);
+	public delegate void Label_MouseMoveEventHandler(Int16 button, Int16 shift, Single x, Single y);
+	public delegate void Label_MouseUpEventHandler(Int16 button, Int16 shift, Single x, Single y);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Label 
 	/// SupportByVersion MSForms, 2
-	///</summary>
-	[SupportByVersionAttribute("MSForms", 2)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Label : ILabelControl,IEventBinding
+	/// </summary>
+	[SupportByVersion("MSForms", 2)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.LabelControlEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.LabelControlEvents))]
+    public class Label : ILabelControl, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		LabelControlEvents_SinkHelper _labelControlEvents_SinkHelper;
+        private static Type _type;
+        private Events.LabelControlEvents_SinkHelper _labelControlEvents_SinkHelper;
 	
 		#endregion
 
@@ -45,6 +46,7 @@ namespace NetOffice.MSFormsApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -53,8 +55,9 @@ namespace NetOffice.MSFormsApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -111,17 +114,17 @@ namespace NetOffice.MSFormsApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Label 
-        ///</summary>		
+        /// </summary>		
 		public Label():base("MSForms.Label")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Label
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Label(string progId):base(progId)
 		{
@@ -131,46 +134,6 @@ namespace NetOffice.MSFormsApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running MSForms.Label objects from the environment/system
-        /// </summary>
-        /// <returns>an MSForms.Label array</returns>
-		public static NetOffice.MSFormsApi.Label[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSForms","Label");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.Label> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.Label>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.MSFormsApi.Label(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.Label object from the environment/system.
-        /// </summary>
-        /// <returns>an MSForms.Label object or null</returns>
-		public static NetOffice.MSFormsApi.Label GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","Label", false);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.Label(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.Label object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an MSForms.Label object or null</returns>
-		public static NetOffice.MSFormsApi.Label GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","Label", throwOnError);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.Label(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -368,12 +331,12 @@ namespace NetOffice.MSFormsApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, LabelControlEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.LabelControlEvents_SinkHelper.Id);
 
 
-			if(LabelControlEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.LabelControlEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_labelControlEvents_SinkHelper = new LabelControlEvents_SinkHelper(this, _connectPoint);
+				_labelControlEvents_SinkHelper = new Events.LabelControlEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -389,50 +352,34 @@ namespace NetOffice.MSFormsApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -441,22 +388,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -467,34 +400,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -515,3 +422,4 @@ namespace NetOffice.MSFormsApi
 		#pragma warning restore
 	}
 }
+

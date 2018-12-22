@@ -1,49 +1,50 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.AccessApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
 	public delegate void _ToggleButtonInOption_GotFocusEventHandler();
 	public delegate void _ToggleButtonInOption_LostFocusEventHandler();
-	public delegate void _ToggleButtonInOption_MouseDownEventHandler(ref Int16 Button, ref Int16 Shift, ref Single X, ref Single Y);
-	public delegate void _ToggleButtonInOption_MouseMoveEventHandler(ref Int16 Button, ref Int16 Shift, ref Single X, ref Single Y);
-	public delegate void _ToggleButtonInOption_MouseUpEventHandler(ref Int16 Button, ref Int16 Shift, ref Single X, ref Single Y);
-	public delegate void _ToggleButtonInOption_KeyDownEventHandler(ref Int16 KeyCode, ref Int16 Shift);
-	public delegate void _ToggleButtonInOption_KeyPressEventHandler(ref Int16 KeyAscii);
-	public delegate void _ToggleButtonInOption_KeyUpEventHandler(ref Int16 KeyCode, ref Int16 Shift);
+	public delegate void _ToggleButtonInOption_MouseDownEventHandler(ref Int16 button, ref Int16 shift, ref Single x, ref Single y);
+	public delegate void _ToggleButtonInOption_MouseMoveEventHandler(ref Int16 button, ref Int16 shift, ref Single x, ref Single y);
+	public delegate void _ToggleButtonInOption_MouseUpEventHandler(ref Int16 button, ref Int16 shift, ref Single x, ref Single y);
+	public delegate void _ToggleButtonInOption_KeyDownEventHandler(ref Int16 keyCode, ref Int16 shift);
+	public delegate void _ToggleButtonInOption_KeyPressEventHandler(ref Int16 keyAscii);
+	public delegate void _ToggleButtonInOption_KeyUpEventHandler(ref Int16 keyCode, ref Int16 shift);
 	public delegate void _ToggleButtonInOption_ClickEventHandler();
-	public delegate void _ToggleButtonInOption_BeforeUpdateEventHandler(ref Int16 Cancel);
+	public delegate void _ToggleButtonInOption_BeforeUpdateEventHandler(ref Int16 cancel);
 	public delegate void _ToggleButtonInOption_AfterUpdateEventHandler();
 	public delegate void _ToggleButtonInOption_EnterEventHandler();
-	public delegate void _ToggleButtonInOption_ExitEventHandler(ref Int16 Cancel);
-	public delegate void _ToggleButtonInOption_DblClickEventHandler(ref Int16 Cancel);
+	public delegate void _ToggleButtonInOption_ExitEventHandler(ref Int16 cancel);
+	public delegate void _ToggleButtonInOption_DblClickEventHandler(ref Int16 cancel);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass _ToggleButtonInOption 
 	/// SupportByVersion Access, 9,10,11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Access", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class _ToggleButtonInOption : _ToggleButton,IEventBinding
+	/// </summary>
+	[SupportByVersion("Access", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+    [EventSink(typeof(Events._ToggleButtonInOptionEvents_SinkHelper), typeof(Events.DispToggleButtonEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events._ToggleButtonInOptionEvents), typeof(Events.DispToggleButtonEvents))]
+    public class _ToggleButtonInOption : _ToggleButton, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_ToggleButtonInOptionEvents_SinkHelper __ToggleButtonInOptionEvents_SinkHelper;
-		DispToggleButtonEvents_SinkHelper _dispToggleButtonEvents_SinkHelper;
+        private static Type _type;
+        private Events._ToggleButtonInOptionEvents_SinkHelper __ToggleButtonInOptionEvents_SinkHelper;
+		private Events.DispToggleButtonEvents_SinkHelper _dispToggleButtonEvents_SinkHelper;
 	
 		#endregion
 
@@ -52,6 +53,7 @@ namespace NetOffice.AccessApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -59,9 +61,10 @@ namespace NetOffice.AccessApi
                 return LateBindingApiWrapperType;
             }
         }
-
-        private static Type _type;
-		
+       
+		/// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -118,17 +121,17 @@ namespace NetOffice.AccessApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of _ToggleButtonInOption 
-        ///</summary>		
+        /// </summary>		
 		public _ToggleButtonInOption():base("Access._ToggleButtonInOption")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of _ToggleButtonInOption
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public _ToggleButtonInOption(string progId):base(progId)
 		{
@@ -138,46 +141,6 @@ namespace NetOffice.AccessApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Access._ToggleButtonInOption objects from the environment/system
-        /// </summary>
-        /// <returns>an Access._ToggleButtonInOption array</returns>
-		public static NetOffice.AccessApi._ToggleButtonInOption[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Access","_ToggleButtonInOption");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.AccessApi._ToggleButtonInOption> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.AccessApi._ToggleButtonInOption>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.AccessApi._ToggleButtonInOption(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Access._ToggleButtonInOption object from the environment/system.
-        /// </summary>
-        /// <returns>an Access._ToggleButtonInOption object or null</returns>
-		public static NetOffice.AccessApi._ToggleButtonInOption GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Access","_ToggleButtonInOption", false);
-			if(null != proxy)
-				return new NetOffice.AccessApi._ToggleButtonInOption(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Access._ToggleButtonInOption object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Access._ToggleButtonInOption object or null</returns>
-		public static NetOffice.AccessApi._ToggleButtonInOption GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Access","_ToggleButtonInOption", throwOnError);
-			if(null != proxy)
-				return new NetOffice.AccessApi._ToggleButtonInOption(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -492,7 +455,7 @@ namespace NetOffice.AccessApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -507,18 +470,18 @@ namespace NetOffice.AccessApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _ToggleButtonInOptionEvents_SinkHelper.Id,DispToggleButtonEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events._ToggleButtonInOptionEvents_SinkHelper.Id, Events.DispToggleButtonEvents_SinkHelper.Id);
 
 
-			if(_ToggleButtonInOptionEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events._ToggleButtonInOptionEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__ToggleButtonInOptionEvents_SinkHelper = new _ToggleButtonInOptionEvents_SinkHelper(this, _connectPoint);
+				__ToggleButtonInOptionEvents_SinkHelper = new Events._ToggleButtonInOptionEvents_SinkHelper(this, _connectPoint);
 				return;
 			}
 
-			if(DispToggleButtonEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.DispToggleButtonEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_dispToggleButtonEvents_SinkHelper = new DispToggleButtonEvents_SinkHelper(this, _connectPoint);
+				_dispToggleButtonEvents_SinkHelper = new Events.DispToggleButtonEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -534,50 +497,34 @@ namespace NetOffice.AccessApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -586,22 +533,8 @@ namespace NetOffice.AccessApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -612,34 +545,8 @@ namespace NetOffice.AccessApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -665,3 +572,4 @@ namespace NetOffice.AccessApi
 		#pragma warning restore
 	}
 }
+

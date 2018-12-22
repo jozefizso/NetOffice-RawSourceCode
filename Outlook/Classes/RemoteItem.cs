@@ -1,62 +1,63 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OutlookApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void RemoteItem_OpenEventHandler(ref bool Cancel);
-	public delegate void RemoteItem_CustomActionEventHandler(COMObject Action, COMObject Response, ref bool Cancel);
-	public delegate void RemoteItem_CustomPropertyChangeEventHandler(string Name);
-	public delegate void RemoteItem_ForwardEventHandler(COMObject Forward, ref bool Cancel);
-	public delegate void RemoteItem_CloseEventHandler(ref bool Cancel);
+	public delegate void RemoteItem_OpenEventHandler(ref bool cancel);
+	public delegate void RemoteItem_CustomActionEventHandler(ICOMObject action, ICOMObject response, ref bool cancel);
+	public delegate void RemoteItem_CustomPropertyChangeEventHandler(string name);
+	public delegate void RemoteItem_ForwardEventHandler(ICOMObject forward, ref bool cancel);
+	public delegate void RemoteItem_CloseEventHandler(ref bool cancel);
 	public delegate void RemoteItem_PropertyChangeEventHandler(string Name);
 	public delegate void RemoteItem_ReadEventHandler();
-	public delegate void RemoteItem_ReplyEventHandler(COMObject Response, ref bool Cancel);
-	public delegate void RemoteItem_ReplyAllEventHandler(COMObject Response, ref bool Cancel);
-	public delegate void RemoteItem_SendEventHandler(ref bool Cancel);
-	public delegate void RemoteItem_WriteEventHandler(ref bool Cancel);
-	public delegate void RemoteItem_BeforeCheckNamesEventHandler(ref bool Cancel);
-	public delegate void RemoteItem_AttachmentAddEventHandler(NetOffice.OutlookApi.Attachment Attachment);
-	public delegate void RemoteItem_AttachmentReadEventHandler(NetOffice.OutlookApi.Attachment Attachment);
-	public delegate void RemoteItem_BeforeAttachmentSaveEventHandler(NetOffice.OutlookApi.Attachment Attachment, ref bool Cancel);
-	public delegate void RemoteItem_BeforeDeleteEventHandler(COMObject Item, ref bool Cancel);
-	public delegate void RemoteItem_AttachmentRemoveEventHandler(NetOffice.OutlookApi.Attachment Attachment);
-	public delegate void RemoteItem_BeforeAttachmentAddEventHandler(NetOffice.OutlookApi.Attachment Attachment, ref bool Cancel);
-	public delegate void RemoteItem_BeforeAttachmentPreviewEventHandler(NetOffice.OutlookApi.Attachment Attachment, ref bool Cancel);
-	public delegate void RemoteItem_BeforeAttachmentReadEventHandler(NetOffice.OutlookApi.Attachment Attachment, ref bool Cancel);
-	public delegate void RemoteItem_BeforeAttachmentWriteToTempFileEventHandler(NetOffice.OutlookApi.Attachment Attachment, ref bool Cancel);
+	public delegate void RemoteItem_ReplyEventHandler(ICOMObject response, ref bool cancel);
+	public delegate void RemoteItem_ReplyAllEventHandler(ICOMObject response, ref bool cancel);
+	public delegate void RemoteItem_SendEventHandler(ref bool cancel);
+	public delegate void RemoteItem_WriteEventHandler(ref bool cancel);
+	public delegate void RemoteItem_BeforeCheckNamesEventHandler(ref bool cancel);
+	public delegate void RemoteItem_AttachmentAddEventHandler(NetOffice.OutlookApi.Attachment attachment);
+	public delegate void RemoteItem_AttachmentReadEventHandler(NetOffice.OutlookApi.Attachment attachment);
+	public delegate void RemoteItem_BeforeAttachmentSaveEventHandler(NetOffice.OutlookApi.Attachment attachment, ref bool cancel);
+	public delegate void RemoteItem_BeforeDeleteEventHandler(ICOMObject item, ref bool cancel);
+	public delegate void RemoteItem_AttachmentRemoveEventHandler(NetOffice.OutlookApi.Attachment attachment);
+	public delegate void RemoteItem_BeforeAttachmentAddEventHandler(NetOffice.OutlookApi.Attachment attachment, ref bool cancel);
+	public delegate void RemoteItem_BeforeAttachmentPreviewEventHandler(NetOffice.OutlookApi.Attachment attachment, ref bool cancel);
+	public delegate void RemoteItem_BeforeAttachmentReadEventHandler(NetOffice.OutlookApi.Attachment attachment, ref bool cancel);
+	public delegate void RemoteItem_BeforeAttachmentWriteToTempFileEventHandler(NetOffice.OutlookApi.Attachment attachment, ref bool cancel);
 	public delegate void RemoteItem_UnloadEventHandler();
-	public delegate void RemoteItem_BeforeAutoSaveEventHandler(ref bool Cancel);
+	public delegate void RemoteItem_BeforeAutoSaveEventHandler(ref bool cancel);
 	public delegate void RemoteItem_BeforeReadEventHandler();
 	public delegate void RemoteItem_AfterWriteEventHandler();
-	public delegate void RemoteItem_ReadCompleteEventHandler(ref bool Cancel);
+	public delegate void RemoteItem_ReadCompleteEventHandler(ref bool cancel);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass RemoteItem 
 	/// SupportByVersion Outlook, 9,10,11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff865832.aspx
-	///</summary>
-	[SupportByVersionAttribute("Outlook", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class RemoteItem : _RemoteItem,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff865832.aspx </remarks>
+	[SupportByVersion("Outlook", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.ItemEvents_SinkHelper), typeof(Events.ItemEvents_10_SinkHelper))]
+    [ComEventInterface(typeof(Events.ItemEvents), typeof(Events.ItemEvents_10))]
+    public class RemoteItem : _RemoteItem, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		ItemEvents_SinkHelper _itemEvents_SinkHelper;
-		ItemEvents_10_SinkHelper _itemEvents_10_SinkHelper;
+        private static Type _type;
+        private Events.ItemEvents_SinkHelper _itemEvents_SinkHelper;
+		private Events.ItemEvents_10_SinkHelper _itemEvents_10_SinkHelper;
 	
 		#endregion
 
@@ -65,6 +66,7 @@ namespace NetOffice.OutlookApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -73,8 +75,9 @@ namespace NetOffice.OutlookApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -131,17 +134,17 @@ namespace NetOffice.OutlookApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of RemoteItem 
-        ///</summary>		
+        /// </summary>		
 		public RemoteItem():base("Outlook.RemoteItem")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of RemoteItem
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public RemoteItem(string progId):base(progId)
 		{
@@ -151,46 +154,6 @@ namespace NetOffice.OutlookApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Outlook.RemoteItem objects from the environment/system
-        /// </summary>
-        /// <returns>an Outlook.RemoteItem array</returns>
-		public static NetOffice.OutlookApi.RemoteItem[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Outlook","RemoteItem");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi.RemoteItem> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OutlookApi.RemoteItem>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OutlookApi.RemoteItem(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Outlook.RemoteItem object from the environment/system.
-        /// </summary>
-        /// <returns>an Outlook.RemoteItem object or null</returns>
-		public static NetOffice.OutlookApi.RemoteItem GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","RemoteItem", false);
-			if(null != proxy)
-				return new NetOffice.OutlookApi.RemoteItem(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Outlook.RemoteItem object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Outlook.RemoteItem object or null</returns>
-		public static NetOffice.OutlookApi.RemoteItem GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Outlook","RemoteItem", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OutlookApi.RemoteItem(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -795,7 +758,7 @@ namespace NetOffice.OutlookApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -810,18 +773,18 @@ namespace NetOffice.OutlookApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, ItemEvents_SinkHelper.Id,ItemEvents_10_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.ItemEvents_SinkHelper.Id, Events.ItemEvents_10_SinkHelper.Id);
 
 
-			if(ItemEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.ItemEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_itemEvents_SinkHelper = new ItemEvents_SinkHelper(this, _connectPoint);
+				_itemEvents_SinkHelper = new Events.ItemEvents_SinkHelper(this, _connectPoint);
 				return;
 			}
 
-			if(ItemEvents_10_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.ItemEvents_10_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_itemEvents_10_SinkHelper = new ItemEvents_10_SinkHelper(this, _connectPoint);
+				_itemEvents_10_SinkHelper = new Events.ItemEvents_10_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -837,50 +800,34 @@ namespace NetOffice.OutlookApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -889,22 +836,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -915,34 +848,8 @@ namespace NetOffice.OutlookApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -968,3 +875,4 @@ namespace NetOffice.OutlookApi
 		#pragma warning restore
 	}
 }
+

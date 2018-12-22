@@ -1,23 +1,33 @@
-﻿using System;
+using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.MSHTMLApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IHTMLDOMAttribute3 
 	/// SupportByVersion MSHTML, 4
-	///</summary>
-	[SupportByVersionAttribute("MSHTML", 4)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IHTMLDOMAttribute3 : IHTMLDOMAttribute2
+	/// </summary>
+	[SupportByVersion("MSHTML", 4)]
+	[EntityType(EntityType.IsDispatchInterface)]
+ 	public class IHTMLDOMAttribute3 : IHTMLDOMAttribute2
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.MSHTMLApi
             {
                 if (null == _type)
                     _type = typeof(IHTMLDOMAttribute3);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IHTMLDOMAttribute3(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.MSHTMLApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IHTMLDOMAttribute3(string progId) : base(progId)
 		{
@@ -90,91 +106,13 @@ namespace NetOffice.MSHTMLApi
 		#endregion
 		
 		#region Properties
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public object nodeValue
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "nodeValue", paramsArray);
-				if((null != returnItem) && (returnItem is MarshalByRefObject))
-				{
-					ICOMObject newObject = Factory.CreateObjectFromComProxy(this, returnItem);
-					return newObject;
-				}
-				else
-				{
-					return  returnItem;
-				}
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "nodeValue", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string value
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "value", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "value", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public bool specified
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "specified", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public NetOffice.MSHTMLApi.IHTMLElement2 ownerElement
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "ownerElement", paramsArray);
-				NetOffice.MSHTMLApi.IHTMLElement2 newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.MSHTMLApi.IHTMLElement2;
-				return newObject;
-			}
-		}
-
+        
 		#endregion
 
 		#region Methods
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

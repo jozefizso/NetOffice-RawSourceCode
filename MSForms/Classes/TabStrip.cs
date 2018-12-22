@@ -1,46 +1,47 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.MSFormsApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void TabStrip_BeforeDragOverEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.Enums.fmDragState DragState, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
-	public delegate void TabStrip_BeforeDropOrPasteEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel, NetOffice.MSFormsApi.Enums.fmAction Action, NetOffice.MSFormsApi.DataObject Data, Single X, Single Y, NetOffice.MSFormsApi.ReturnEffect Effect, Int16 Shift);
+	public delegate void TabStrip_BeforeDragOverEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.Enums.fmDragState dragState, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
+	public delegate void TabStrip_BeforeDropOrPasteEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel, NetOffice.MSFormsApi.Enums.fmAction action, NetOffice.MSFormsApi.DataObject data, Single x, Single y, NetOffice.MSFormsApi.ReturnEffect effect, Int16 shift);
 	public delegate void TabStrip_ChangeEventHandler();
-	public delegate void TabStrip_ClickEventHandler(Int32 Index);
-	public delegate void TabStrip_DblClickEventHandler(Int32 Index, NetOffice.MSFormsApi.ReturnBoolean Cancel);
-	public delegate void TabStrip_ErrorEventHandler(Int16 Number, NetOffice.MSFormsApi.ReturnString Description, Int32 SCode, string Source, string HelpFile, Int32 HelpContext, NetOffice.MSFormsApi.ReturnBoolean CancelDisplay);
-	public delegate void TabStrip_KeyDownEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyCode, Int16 Shift);
-	public delegate void TabStrip_KeyPressEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyAscii);
-	public delegate void TabStrip_KeyUpEventHandler(NetOffice.MSFormsApi.ReturnInteger KeyCode, Int16 Shift);
-	public delegate void TabStrip_MouseDownEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void TabStrip_MouseMoveEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
-	public delegate void TabStrip_MouseUpEventHandler(Int32 Index, Int16 Button, Int16 Shift, Single X, Single Y);
+	public delegate void TabStrip_ClickEventHandler(Int32 index);
+	public delegate void TabStrip_DblClickEventHandler(Int32 index, NetOffice.MSFormsApi.ReturnBoolean cancel);
+	public delegate void TabStrip_ErrorEventHandler(Int16 number, NetOffice.MSFormsApi.ReturnString description, Int32 sCode, string source, string helpFile, Int32 helpContext, NetOffice.MSFormsApi.ReturnBoolean cancelDisplay);
+	public delegate void TabStrip_KeyDownEventHandler(NetOffice.MSFormsApi.ReturnInteger keyCode, Int16 Shift);
+	public delegate void TabStrip_KeyPressEventHandler(NetOffice.MSFormsApi.ReturnInteger keyAscii);
+	public delegate void TabStrip_KeyUpEventHandler(NetOffice.MSFormsApi.ReturnInteger keyCode, Int16 shift);
+	public delegate void TabStrip_MouseDownEventHandler(Int32 index, Int16 button, Int16 shift, Single x, Single y);
+	public delegate void TabStrip_MouseMoveEventHandler(Int32 index, Int16 button, Int16 shift, Single x, Single y);
+	public delegate void TabStrip_MouseUpEventHandler(Int32 index, Int16 button, Int16 shift, Single x, Single y);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass TabStrip 
 	/// SupportByVersion MSForms, 2
-	///</summary>
-	[SupportByVersionAttribute("MSForms", 2)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class TabStrip : ITabStrip,IEventBinding
+	/// </summary>
+	[SupportByVersion("MSForms", 2)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.TabStripEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.TabStripEvents))]
+    public class TabStrip : ITabStrip, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		TabStripEvents_SinkHelper _tabStripEvents_SinkHelper;
+        private static Type _type;
+        private Events.TabStripEvents_SinkHelper _tabStripEvents_SinkHelper;
 	
 		#endregion
 
@@ -49,6 +50,7 @@ namespace NetOffice.MSFormsApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -57,8 +59,9 @@ namespace NetOffice.MSFormsApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -115,17 +118,17 @@ namespace NetOffice.MSFormsApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of TabStrip 
-        ///</summary>		
+        /// </summary>		
 		public TabStrip():base("MSForms.TabStrip")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of TabStrip
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public TabStrip(string progId):base(progId)
 		{
@@ -135,46 +138,6 @@ namespace NetOffice.MSFormsApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running MSForms.TabStrip objects from the environment/system
-        /// </summary>
-        /// <returns>an MSForms.TabStrip array</returns>
-		public static NetOffice.MSFormsApi.TabStrip[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("MSForms","TabStrip");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.TabStrip> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.MSFormsApi.TabStrip>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.MSFormsApi.TabStrip(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.TabStrip object from the environment/system.
-        /// </summary>
-        /// <returns>an MSForms.TabStrip object or null</returns>
-		public static NetOffice.MSFormsApi.TabStrip GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","TabStrip", false);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.TabStrip(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running MSForms.TabStrip object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an MSForms.TabStrip object or null</returns>
-		public static NetOffice.MSFormsApi.TabStrip GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("MSForms","TabStrip", throwOnError);
-			if(null != proxy)
-				return new NetOffice.MSFormsApi.TabStrip(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -445,7 +408,7 @@ namespace NetOffice.MSFormsApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -460,12 +423,12 @@ namespace NetOffice.MSFormsApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, TabStripEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.TabStripEvents_SinkHelper.Id);
 
 
-			if(TabStripEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.TabStripEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_tabStripEvents_SinkHelper = new TabStripEvents_SinkHelper(this, _connectPoint);
+				_tabStripEvents_SinkHelper = new Events.TabStripEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -481,50 +444,34 @@ namespace NetOffice.MSFormsApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -533,22 +480,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -559,34 +492,8 @@ namespace NetOffice.MSFormsApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -607,3 +514,4 @@ namespace NetOffice.MSFormsApi
 		#pragma warning restore
 	}
 }
+

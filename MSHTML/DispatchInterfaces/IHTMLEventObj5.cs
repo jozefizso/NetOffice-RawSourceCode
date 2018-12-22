@@ -1,23 +1,33 @@
 ﻿using System;
 using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using NetOffice;
+using NetOffice.Attributes;
+
 namespace NetOffice.MSHTMLApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface IHTMLEventObj5 
 	/// SupportByVersion MSHTML, 4
-	///</summary>
-	[SupportByVersionAttribute("MSHTML", 4)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class IHTMLEventObj5 : IHTMLEventObj4
+	/// </summary>
+	[SupportByVersion("MSHTML", 4)]
+	[EntityType(EntityType.IsDispatchInterface)]
+ 	public class IHTMLEventObj5 : IHTMLEventObj4
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -28,14 +38,20 @@ namespace NetOffice.MSHTMLApi
             {
                 if (null == _type)
                     _type = typeof(IHTMLEventObj5);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public IHTMLEventObj5(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -81,7 +97,7 @@ namespace NetOffice.MSHTMLApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public IHTMLEventObj5(string progId) : base(progId)
 		{
@@ -91,109 +107,12 @@ namespace NetOffice.MSHTMLApi
 		
 		#region Properties
 
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string url
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "url", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "url", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string data
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "data", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "data", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get
-		/// Unknown COM Proxy
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public object source
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "source", paramsArray);
-				ICOMObject newObject = Factory.CreateObjectFromComProxy(this,returnItem);
-				return newObject;
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		public string origin
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "origin", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "origin", paramsArray);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion MSHTML 4
-		/// Get/Set
-		/// </summary>
-		[SupportByVersionAttribute("MSHTML", 4)]
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		public bool issession
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "issession", paramsArray);
-				return NetRuntimeSystem.Convert.ToBoolean(returnItem);
-			}
-			set
-			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "issession", paramsArray);
-			}
-		}
-
 		#endregion
 
 		#region Methods
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

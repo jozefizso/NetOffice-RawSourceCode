@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.AccessApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface _AdditionalData 
 	/// SupportByVersion Access, 11,12,14,15,16
-	///</summary>
-	[SupportByVersionAttribute("Access", 11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class _AdditionalData : COMObject ,IEnumerable<NetOffice.AccessApi._AdditionalData>
+	/// </summary>
+	[SupportByVersion("Access", 11,12,14,15,16)]
+	[EntityType(EntityType.IsDispatchInterface), BaseType, Enumerator(Enumerator.Reference, EnumeratorInvoke.Method), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class _AdditionalData : COMObject, IEnumerableProvider<NetOffice.AccessApi._AdditionalData>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.AccessApi
             {
                 if (null == _type)
                     _type = typeof(_AdditionalData);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public _AdditionalData(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.AccessApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public _AdditionalData(string progId) : base(progId)
 		{
@@ -95,21 +113,18 @@ namespace NetOffice.AccessApi
 		/// <summary>
 		/// SupportByVersion Access 11, 12, 14, 15, 16
 		/// Get/Set
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff834471.aspx
 		/// </summary>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff834471.aspx </remarks>
+		[SupportByVersion("Access", 11,12,14,15,16)]
 		public string Name
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Name", paramsArray);
-				return NetRuntimeSystem.Convert.ToString(returnItem);
+				return Factory.ExecuteStringPropertyGet(this, "Name");
 			}
 			set
 			{
-				object[] paramsArray = Invoker.ValidateParamsArray(value);
-				Invoker.PropertySet(this, "Name", paramsArray);
+				Factory.ExecuteValuePropertySet(this, "Name", value);
 			}
 		}
 
@@ -117,33 +132,29 @@ namespace NetOffice.AccessApi
 		/// SupportByVersion Access 11, 12, 14, 15, 16
 		/// Get
 		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("Access", 11,12,14,15,16)]
+		[BaseResult]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.AccessApi._AdditionalData this[object index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.AccessApi._AdditionalData newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.AccessApi._AdditionalData;
-			return newObject;
+			{
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.AccessApi._AdditionalData>(this, "Item", index);
 			}
 		}
 
 		/// <summary>
 		/// SupportByVersion Access 11, 12, 14, 15, 16
 		/// Get
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff198239.aspx
 		/// </summary>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff198239.aspx </remarks>
+		[SupportByVersion("Access", 11,12,14,15,16)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -153,61 +164,71 @@ namespace NetOffice.AccessApi
 
 		/// <summary>
 		/// SupportByVersion Access 11, 12, 14, 15, 16
-		/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff192052.aspx
 		/// </summary>
+		/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff192052.aspx </remarks>
 		/// <param name="var">string var</param>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
+		[SupportByVersion("Access", 11,12,14,15,16)]
+		[BaseResult]
 		public NetOffice.AccessApi._AdditionalData Add(string var)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(var);
-			object returnItem = Invoker.MethodReturn(this, "Add", paramsArray);
-			NetOffice.AccessApi._AdditionalData newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.AccessApi._AdditionalData;
-			return newObject;
+			return Factory.ExecuteBaseReferenceMethodGet<NetOffice.AccessApi._AdditionalData>(this, "Add", var);
 		}
 
 		/// <summary>
 		/// SupportByVersion Access 11, 12, 14, 15, 16
-		/// 
 		/// </summary>
 		/// <param name="dispid">Int32 dispid</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
+		[SupportByVersion("Access", 11,12,14,15,16)]
 		public bool IsMemberSafe(Int32 dispid)
 		{
-			object[] paramsArray = Invoker.ValidateParamsArray(dispid);
-			object returnItem = Invoker.MethodReturn(this, "IsMemberSafe", paramsArray);
-			return NetRuntimeSystem.Convert.ToBoolean(returnItem);
+			return Factory.ExecuteBoolMethodGet(this, "IsMemberSafe", dispid);
 		}
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.AccessApi._AdditionalData> Member
-        
+        #region IEnumerableProvider<NetOffice.AccessApi._AdditionalData>
+
+        ICOMObject IEnumerableProvider<NetOffice.AccessApi._AdditionalData>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsMethod(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.AccessApi._AdditionalData>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.AccessApi._AdditionalData>
+
         /// <summary>
-		/// SupportByVersionAttribute Access, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
-       public IEnumerator<NetOffice.AccessApi._AdditionalData> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.AccessApi._AdditionalData item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion Access, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Access", 11, 12, 14, 15, 16)]
+        public IEnumerator<NetOffice.AccessApi._AdditionalData> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.AccessApi._AdditionalData item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute Access, 11,12,14,15,16
-		/// </summary>
-		[SupportByVersionAttribute("Access", 11,12,14,15,16)]
+        #endregion
+
+        #region IEnumerable Members
+
+        /// <summary>
+        /// SupportByVersion Access, 11,12,14,15,16
+        /// </summary>
+        [SupportByVersion("Access", 11,12,14,15,16)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

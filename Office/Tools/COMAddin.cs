@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using NetOffice;
+using NetOffice.Attributes;
 using NetOffice.Tools;
 using NetOffice.OfficeApi.Tools;
 using Office = NetOffice.OfficeApi;
@@ -64,7 +65,7 @@ namespace NetOffice.OfficeApi.Tools
         /// <summary>
         /// Common Tasks Helper. The property is available after the host application has called OnConnection for the instance
         /// </summary>
-        public Utils.CommonUtils Utils { get; private set; }
+        public Contribution.CommonUtils Utils { get; private set; }
 
         /// <summary>
         /// Host Application Instance
@@ -86,10 +87,20 @@ namespace NetOffice.OfficeApi.Tools
         /// </summary>
 		protected List<ITaskPane> TaskPaneInstances { get; set; }
 
-		/// <summary>
+        /// <summary>
+        /// Ribbon instance to manipulate ui at runtime 
+        /// </summary>
+        public IRibbonUI RibbonUI { get; private set; }
+
+        /// <summary>
+        /// Custom addin object if created
+        /// </summary>
+        protected internal object CustomObject { get; private set; }
+
+        /// <summary>
         /// Cached Error Method Delegate
         /// </summary>
-		private MethodInfo ErrorMethod { get; set; }
+        private MethodInfo ErrorMethod { get; set; }
 
 		/// <summary>
         /// Cached Register Error Method Delegate
@@ -217,7 +228,7 @@ namespace NetOffice.OfficeApi.Tools
             }
         }
 
-        #endregion
+        #endregion       
 
         #region COMAddinBase
 
@@ -266,7 +277,7 @@ namespace NetOffice.OfficeApi.Tools
 
         #region IDTExtensibility2 Members
 
-        void IDTExtensibility2.OnStartupComplete(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnStartupComplete(ref Array custom)
         {
             try
             {
@@ -281,7 +292,7 @@ namespace NetOffice.OfficeApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref Array custom)
         {
             try
             {
@@ -299,8 +310,9 @@ namespace NetOffice.OfficeApi.Tools
                     System.Int32.TryParse(tryString, out _automationCode);
                 }
 
-                this.Application = Factory.CreateObjectFromComProxy(null, application);
+                this.Application = Factory.CreateObjectFromComProxy(null, application, true);
                 Utils = OnCreateUtils();
+                TryCreateCustomObject(AddInInst);
                 RaiseOnConnection(Application, ConnectMode, AddInInst, ref custom);
             }
             catch (NetRuntimeSystem.Exception exception)
@@ -310,10 +322,22 @@ namespace NetOffice.OfficeApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
         {
             try
             {
+                try
+                {
+                    RaiseOnDisconnection(RemoveMode, ref custom);
+                    Tweaks.DisposeTweaks(Factory, this, Type);                   
+                    Utils.Dispose();
+
+                }
+                catch (NetRuntimeSystem.Exception exception)
+                {
+                    Factory.Console.WriteException(exception);
+                }
+
                 foreach (ITaskPane item in TaskPaneInstances)
                 {
                     try
@@ -351,14 +375,15 @@ namespace NetOffice.OfficeApi.Tools
 
                 try
                 {
-                    Tweaks.DisposeTweaks(Factory, this, Type);
-                    RaiseOnDisconnection(RemoveMode, ref custom);
-                    Utils.Dispose();
-
+                    if (null != RibbonUI)
+                    {
+                        RibbonUI.Dispose();
+                        RibbonUI = null;
+                    }
                 }
                 catch (NetRuntimeSystem.Exception exception)
                 {
-                    Factory.Console.WriteException(exception);
+                    NetOffice.DebugConsole.Default.WriteException(exception);
                 }
 
                 try
@@ -378,7 +403,7 @@ namespace NetOffice.OfficeApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnAddInsUpdate(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnAddInsUpdate(ref Array custom)
         {
             try
             {
@@ -391,7 +416,7 @@ namespace NetOffice.OfficeApi.Tools
             }
         }
 
-        void IDTExtensibility2.OnBeginShutdown(ref Array custom)
+        void NetOffice.Tools.Native.IDTExtensibility2.OnBeginShutdown(ref Array custom)
         {
             try
             {
@@ -411,14 +436,14 @@ namespace NetOffice.OfficeApi.Tools
         /// <summary>
         /// IRibbonExtensibility implementation
         /// </summary>
-        /// <param name="RibbonID">target ribbon id, only used from Outlook and ignored in this standard implementation. overwrite this method if you need a custom behavior</param>
+        /// <param name="RibbonID">target ribbon id</param>
         /// <returns>XML content or String.Empty</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public virtual string GetCustomUI(string RibbonID)
         {
             try
             {
-                CustomUIAttribute ribbon = AttributeReflector.GetRibbonAttribute(Type);
+                CustomUIAttribute ribbon = AttributeReflector.GetRibbonAttribute(Type, RibbonID);
                 if (null != ribbon)
                     return Utils.Resource.ReadString(CustomUIAttribute.BuildPath(ribbon.Value, ribbon.UseAssemblyNamespace, Type.Namespace));
                 else
@@ -430,6 +455,23 @@ namespace NetOffice.OfficeApi.Tools
                 OnError(ErrorMethodKind.GetCustomUI, exception);
 				return string.Empty;
             } 
+        }
+
+        /// <summary>
+        /// Pre-defined Ribbon Loader
+        /// </summary>
+        /// <param name="ribbonUI">actual ribbon ui</param>
+        public virtual void CustomUI_OnLoad(Office.Native.IRibbonUI ribbonUI)
+        {
+            try
+            {
+                RibbonUI = COMObject.Create<OfficeApi.IRibbonUI>(Factory, ribbonUI);
+            }
+            catch (NetRuntimeSystem.Exception exception)
+            {
+                NetOffice.DebugConsole.Default.WriteException(exception);
+                OnError(ErrorMethodKind.GetCustomUI, exception);
+            }
         }
 
         #endregion
@@ -469,19 +511,23 @@ namespace NetOffice.OfficeApi.Tools
                 if (null != itemPane)
                 {
                     TaskPaneInfo item = TaskPanes.Add(itemPane.PaneType, itemPane.PaneType.Name);
-                    if (!CallOnCreateTaskPaneInfo(item))
-                    {
-                        item.Title = itemPane.Title;
-                        item.Visible = itemPane.Visible;
-                        item.DockPosition = (Office.Enums.MsoCTPDockPosition)Enum.Parse(typeof(Office.Enums.MsoCTPDockPosition), itemPane.DockPosition.ToString());
-                        item.DockPositionRestrict = (Office.Enums.MsoCTPDockPositionRestrict)Enum.Parse(typeof(Office.Enums.MsoCTPDockPositionRestrict), itemPane.DockPositionRestrict.ToString());
-                        item.Width = itemPane.Width;
-                        item.Height = itemPane.Height;
-                        item.Arguments = new object[] { this };
-                    }
+                    item.Title = itemPane.Title;
+                    item.Visible = itemPane.Visible;
+                    item.DockPosition = (Office.Enums.MsoCTPDockPosition)Enum.Parse(typeof(Office.Enums.MsoCTPDockPosition), itemPane.DockPosition.ToString());
+                    item.DockPositionRestrict = (Office.Enums.MsoCTPDockPositionRestrict)Enum.Parse(typeof(Office.Enums.MsoCTPDockPositionRestrict), itemPane.DockPositionRestrict.ToString());
+                    item.Width = itemPane.Width;
+                    item.Height = itemPane.Height;
+                    item.Arguments = new object[] { this };
 
-                    item.VisibleStateChange += new NetOffice.OfficeApi.CustomTaskPane_VisibleStateChangeEventHandler(AttributePane_VisibleStateChange);
-                    item.DockPositionStateChange += new Office.CustomTaskPane_DockPositionStateChangeEventHandler(AttributePane_DockPositionStateChange);
+                    if (CallOnCreateTaskPaneInfo(item))
+                    {
+                        item.VisibleStateChange += new NetOffice.OfficeApi.CustomTaskPane_VisibleStateChangeEventHandler(AttributePane_VisibleStateChange);
+                        item.DockPositionStateChange += new Office.CustomTaskPane_DockPositionStateChangeEventHandler(AttributePane_DockPositionStateChange);
+                    }
+                    else
+                    {
+                        TaskPanes.Remove(item);
+                    }
                 }
             }
         }
@@ -600,10 +646,10 @@ namespace NetOffice.OfficeApi.Tools
         /// The method is called while the CustomPane attribute is processed
         /// </summary>
         /// <param name="paneInfo">pane definition</param>
-		/// <returns>true if paneInfo is modified, otherwise false to set the default or attribute values</returns>
+		/// <returns>true if pane should be create, otherwise false</returns>
 		protected internal virtual bool OnCreateTaskPaneInfo(TaskPaneInfo paneInfo)
 		{
-			return false;
+			return true;
 		}
 		
         /// <summary>
@@ -789,18 +835,18 @@ namespace NetOffice.OfficeApi.Tools
                 RegistryLocationAttribute location = AttributeReflector.GetRegistryLocationAttribute(addinType);
                 ProgIdAttribute progID = AttributeReflector.GetProgIDAttribute(addinType);
 
-                OfficeApi.Tools.Utils.RegistryLocationResult addinLocation =
-                    Tools.Utils.CommonUtils.TryFindAddinLoadLocation(addinType, applicationType);
-                if (addinLocation == Office.Tools.Utils.RegistryLocationResult.Unknown)
+                OfficeApi.Tools.Contribution.RegistryLocationResult addinLocation =
+                    Tools.Contribution.CommonUtils.TryFindAddinLoadLocation(addinType, applicationType);
+                if (addinLocation == Office.Tools.Contribution.RegistryLocationResult.Unknown)
                     return false;
 
                 RegistryKey regKey = null;
                 switch (addinLocation)
                 {
-                    case Office.Tools.Utils.RegistryLocationResult.User:
+                    case Office.Tools.Contribution.RegistryLocationResult.User:
                         regKey = Registry.LocalMachine.OpenSubKey(_addinOfficeRegistryKey + progID.Value, true);
                         break;
-                    case Office.Tools.Utils.RegistryLocationResult.System:
+                    case Office.Tools.Contribution.RegistryLocationResult.System:
                         regKey = Registry.CurrentUser.OpenSubKey(_addinOfficeRegistryKey + progID.Value, true);
                         break;
                 }
@@ -822,18 +868,29 @@ namespace NetOffice.OfficeApi.Tools
                     return false;
             }
         }
-         
+
         #endregion
 
         #region Virtual Methods
 
         /// <summary>
+        /// Returns an instance to publish them as addin custom object.
+        /// External code like vba can access this object if instance is available as COM component.
+        /// This object is available as Appplication.COMAddins(?).Object
+        /// </summary>
+        /// <returns>addin instance object or null(Nothing in Visual Basic)</returns>
+        protected virtual object OnCreateObjectInstance()
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Create the used utils. The method was called in OnConnection
         /// </summary>
         /// <returns>new ToolsUtils instance</returns>
-        protected internal virtual Utils.CommonUtils OnCreateUtils()
+        protected internal virtual Contribution.CommonUtils OnCreateUtils()
         {
-            return new Utils.CommonUtils(this, Type, 3 == _automationCode ? true : false, this.Type.Assembly);
+            return new Contribution.CommonUtils(this, Type, 3 == _automationCode ? true : false, this.Type.Assembly);
         }
 
         /// <summary>
@@ -846,7 +903,7 @@ namespace NetOffice.OfficeApi.Tools
             ForceInitializeAttribute attribute = AttributeReflector.GetForceInitializeAttribute(Type);
             if (null != attribute)
             {
-                core.Settings.EnableDebugOutput = attribute.EnableDebugOutput;
+                core.Settings.EnableMoreDebugOutput = attribute.EnableMoreDebugOutput;
                 core.CheckInitialize();
             }
             return core;
@@ -871,6 +928,29 @@ namespace NetOffice.OfficeApi.Tools
                 NetOffice.DebugConsole.Default.WriteException(exception);
                 OnError(ErrorMethodKind.CreateFactory, exception);
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Try to create a custom addin object instance
+        /// </summary>
+        /// <param name="addInInst">given instance from OnConnection event</param>
+        private void TryCreateCustomObject(object addInInst)
+        {
+            try
+            {
+                CustomObject = OnCreateObjectInstance();
+                if (null != CustomObject)
+                {
+                    object[] param = new object[1];
+                    param[0] = CustomObject;
+                    addInInst.GetType().InvokeMember("Object", NetRuntimeSystem.Reflection.BindingFlags.SetProperty, null, addInInst, param);
+                }
+            }
+            catch (NetRuntimeSystem.Exception exception)
+            {
+                Factory.Console.WriteException(exception);
+                OnError(ErrorMethodKind.CreateCustomAddinInstance, exception);
             }
         }
 
@@ -903,13 +983,13 @@ namespace NetOffice.OfficeApi.Tools
             if (applicationType == ApplicationIdentifiers.ApplicationType.None)
                 return null;
 
-            OfficeApi.Tools.Utils.RegistryLocationResult result = OfficeApi.Tools.Utils.CommonUtils.TryFindAddinLoadLocation(Type,
+            OfficeApi.Tools.Contribution.RegistryLocationResult result = OfficeApi.Tools.Contribution.CommonUtils.TryFindAddinLoadLocation(Type,
                     applicationType);
             switch (result)
             {
-                case Office.Tools.Utils.RegistryLocationResult.User:
+                case Office.Tools.Contribution.RegistryLocationResult.User:
                     return false;
-                case Office.Tools.Utils.RegistryLocationResult.System:
+                case Office.Tools.Contribution.RegistryLocationResult.System:
                     return true;
                 default:
                     throw new IndexOutOfRangeException();
@@ -961,7 +1041,7 @@ namespace NetOffice.OfficeApi.Tools
                 for (int i = 0; i < attribute.Products.Length; i++)
                     product[i] = String.Format(_addinOfficeRegistryKey, MultiRegisterAttribute.RegistryEntry(attribute.Products[i]));
 
-                RegisterHandler.Proceed(type, product, InstallScope.System, OfficeRegisterKeyState.NeedToCreate);
+                COMAddinRegisterHandler.Proceed(type, product, InstallScope.System, OfficeRegisterKeyState.NeedToCreate);
             }
             catch (Exception exception)
             {
@@ -984,7 +1064,7 @@ namespace NetOffice.OfficeApi.Tools
                 for (int i = 0; i < attribute.Products.Length; i++)
                     product[i] = String.Format(_addinOfficeRegistryKey, MultiRegisterAttribute.RegistryEntry(attribute.Products[i]));
 
-                UnRegisterHandler.Proceed(type, product, InstallScope.System, OfficeUnRegisterKeyState.NeedToDelete);
+                COMAddinUnRegisterHandler.Proceed(type, product, InstallScope.System, OfficeUnRegisterKeyState.NeedToDelete);
             }
             catch (Exception exception)
             {
@@ -1013,7 +1093,7 @@ namespace NetOffice.OfficeApi.Tools
             for (int i = 0; i < attribute.Products.Length; i++)
                 product[i] = String.Format(_addinOfficeRegistryKey, MultiRegisterAttribute.RegistryEntry(attribute.Products[i]));
 
-            RegisterHandler.Proceed(type, product, currentScope, currentKeyState);
+            COMAddinRegisterHandler.Proceed(type, product, currentScope, currentKeyState);
         }
 
         /// <summary>
@@ -1036,7 +1116,7 @@ namespace NetOffice.OfficeApi.Tools
             for (int i = 0; i < attribute.Products.Length; i++)
                 product[i] = String.Format(_addinOfficeRegistryKey, MultiRegisterAttribute.RegistryEntry(attribute.Products[i]));
 
-            UnRegisterHandler.Proceed(type, product, currentScope, currentKeyState);
+            COMAddinUnRegisterHandler.Proceed(type, product, currentScope, currentKeyState);
         }
 
         /// <summary>

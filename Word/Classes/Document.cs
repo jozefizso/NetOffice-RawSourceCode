@@ -1,49 +1,51 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
 
 namespace NetOffice.WordApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
 	public delegate void Document_NewEventHandler();
 	public delegate void Document_OpenEventHandler();
 	public delegate void Document_CloseEventHandler();
-	public delegate void Document_SyncEventHandler(NetOffice.OfficeApi.Enums.MsoSyncEventType SyncEventType);
-	public delegate void Document_XMLAfterInsertEventHandler(NetOffice.WordApi.XMLNode NewXMLNode, bool InUndoRedo);
-	public delegate void Document_XMLBeforeDeleteEventHandler(NetOffice.WordApi.Range DeletedRange, NetOffice.WordApi.XMLNode OldXMLNode, bool InUndoRedo);
-	public delegate void Document_ContentControlAfterAddEventHandler(NetOffice.WordApi.ContentControl NewContentControl, bool InUndoRedo);
-	public delegate void Document_ContentControlBeforeDeleteEventHandler(NetOffice.WordApi.ContentControl OldContentControl, bool InUndoRedo);
-	public delegate void Document_ContentControlOnExitEventHandler(NetOffice.WordApi.ContentControl ContentControl, ref bool Cancel);
-	public delegate void Document_ContentControlOnEnterEventHandler(NetOffice.WordApi.ContentControl ContentControl);
-	public delegate void Document_ContentControlBeforeStoreUpdateEventHandler(NetOffice.WordApi.ContentControl ContentControl, ref string Content);
-	public delegate void Document_ContentControlBeforeContentUpdateEventHandler(NetOffice.WordApi.ContentControl ContentControl, ref string Content);
-	public delegate void Document_BuildingBlockInsertEventHandler(NetOffice.WordApi.Range Range, string Name, string Category, string BlockType, string Template);
+	public delegate void Document_SyncEventHandler(NetOffice.OfficeApi.Enums.MsoSyncEventType syncEventType);
+	public delegate void Document_XMLAfterInsertEventHandler(NetOffice.WordApi.XMLNode nNewXMLNode, bool inUndoRedo);
+	public delegate void Document_XMLBeforeDeleteEventHandler(NetOffice.WordApi.Range deletedRange, NetOffice.WordApi.XMLNode oldXMLNode, bool inUndoRedo);
+	public delegate void Document_ContentControlAfterAddEventHandler(NetOffice.WordApi.ContentControl newContentControl, bool inUndoRedo);
+	public delegate void Document_ContentControlBeforeDeleteEventHandler(NetOffice.WordApi.ContentControl oldContentControl, bool inUndoRedo);
+	public delegate void Document_ContentControlOnExitEventHandler(NetOffice.WordApi.ContentControl contentControl, ref bool cancel);
+	public delegate void Document_ContentControlOnEnterEventHandler(NetOffice.WordApi.ContentControl contentControl);
+	public delegate void Document_ContentControlBeforeStoreUpdateEventHandler(NetOffice.WordApi.ContentControl contentControl, ref string content);
+	public delegate void Document_ContentControlBeforeContentUpdateEventHandler(NetOffice.WordApi.ContentControl contentControl, ref string content);
+	public delegate void Document_BuildingBlockInsertEventHandler(NetOffice.WordApi.Range range, string name, string category, string blockType, string template);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass Document 
 	/// SupportByVersion Word, 9,10,11,12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff822963.aspx
-	///</summary>
-	[SupportByVersionAttribute("Word", 9,10,11,12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class Document : _Document,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff822963.aspx </remarks>
+	[SupportByVersion("Word", 9,10,11,12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.DocumentEvents_SinkHelper), typeof(Events.DocumentEvents2_SinkHelper))]
+    [ComEventInterface(typeof(Events.DocumentEvents), typeof(Events.DocumentEvents2))]
+    public class Document : _Document, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		DocumentEvents_SinkHelper _documentEvents_SinkHelper;
-		DocumentEvents2_SinkHelper _documentEvents2_SinkHelper;
+        private static Type _type;
+        private Events.DocumentEvents_SinkHelper _documentEvents_SinkHelper;
+		private Events.DocumentEvents2_SinkHelper _documentEvents2_SinkHelper;
 	
 		#endregion
 
@@ -52,6 +54,7 @@ namespace NetOffice.WordApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -60,8 +63,9 @@ namespace NetOffice.WordApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -75,7 +79,7 @@ namespace NetOffice.WordApi
         
         #endregion
         		
-		#region Construction
+		#region Ctro
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -118,74 +122,54 @@ namespace NetOffice.WordApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Document 
-        ///</summary>		
+        /// </summary>		
 		public Document():base("Word.Document")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of Document
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public Document(string progId):base(progId)
 		{
 			
 		}
 
-		#endregion
+        #endregion
 
-		#region Static CoClass Methods
+        #region Static CoClass Methods
 
-		/// <summary>
-        /// Returns all running Word.Document objects from the environment/system
+        /// <summary>
+        /// Returns all running Word.Document instances from the environment/system
         /// </summary>
-        /// <returns>an Word.Document array</returns>
-		public static NetOffice.WordApi.Document[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Word","Document");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.WordApi.Document> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.WordApi.Document>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.WordApi.Document(null, proxy) );
-			return resultList.ToArray();
-		}
+        /// <returns>Word.Document sequence</returns>
+        public static IDisposableSequence<Application> GetActiveInstances()
+        {
+            return Running.ProxyService.GetActiveInstances<Application>("Word", "Document");
+        }
 
-		/// <summary>
-        /// Returns a running Word.Document object from the environment/system.
+        /// <summary>
+        /// Returns a running Word.Document instance from the environment/system
         /// </summary>
-        /// <returns>an Word.Document object or null</returns>
-		public static NetOffice.WordApi.Document GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Word","Document", false);
-			if(null != proxy)
-				return new NetOffice.WordApi.Document(null, proxy);
-			else
-				return null;
-		}
+        /// <param name="throwExceptionIfNotFound">throw exception if unable to find an instance</param>
+        /// <returns>Word.Document instance or null</returns>
+        public static Application GetActiveInstance(bool throwExceptionIfNotFound = false)
+        {
+            return Running.ProxyService.GetActiveInstance<Application>("Word", "Document", throwExceptionIfNotFound);
+        }
 
-		/// <summary>
-        /// Returns a running Word.Document object from the environment/system. 
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// SupportByVersion Word, 9,10,11,12,14,15,16
         /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Word.Document object or null</returns>
-		public static NetOffice.WordApi.Document GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Word","Document", throwOnError);
-			if(null != proxy)
-				return new NetOffice.WordApi.Document(null, proxy);
-			else
-				return null;
-		}
-		#endregion
-
-		#region Events
-
-		/// <summary>
-		/// SupportByVersion Word, 9,10,11,12,14,15,16
-		/// </summary>
-		private event Document_NewEventHandler _NewEvent;
+        private event Document_NewEventHandler _NewEvent;
 
 		/// <summary>
 		/// SupportByVersion Word 9 10 11 12 14 15,16
@@ -483,7 +467,7 @@ namespace NetOffice.WordApi
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -498,18 +482,18 @@ namespace NetOffice.WordApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, DocumentEvents_SinkHelper.Id,DocumentEvents2_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.DocumentEvents_SinkHelper.Id, Events.DocumentEvents2_SinkHelper.Id);
 
 
-			if(DocumentEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.DocumentEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_documentEvents_SinkHelper = new DocumentEvents_SinkHelper(this, _connectPoint);
+				_documentEvents_SinkHelper = new Events.DocumentEvents_SinkHelper(this, _connectPoint);
 				return;
 			}
 
-			if(DocumentEvents2_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.DocumentEvents2_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_documentEvents2_SinkHelper = new DocumentEvents2_SinkHelper(this, _connectPoint);
+				_documentEvents2_SinkHelper = new Events.DocumentEvents2_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -525,50 +509,34 @@ namespace NetOffice.WordApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -577,22 +545,8 @@ namespace NetOffice.WordApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -603,34 +557,8 @@ namespace NetOffice.WordApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -656,3 +584,4 @@ namespace NetOffice.WordApi
 		#pragma warning restore
 	}
 }
+

@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.ADODBApi
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface Parameters 
 	/// SupportByVersion ADODB, 2.1,2.5
-	///</summary>
-	[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class Parameters : _DynaCollection ,IEnumerable<NetOffice.ADODBApi._Parameter>
+	/// </summary>
+	[SupportByVersion("ADODB", 2.1,2.5)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Method), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class Parameters : _DynaCollection, IEnumerableProvider<NetOffice.ADODBApi._Parameter>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.ADODBApi
             {
                 if (null == _type)
                     _type = typeof(Parameters);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Parameters(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.ADODBApi
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public Parameters(string progId) : base(progId)
 		{
@@ -96,79 +114,66 @@ namespace NetOffice.ADODBApi
 		/// SupportByVersion ADODB 2.1, 2.5
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-		public Int32 Count
-		{
-			get
-			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
-			}
-		}
-
-		/// <summary>
-		/// SupportByVersion ADODB 2.1, 2.5
-		/// Get
-		/// </summary>
-		/// <param name="index">object Index</param>
-		[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">object index</param>
+		[SupportByVersion("ADODB", 2.1,2.5)]
+		[BaseResult]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.ADODBApi._Parameter this[object index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.ADODBApi._Parameter newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.ADODBApi._Parameter;
-			return newObject;
+			{
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.ADODBApi._Parameter>(this, "Item", index);
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// SupportByVersion ADODB 2.1, 2.5
-		/// 
-		/// </summary>
-		[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-		public void Refresh()
-		{
-			object[] paramsArray = null;
-			Invoker.Method(this, "Refresh", paramsArray);
-		}
+        #endregion
 
-		#endregion
+        #region IEnumerableProvider<NetOffice.ADODBApi._Parameter>
 
-       #region IEnumerable<NetOffice.ADODBApi._Parameter> Member
-        
+        ICOMObject IEnumerableProvider<NetOffice.ADODBApi._Parameter>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsMethod(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.ADODBApi._Parameter>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, true);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.ADODBApi._Parameter>
+
         /// <summary>
-		/// SupportByVersionAttribute ADODB, 2.1,2.5
-		/// </summary>
-		[SupportByVersionAttribute("ADODB", 2.1,2.5)]
-       public IEnumerator<NetOffice.ADODBApi._Parameter> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.ADODBApi._Parameter item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion ADODB, 2.1,2.5
+        /// </summary>
+        [SupportByVersion("ADODB", 2.1, 2.5)]
+        public IEnumerator<NetOffice.ADODBApi._Parameter> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.ADODBApi._Parameter item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute ADODB, 2.1,2.5
-		/// </summary>
-		[SupportByVersionAttribute("ADODB", 2.1,2.5)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion ADODB, 2.1,2.5
+        /// </summary>
+        [SupportByVersion("ADODB", 2.1,2.5)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsMethod(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

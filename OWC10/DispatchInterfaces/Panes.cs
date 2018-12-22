@@ -1,24 +1,36 @@
-﻿using System;
-using NetRuntimeSystem = System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using NetOffice;
+using System;
+using NetRuntimeSystem = System;
+using System.ComponentModel;
+using NetOffice.Attributes;
+using NetOffice.CollectionsGeneric;
+
 namespace NetOffice.OWC10Api
 {
-	///<summary>
+	/// <summary>
 	/// DispatchInterface Panes 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsDispatchInterface)]
-	public class Panes : COMObject ,IEnumerable<NetOffice.OWC10Api.Pane>
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsDispatchInterface), Enumerator(Enumerator.Reference, EnumeratorInvoke.Property), HasIndexProperty(IndexInvoke.Property, "Item")]
+	public class Panes : COMObject, IEnumerableProvider<NetOffice.OWC10Api.Pane>
 	{
 		#pragma warning disable
+
 		#region Type Information
+
+		/// <summary>
+		/// Instance Type
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
+		public override Type InstanceType
+		{
+			get
+			{
+				return LateBindingApiWrapperType;
+			}
+		}
 
         private static Type _type;
 
@@ -29,14 +41,20 @@ namespace NetOffice.OWC10Api
             {
                 if (null == _type)
                     _type = typeof(Panes);
-                    
                 return _type;
             }
         }
         
         #endregion
         
-		#region Construction
+		#region Ctor
+
+		/// <param name="factory">current used factory core</param>
+		/// <param name="parentObject">object there has created the proxy</param>
+		/// <param name="proxyShare">proxy share instead if com proxy</param>
+		public Panes(Core factory, ICOMObject parentObject, COMProxyShare proxyShare) : base(factory, parentObject, proxyShare)
+		{
+		}
 
 		///<param name="factory">current used factory core</param>
 		///<param name="parentObject">object there has created the proxy</param>
@@ -82,7 +100,7 @@ namespace NetOffice.OWC10Api
 		{
 		}
 		
-		/// <param name="progId">registered ProgID</param>
+		/// <param name="progId">registered progID</param>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public Panes(string progId) : base(progId)
 		{
@@ -96,15 +114,13 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
+		[BaseResult]
 		public NetOffice.OWC10Api.ISpreadsheet Application
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Application", paramsArray);
-				NetOffice.OWC10Api.ISpreadsheet newObject = Factory.CreateObjectFromComProxy(this,returnItem) as NetOffice.OWC10Api.ISpreadsheet;
-				return newObject;
+				return Factory.ExecuteBaseReferencePropertyGet<NetOffice.OWC10Api.ISpreadsheet>(this, "Application");
 			}
 		}
 
@@ -112,14 +128,12 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
 		public Int32 Count
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Count", paramsArray);
-				return NetRuntimeSystem.Convert.ToInt32(returnItem);
+				return Factory.ExecuteInt32PropertyGet(this, "Count");
 			}
 		}
 
@@ -127,17 +141,14 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		/// <param name="index">Int32 Index</param>
-		[SupportByVersionAttribute("OWC10", 1)]
-		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item")]
+		/// <param name="index">Int32 index</param>
+		[SupportByVersion("OWC10", 1)]
+		[NetRuntimeSystem.Runtime.CompilerServices.IndexerName("Item"), IndexProperty]
 		public NetOffice.OWC10Api.Pane this[Int32 index]
 		{
 			get
-{			
-			object[] paramsArray = Invoker.ValidateParamsArray(index);
-			object returnItem = Invoker.PropertyGet(this, "Item", paramsArray);
-			NetOffice.OWC10Api.Pane newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.Pane.LateBindingApiWrapperType) as NetOffice.OWC10Api.Pane;
-			return newObject;
+			{
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.OWC10Api.Pane>(this, "Item", NetOffice.OWC10Api.Pane.LateBindingApiWrapperType, index);
 			}
 		}
 
@@ -145,51 +156,63 @@ namespace NetOffice.OWC10Api
 		/// SupportByVersion OWC10 1
 		/// Get
 		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+		[SupportByVersion("OWC10", 1)]
 		public NetOffice.OWC10Api.Window Parent
 		{
 			get
 			{
-				object[] paramsArray = null;
-				object returnItem = Invoker.PropertyGet(this, "Parent", paramsArray);
-				NetOffice.OWC10Api.Window newObject = Factory.CreateKnownObjectFromComProxy(this,returnItem,NetOffice.OWC10Api.Window.LateBindingApiWrapperType) as NetOffice.OWC10Api.Window;
-				return newObject;
+				return Factory.ExecuteKnownReferencePropertyGet<NetOffice.OWC10Api.Window>(this, "Parent", NetOffice.OWC10Api.Window.LateBindingApiWrapperType);
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		#endregion
+        #endregion
 
-       #region IEnumerable<NetOffice.OWC10Api.Pane> Member
-        
+        #region IEnumerableProvider<NetOffice.OWC10Api.Pane>
+
+        ICOMObject IEnumerableProvider<NetOffice.OWC10Api.Pane>.GetComObjectEnumerator(ICOMObject parent)
+        {
+            return NetOffice.Utils.GetComObjectEnumeratorAsProperty(parent, this, false);
+        }
+
+        IEnumerable IEnumerableProvider<NetOffice.OWC10Api.Pane>.FetchVariantComObjectEnumerator(ICOMObject parent, ICOMObject enumerator)
+        {
+            return NetOffice.Utils.FetchVariantComObjectEnumerator(parent, enumerator, false);
+        }
+
+        #endregion
+
+        #region IEnumerable<NetOffice.OWC10Api.Pane>
+
         /// <summary>
-		/// SupportByVersionAttribute OWC10, 1
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
-       public IEnumerator<NetOffice.OWC10Api.Pane> GetEnumerator()  
-       {
-           NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
-           foreach (NetOffice.OWC10Api.Pane item in innerEnumerator)
-               yield return item;
-       }
+        /// SupportByVersion OWC10, 1
+        /// </summary>
+        [SupportByVersion("OWC10", 1)]
+        public IEnumerator<NetOffice.OWC10Api.Pane> GetEnumerator()
+        {
+            NetRuntimeSystem.Collections.IEnumerable innerEnumerator = (this as NetRuntimeSystem.Collections.IEnumerable);
+            foreach (NetOffice.OWC10Api.Pane item in innerEnumerator)
+                yield return item;
+        }
 
-       #endregion
-          
-		#region IEnumerable Members
-       
-		/// <summary>
-		/// SupportByVersionAttribute OWC10, 1
-		/// </summary>
-		[SupportByVersionAttribute("OWC10", 1)]
+        #endregion
+
+        #region IEnumerable
+
+        /// <summary>
+        /// SupportByVersion OWC10, 1
+        /// </summary>
+        [SupportByVersion("OWC10", 1)]
 		IEnumerator NetRuntimeSystem.Collections.IEnumerable.GetEnumerator()
 		{
-			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this);
+			return NetOffice.Utils.GetProxyEnumeratorAsProperty(this, false);
 		}
 
 		#endregion
+
 		#pragma warning restore
 	}
 }

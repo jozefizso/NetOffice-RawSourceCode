@@ -1,37 +1,35 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OWC10Api
 {
-
 	#region Delegates
 
 	#pragma warning disable
 	public delegate void ChartSpace_DataSetChangeEventHandler();
 	public delegate void ChartSpace_DblClickEventHandler();
 	public delegate void ChartSpace_ClickEventHandler();
-	public delegate void ChartSpace_KeyDownEventHandler(Int32 KeyCode, Int32 Shift);
-	public delegate void ChartSpace_KeyUpEventHandler(Int32 KeyCode, Int32 Shift);
-	public delegate void ChartSpace_KeyPressEventHandler(Int32 KeyAscii);
-	public delegate void ChartSpace_BeforeKeyDownEventHandler(Int32 KeyCode, Int32 Shift, NetOffice.OWC10Api.ByRef Cancel);
-	public delegate void ChartSpace_BeforeKeyUpEventHandler(Int32 KeyCode, Int32 Shift, NetOffice.OWC10Api.ByRef Cancel);
-	public delegate void ChartSpace_BeforeKeyPressEventHandler(Int32 KeyAscii, NetOffice.OWC10Api.ByRef Cancel);
-	public delegate void ChartSpace_MouseDownEventHandler(Int32 Button, Int32 Shift, Int32 x, Int32 y);
-	public delegate void ChartSpace_MouseMoveEventHandler(Int32 Button, Int32 Shift, Int32 x, Int32 y);
-	public delegate void ChartSpace_MouseUpEventHandler(Int32 Button, Int32 Shift, Int32 x, Int32 y);
-	public delegate void ChartSpace_MouseWheelEventHandler(bool Page, Int32 Count);
+	public delegate void ChartSpace_KeyDownEventHandler(Int32 keyCode, Int32 shift);
+	public delegate void ChartSpace_KeyUpEventHandler(Int32 keyCode, Int32 shift);
+	public delegate void ChartSpace_KeyPressEventHandler(Int32 keyAscii);
+	public delegate void ChartSpace_BeforeKeyDownEventHandler(Int32 keyCode, Int32 shift, NetOffice.OWC10Api.ByRef cancel);
+	public delegate void ChartSpace_BeforeKeyUpEventHandler(Int32 keyCode, Int32 shift, NetOffice.OWC10Api.ByRef cancel);
+	public delegate void ChartSpace_BeforeKeyPressEventHandler(Int32 keyAscii, NetOffice.OWC10Api.ByRef Cancel);
+	public delegate void ChartSpace_MouseDownEventHandler(Int32 button, Int32 shift, Int32 x, Int32 y);
+	public delegate void ChartSpace_MouseMoveEventHandler(Int32 button, Int32 shift, Int32 x, Int32 y);
+	public delegate void ChartSpace_MouseUpEventHandler(Int32 button, Int32 shift, Int32 x, Int32 y);
+	public delegate void ChartSpace_MouseWheelEventHandler(bool page, Int32 count);
 	public delegate void ChartSpace_SelectionChangeEventHandler();
-	public delegate void ChartSpace_BeforeScreenTipEventHandler(NetOffice.OWC10Api.ByRef TipText, COMObject ContextObject);
-	public delegate void ChartSpace_CommandEnabledEventHandler(object Command, NetOffice.OWC10Api.ByRef Enabled);
-	public delegate void ChartSpace_CommandCheckedEventHandler(object Command, NetOffice.OWC10Api.ByRef Checked);
-	public delegate void ChartSpace_CommandTipTextEventHandler(object Command, NetOffice.OWC10Api.ByRef Caption);
-	public delegate void ChartSpace_CommandBeforeExecuteEventHandler(object Command, NetOffice.OWC10Api.ByRef Cancel);
-	public delegate void ChartSpace_CommandExecuteEventHandler(object Command, bool Succeeded);
-	public delegate void ChartSpace_BeforeContextMenuEventHandler(Int32 x, Int32 y, NetOffice.OWC10Api.ByRef Menu, NetOffice.OWC10Api.ByRef Cancel);
-	public delegate void ChartSpace_BeforeRenderEventHandler(NetOffice.OWC10Api.ChChartDraw drawObject, COMObject chartObject, NetOffice.OWC10Api.ByRef Cancel);
+	public delegate void ChartSpace_BeforeScreenTipEventHandler(NetOffice.OWC10Api.ByRef tipText, COMObject contextObject);
+	public delegate void ChartSpace_CommandEnabledEventHandler(object command, NetOffice.OWC10Api.ByRef enabled);
+	public delegate void ChartSpace_CommandCheckedEventHandler(object command, NetOffice.OWC10Api.ByRef Checked);
+	public delegate void ChartSpace_CommandTipTextEventHandler(object command, NetOffice.OWC10Api.ByRef caption);
+	public delegate void ChartSpace_CommandBeforeExecuteEventHandler(object command, NetOffice.OWC10Api.ByRef Cancel);
+	public delegate void ChartSpace_CommandExecuteEventHandler(object command, bool succeeded);
+	public delegate void ChartSpace_BeforeContextMenuEventHandler(Int32 x, Int32 y, NetOffice.OWC10Api.ByRef menu, NetOffice.OWC10Api.ByRef cancel);
+	public delegate void ChartSpace_BeforeRenderEventHandler(NetOffice.OWC10Api.ChChartDraw drawObject, COMObject chartObject, NetOffice.OWC10Api.ByRef cancel);
 	public delegate void ChartSpace_AfterRenderEventHandler(NetOffice.OWC10Api.ChChartDraw drawObject, COMObject chartObject);
 	public delegate void ChartSpace_AfterFinalRenderEventHandler(NetOffice.OWC10Api.ChChartDraw drawObject);
 	public delegate void ChartSpace_AfterLayoutEventHandler(NetOffice.OWC10Api.ChChartDraw drawObject);
@@ -40,21 +38,24 @@ namespace NetOffice.OWC10Api
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass ChartSpace 
 	/// SupportByVersion OWC10, 1
-	///</summary>
-	[SupportByVersionAttribute("OWC10", 1)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class ChartSpace : ChChartSpace,IEventBinding
+	/// </summary>
+	[SupportByVersion("OWC10", 1)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events.IChartEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events.IChartEvents))]
+    public class ChartSpace : ChChartSpace, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		IChartEvents_SinkHelper _iChartEvents_SinkHelper;
+        private static Type _type;
+        private Events.IChartEvents_SinkHelper _iChartEvents_SinkHelper;
 	
 		#endregion
 
@@ -63,6 +64,7 @@ namespace NetOffice.OWC10Api
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -71,8 +73,9 @@ namespace NetOffice.OWC10Api
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -129,17 +132,17 @@ namespace NetOffice.OWC10Api
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of ChartSpace 
-        ///</summary>		
+        /// </summary>		
 		public ChartSpace():base("OWC10.ChartSpace")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of ChartSpace
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public ChartSpace(string progId):base(progId)
 		{
@@ -149,46 +152,6 @@ namespace NetOffice.OWC10Api
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running OWC10.ChartSpace objects from the environment/system
-        /// </summary>
-        /// <returns>an OWC10.ChartSpace array</returns>
-		public static NetOffice.OWC10Api.ChartSpace[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("OWC10","ChartSpace");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.ChartSpace> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OWC10Api.ChartSpace>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OWC10Api.ChartSpace(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.ChartSpace object from the environment/system.
-        /// </summary>
-        /// <returns>an OWC10.ChartSpace object or null</returns>
-		public static NetOffice.OWC10Api.ChartSpace GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","ChartSpace", false);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.ChartSpace(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running OWC10.ChartSpace object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an OWC10.ChartSpace object or null</returns>
-		public static NetOffice.OWC10Api.ChartSpace GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("OWC10","ChartSpace", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OWC10Api.ChartSpace(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -767,7 +730,7 @@ namespace NetOffice.OWC10Api
 
 		#endregion
        
-	    #region IEventBinding Member
+	    #region IEventBinding
         
 		/// <summary>
         /// Creates active sink helper
@@ -782,12 +745,12 @@ namespace NetOffice.OWC10Api
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, IChartEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events.IChartEvents_SinkHelper.Id);
 
 
-			if(IChartEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events.IChartEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				_iChartEvents_SinkHelper = new IChartEvents_SinkHelper(this, _connectPoint);
+				_iChartEvents_SinkHelper = new Events.IChartEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -803,50 +766,34 @@ namespace NetOffice.OWC10Api
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -855,22 +802,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -881,34 +814,8 @@ namespace NetOffice.OWC10Api
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -929,3 +836,4 @@ namespace NetOffice.OWC10Api
 		#pragma warning restore
 	}
 }
+

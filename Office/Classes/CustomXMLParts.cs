@@ -1,38 +1,39 @@
 ﻿using System;
 using NetRuntimeSystem = System;
 using System.ComponentModel;
-using NetOffice;
-using NetOffice.Misc;
+using NetOffice.Attributes;
 
 namespace NetOffice.OfficeApi
 {
-
 	#region Delegates
 
 	#pragma warning disable
-	public delegate void CustomXMLParts_PartAfterAddEventHandler(NetOffice.OfficeApi.CustomXMLPart NewPart);
-	public delegate void CustomXMLParts_PartBeforeDeleteEventHandler(NetOffice.OfficeApi.CustomXMLPart OldPart);
-	public delegate void CustomXMLParts_PartAfterLoadEventHandler(NetOffice.OfficeApi.CustomXMLPart Part);
+	public delegate void CustomXMLParts_PartAfterAddEventHandler(NetOffice.OfficeApi.CustomXMLPart newPart);
+	public delegate void CustomXMLParts_PartBeforeDeleteEventHandler(NetOffice.OfficeApi.CustomXMLPart oldPart);
+	public delegate void CustomXMLParts_PartAfterLoadEventHandler(NetOffice.OfficeApi.CustomXMLPart part);
 	#pragma warning restore
 
 	#endregion
 
-	///<summary>
+	/// <summary>
 	/// CoClass CustomXMLParts 
 	/// SupportByVersion Office, 12,14,15,16
-	/// MSDN Online Documentation: http://msdn.microsoft.com/en-us/en-us/library/office/ff863162.aspx
-	///</summary>
-	[SupportByVersionAttribute("Office", 12,14,15,16)]
-	[EntityTypeAttribute(EntityType.IsCoClass)]
-	public class CustomXMLParts : _CustomXMLParts,IEventBinding
+	/// </summary>
+	/// <remarks> MSDN Online: http://msdn.microsoft.com/en-us/en-us/library/office/ff863162.aspx </remarks>
+	[SupportByVersion("Office", 12,14,15,16)]
+	[EntityType(EntityType.IsCoClass)]
+	[EventSink(typeof(Events._CustomXMLPartsEvents_SinkHelper))]
+    [ComEventInterface(typeof(Events._CustomXMLPartsEvents))]
+    public class CustomXMLParts : _CustomXMLParts, IEventBinding
 	{
 		#pragma warning disable
+
 		#region Fields
 		
 		private NetRuntimeSystem.Runtime.InteropServices.ComTypes.IConnectionPoint _connectPoint;
 		private string _activeSinkId;
-		private NetRuntimeSystem.Type _thisType;
-		_CustomXMLPartsEvents_SinkHelper __CustomXMLPartsEvents_SinkHelper;
+        private static Type _type;
+        private Events._CustomXMLPartsEvents_SinkHelper __CustomXMLPartsEvents_SinkHelper;
 	
 		#endregion
 
@@ -41,6 +42,7 @@ namespace NetOffice.OfficeApi
         /// <summary>
         /// Instance Type
         /// </summary>
+		[EditorBrowsable(EditorBrowsableState.Advanced), Browsable(false), Category("NetOffice"), CoreOverridden]
         public override Type InstanceType
         {
             get
@@ -49,8 +51,9 @@ namespace NetOffice.OfficeApi
             }
         }
 
-        private static Type _type;
-		
+        /// <summary>
+        /// Type Cache
+        /// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public static Type LateBindingApiWrapperType
         {
@@ -107,17 +110,17 @@ namespace NetOffice.OfficeApi
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of CustomXMLParts 
-        ///</summary>		
+        /// </summary>		
 		public CustomXMLParts():base("Office.CustomXMLParts")
 		{
 			
 		}
 		
-		///<summary>
+		/// <summary>
         /// Creates a new instance of CustomXMLParts
-        ///</summary>
+        /// </summary>
         ///<param name="progId">registered ProgID</param>
 		public CustomXMLParts(string progId):base(progId)
 		{
@@ -127,46 +130,6 @@ namespace NetOffice.OfficeApi
 		#endregion
 
 		#region Static CoClass Methods
-
-		/// <summary>
-        /// Returns all running Office.CustomXMLParts objects from the environment/system
-        /// </summary>
-        /// <returns>an Office.CustomXMLParts array</returns>
-		public static NetOffice.OfficeApi.CustomXMLParts[] GetActiveInstances()
-		{		
-			IDisposableEnumeration proxyList = NetOffice.ProxyService.GetActiveInstances("Office","CustomXMLParts");
-			NetRuntimeSystem.Collections.Generic.List<NetOffice.OfficeApi.CustomXMLParts> resultList = new NetRuntimeSystem.Collections.Generic.List<NetOffice.OfficeApi.CustomXMLParts>();
-			foreach(object proxy in proxyList)
-				resultList.Add( new NetOffice.OfficeApi.CustomXMLParts(null, proxy) );
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-        /// Returns a running Office.CustomXMLParts object from the environment/system.
-        /// </summary>
-        /// <returns>an Office.CustomXMLParts object or null</returns>
-		public static NetOffice.OfficeApi.CustomXMLParts GetActiveInstance()
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Office","CustomXMLParts", false);
-			if(null != proxy)
-				return new NetOffice.OfficeApi.CustomXMLParts(null, proxy);
-			else
-				return null;
-		}
-
-		/// <summary>
-        /// Returns a running Office.CustomXMLParts object from the environment/system. 
-        /// </summary>
-	    /// <param name="throwOnError">throw an exception if no object was found</param>
-        /// <returns>an Office.CustomXMLParts object or null</returns>
-		public static NetOffice.OfficeApi.CustomXMLParts GetActiveInstance(bool throwOnError)
-		{
-			object proxy  = NetOffice.ProxyService.GetActiveInstance("Office","CustomXMLParts", throwOnError);
-			if(null != proxy)
-				return new NetOffice.OfficeApi.CustomXMLParts(null, proxy);
-			else
-				return null;
-		}
 		#endregion
 
 		#region Events
@@ -257,12 +220,12 @@ namespace NetOffice.OfficeApi
 				return;
 	
             if (null == _activeSinkId)
-				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, _CustomXMLPartsEvents_SinkHelper.Id);
+				_activeSinkId = SinkHelper.GetConnectionPoint(this, ref _connectPoint, Events._CustomXMLPartsEvents_SinkHelper.Id);
 
 
-			if(_CustomXMLPartsEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
+			if(Events._CustomXMLPartsEvents_SinkHelper.Id.Equals(_activeSinkId, StringComparison.InvariantCultureIgnoreCase))
 			{
-				__CustomXMLPartsEvents_SinkHelper = new _CustomXMLPartsEvents_SinkHelper(this, _connectPoint);
+				__CustomXMLPartsEvents_SinkHelper = new Events._CustomXMLPartsEvents_SinkHelper(this, _connectPoint);
 				return;
 			} 
         }
@@ -278,50 +241,34 @@ namespace NetOffice.OfficeApi
                 return (null != _connectPoint);
             }
         }
-
         /// <summary>
-        ///  The instance has currently one or more event recipients 
+        /// Instance has one or more event recipients
         /// </summary>
+        /// <returns>true if one or more event is active, otherwise false</returns>
         [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public bool HasEventRecipients()       
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-					
-			foreach (NetRuntimeSystem.Reflection.EventInfo item in _thisType.GetEvents())
-			{
-				MulticastDelegate eventDelegate = (MulticastDelegate) _thisType.GetType().GetField(item.Name, 
-																			NetRuntimeSystem.Reflection.BindingFlags.NonPublic |
-																			NetRuntimeSystem.Reflection.BindingFlags.Instance).GetValue(this);
-					
-				if( (null != eventDelegate) && (eventDelegate.GetInvocationList().Length > 0) )
-					return false;
-			}
-				
-			return false;
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType);            
         }
-        
+
+        /// <summary>
+        /// Instance has one or more event recipients
+        /// </summary>
+        /// <param name="eventName">name of the event</param>
+        /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        public bool HasEventRecipients(string eventName)
+        {
+            return NetOffice.Events.CoClassEventReflector.HasEventRecipients(this, LateBindingApiWrapperType, eventName);
+        }
+
         /// <summary>
         /// Target methods from its actual event recipients
         /// </summary>
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public Delegate[] GetEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates;
-            }
-            else
-                return new Delegate[0];
+            return NetOffice.Events.CoClassEventReflector.GetEventRecipients(this, LateBindingApiWrapperType, eventName);
         }
        
         /// <summary>
@@ -330,22 +277,8 @@ namespace NetOffice.OfficeApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int GetCountOfEventRecipients(string eventName)
         {
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                return delegates.Length;
-            }
-            else
-                return 0;
-           }
+            return NetOffice.Events.CoClassEventReflector.GetCountOfEventRecipients(this, LateBindingApiWrapperType, eventName);       
+         }
         
         /// <summary>
         /// Raise an instance event
@@ -356,34 +289,8 @@ namespace NetOffice.OfficeApi
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
         public int RaiseCustomEvent(string eventName, ref object[] paramsArray)
 		{
-			if(null == _thisType)
-				_thisType = this.GetType();
-             
-            MulticastDelegate eventDelegate = (MulticastDelegate)_thisType.GetField(
-                                                "_" + eventName + "Event",
-                                                NetRuntimeSystem.Reflection.BindingFlags.Instance |
-                                                NetRuntimeSystem.Reflection.BindingFlags.NonPublic).GetValue(this);
-
-            if (null != eventDelegate)
-            {
-                Delegate[] delegates = eventDelegate.GetInvocationList();
-                foreach (var item in delegates)
-                {
-                    try
-                    {
-                        item.Method.Invoke(item.Target, paramsArray);
-                    }
-                    catch (NetRuntimeSystem.Exception exception)
-                    {
-                        Factory.Console.WriteException(exception);
-                    }
-                }
-                return delegates.Length;
-            }
-            else
-                return 0;
+            return NetOffice.Events.CoClassEventReflector.RaiseCustomEvent(this, LateBindingApiWrapperType, eventName, ref paramsArray);
 		}
-
         /// <summary>
         /// Stop listening events for the instance
         /// </summary>
@@ -404,3 +311,4 @@ namespace NetOffice.OfficeApi
 		#pragma warning restore
 	}
 }
+
